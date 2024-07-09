@@ -246,6 +246,13 @@ Verdict: Implement Data history
 5. Prepare RC
 6. Production version
 
+## Milestones & Issues
+
+- [ ] 02 setup issues
+- [ ] 03 core feature issues
+- [ ] 04 additional feature issues
+- [ ] 05 rc feature issues
+
 # 02 Setup
 
 - [ ] Set up tooling (if applicable)

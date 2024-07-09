@@ -209,7 +209,7 @@ Verdict: Implement Data history
 ### Others
 
 - [x] Typescript
-- [x] Buil in linter
+- [x] Built-in linter
 - [x] OpenAPI tooling
 - [x] Built in test library
 - [x] Docker + compose

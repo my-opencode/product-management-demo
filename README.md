@@ -393,3 +393,8 @@ When applicable
 - [ ] migrate prototype env to a prod env
 - [ ] harden features
 - [ ] migrate to prod DB
+
+# 06 Going further
+
+- i18n
+- elastic/fuzzy search: to warn users about duplicates

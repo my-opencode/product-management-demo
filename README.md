@@ -255,11 +255,66 @@ Verdict: Implement Data history
 
 # 02 Setup
 
-- [ ] Set up tooling (if applicable)
+- [x] init git
+- [ ] init npm
+- [ ] install TS + tsconfig
+- [ ] install OpenAPI tools
+- [ ] openapi.yaml
+- [ ] install Express
+- [ ] stub files & directories
+  - back-built
+  - back/server.ts
+  - back/server.test.ts
+  - back/router.ts
+  - back/router.test.ts
+  - back/databases/sql-connection.ts
+  - back/databases/sql-connection.test.ts
+  - [back/databases/sqlite-connection.ts]
+  - [back/databases/sqlite-connection.test.ts]
+  - back/models/Products.ts
+  - back/models/Products.test.ts
+  - back/models/Users.ts
+  - back/models/Users.test.ts
+  - back/models/Roles.ts
+  - back/models/Roles.test.ts
+  - back/models/DataHistory.ts
+  - back/models/DataHistory.test.ts
+  - back/controllers/products-get-all.ts
+  - back/controllers/products-get-all.test.ts
+  - back/controllers/products-post-new.ts
+  - back/controllers/products-post-new.test.ts
+  - back/controllers/product-get-details.ts
+  - back/controllers/product-get-details.test.ts
+  - back/controllers/product-patch-fields.ts
+  - back/controllers/product-patch-fields.test.ts
+  - back/controllers/product-delete-one.ts
+  - back/controllers/product-delete-one.test.ts
+  - back/middlewares/security-auth.ts
+  - back/middlewares/security-auth.test.ts
+  - back/middlewares/security-role.ts
+  - back/middlewares/security-role.test.ts
+  - back/middlewares/failsafe-db-offline.ts
+  - back/middlewares/failsafe-db-offline.test.ts
+  - back/middlewares/logger.ts
+  - back/middlewares/logger.test.ts
+  - back/views/Products.ts
+  - back/views/Products.test.ts
+  - back/views/Users.ts
+  - back/views/Users.test.ts
+  - back/views/UserRoles.ts
+  - back/views/UserRoles.test.ts
+  - back/views/DataHistory.ts
+  - back/views/DataHistory.test.ts
+- [ ] dummy build step
+- [ ] Dockerfile
+- [ ] DB setup script
+- [ ] Docker compose
+- [ ] Docker log driver (local rotation)
 - [ ] Set up testing suite
-- [ ] Set up CI/CD
-- [ ] Configure the project (package.json, ...)
-- [ ] Set up DB
+- [ ] Set up Github CI/CD Action
+  - build
+  - test
+  [ ] makefile
 
 # 03 Core features
 

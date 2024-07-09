@@ -5,7 +5,7 @@ This project's goal is to build a product management back end to showcase one's 
 # 01 Planification
 
 - [x] Philosophy
-- [ ] Select technologies
+- [x] Select technologies
 - [ ] Plan deliverables
 - [ ] Set issues & milestones
 

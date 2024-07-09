@@ -115,10 +115,40 @@ Verdict: Github issues
 
 ## Technologies
 
+### Core stack
+
 - [x] nodejs/express
 - [ ] Java/Spring Boot
 - [ ] C#/.net Core
 - [ ] Python/Flask
+
+### Others
+
+- [x] Typescript
+- [x] Buil in linter
+- [x] OpenAPI tooling
+- [x] Built in test library
+- [x] Docker + compose
+- [x] Makefile
+
+#### Database
+
+- [ ] JSON file
+- [ ] Not Only SQL
+  - [ ] MongoDB
+  - [ ] other: ...
+- [x] SQL
+  - [ ] SQLite
+  - [ ] MS SQL Server
+  - [ ] PostGresql
+  - [ ] MariaDb
+  - [ ] MySQL
+
+#### Database abstraction
+
+- [ ] ORM
+- [x] Models
+- [ ] None
 
 # 02 Setup
 

@@ -318,12 +318,23 @@ Verdict: Implement Data history
 
 # 03 Core features
 
-- [ ] Implement core features
-  - [ ] GET /products
-  - [ ] POST /products
-  - [ ] GET /products/{id}
-  - [ ] PATCH /products/{id}
-  - [ ] DELETE /products/{id}
+- [ ] GET /products
+  - [ ] Server initializes db connection (using secrets)
+  - [ ] Server listens to port
+  - [ ] Server default route --> 404
+  - [ ] Server mw: failsafe when db offline --> 503
+  - [ ] Product model can select from db
+  - [ ] Product model can serialize db response into JSON
+  - [ ] Server route for GET /products
+  - [ ] Server controller for route
+    - on applicative error --> 500
+    - query db throught model
+    - serializes response throught view
+    - return response --> 200
+- [ ] POST /products
+- [ ] GET /products/{id}
+- [ ] PATCH /products/{id}
+- [ ] DELETE /products/{id}
 - [ ] Implement testing
   - [ ]
 - [ ] Branch & version appropriately

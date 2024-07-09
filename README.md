@@ -9,6 +9,21 @@ This project's goal is to build a product management back end to showcase one's 
 - [ ] Plan deliverables
 - [ ] Set issues & milestones
 
+## Philosophy
+
+Less is more.
+I prefer to work with leaner dependency trees.
+I also prefer to have a simpler application structure.
+My preference will show in the design and stack decisions.
+
+The requirements already set some basic rules:
+
+- javascript
+- node.js
+- express.js
+- REST API
+- product model and field types
+
 
 ## Technologies
 

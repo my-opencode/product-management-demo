@@ -330,6 +330,7 @@ Verdict: Implement Data history
 
 # 04 Nice to have features
 
+- [ ] SSL Certificate for HTTPS
 - [ ] Auth system
   - [ ] mw
   - [ ] routes

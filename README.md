@@ -21,6 +21,8 @@ Overall, I intent to keep production dependencies as few as possible. Build, tes
 Functions, classes and methods should be documented in the code.
 Names should be as explicit as possible.
 
+## Requirements
+
 The requirements already set some basic rules:
 
 - javascript
@@ -28,6 +30,8 @@ The requirements already set some basic rules:
 - express.js
 - REST API
 - product model and field types
+
+## Stack decision process
 
 ### JS vs Typescript
 

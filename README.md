@@ -324,19 +324,56 @@ Verdict: Implement Data history
   - [ ] Server default route --> 404
   - [ ] Server mw: failsafe when db offline --> 503
   - [ ] Product model can select from db
+  - [ ] DataHistory model can insert to db
   - [ ] Product model can serialize db response into JSON
   - [ ] Server route for GET /products
   - [ ] Server controller for route
+    - empty result is not an error
     - on applicative error --> 500
     - query db throught model
     - serializes response throught view
     - return response --> 200
 - [ ] POST /products
+  - [ ] Server mw: auth not logged --> 401
+  - [ ] Server mw: role not matched --> 403
+  - [ ] Product model can validate fields
+    - invalid --> 422
+  - [ ] Product model can insert to db
+  - [ ] Product model can serialize db response into JSON
+  - [ ] Server route for POST /products
+  - [ ] Server controller for route
+    - on applicative error --> 500
+    - insert db throught model
+    - (should not happen) exists error --> 409
+    - serializes response throught view
+    - return response --> 201
 - [ ] GET /products/{id}
+  - [ ] Server route for GET /products/{id}
+  - [ ] Server controller for route
+    - empty result is an error --> 404
+    - on applicative error --> 500
+    - query db throught model
+    - serializes response throught view
+    - return response --> 200
 - [ ] PATCH /products/{id}
+  - [ ] Product model can validate patch fields
+    - invalid --> 422
+  - [ ] Product model can update in db
+  - [ ] Product model can serialize db response into JSON
+  - [ ] Server route for PATCH /products/{id}
+  - [ ] Server controller for route
+    - on applicative error --> 500
+    - update db throught model
+    - serializes response throught view
+    - return response --> 201
 - [ ] DELETE /products/{id}
-- [ ] Implement testing
-  - [ ]
+  - [ ] Product model can update as removed in db
+  - [ ] Server route for DELETE /products/{id}
+  - [ ] Server controller for route
+    - on applicative error --> 500
+    - update db throught model: deleted flag + date
+    - return response --> 204
+      or 202 if async and queued
 - [ ] Branch & version appropriately
 
 # 04 Nice to have features

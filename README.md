@@ -9,17 +9,22 @@ This project's goal is to build a product management back end to showcase one's 
 - [ ] Plan deliverables
 - [ ] Set issues & milestones
 
-## Philosophy
+## Philosophy & design principles
 
 Less is more.
 I prefer to work with leaner dependency trees.
 I also prefer to have a simpler application structure.
 My preference will show in the design and stack decisions.
 
-Overall, I intent to keep production dependencies as few as possible. Build, test and scaffold developement dependencies may be more numerous.
+Keep production dependencies as few as possible.
+Build, test and scaffold developement dependencies may be more numerous.
 
 Functions, classes and methods should be documented in the code.
 Names should be as explicit as possible.
+
+The backend design should separate concerns (~mvc).
+
+Use proper HTTP codes for responses. No: `200 — {"error":"true"}` shenanigans.
 
 ## Requirements
 

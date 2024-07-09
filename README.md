@@ -6,7 +6,7 @@ This project's goal is to build a product management back end to showcase one's 
 
 - [x] Philosophy
 - [x] Select technologies
-- [ ] Plan deliverables
+- [x] Plan deliverables
 - [ ] Set issues & milestones
 
 ## Philosophy & design principles
@@ -46,7 +46,7 @@ Choosing JS for a smaller size project makes much more sense as it does not requ
 
 We may argue that the front end is in TS and both codebases could share dependencies. In practise, it is seldom the case.
 
-As this project is not a real life small project but a demo, it makes more sense to select TS over JS. TS trades added complexity for scalibility.
+As this project is not a real life small project but a demo, it makes more sense to select TS over JS. TS trades added complexity for scalability.
 
 Verdict: Typescript
 
@@ -168,6 +168,7 @@ jobs:
 
 Verdict: use actions
 
+###
 
 ## Technologies
 
@@ -207,6 +208,15 @@ Verdict: use actions
 - [x] Models
 - [ ] None
 
+## Tasks & Deliverables
+
+1. Complete dev setup
+2. Dockerize DB server + express server (one route)
+3. Implement core features & associated tests
+4. Implement additional features & tests
+5. Prepare RC
+6. Production version
+
 # 02 Setup
 
 - [ ] Set up tooling (if applicable)
@@ -240,6 +250,6 @@ Verdict: use actions
 
 When applicable
 
-    migrate prototype env to a prod env
-    harden features
-    migrate to prod DB
+- [ ] migrate prototype env to a prod env
+- [ ] harden features
+- [ ] migrate to prod DB

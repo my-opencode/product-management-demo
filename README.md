@@ -67,8 +67,9 @@ Arbitrary decision:
 - Semi column: [x] always [ ] only required
 - Indents: [ ] tab [x] 2 spaces [ ] 4 spaces
 - Name case: [x] CamelCase [ ] snake_case [ ] kebab-case
+- Filename case: [ ] CamelCase [ ] snake_case [x] kebab-case
 - Class vs Object: [x] CLass [ ] Object
-  Typescript prefers classes anyway
+  (Typescript prefers classes anyway)
 
 ### SQL vs NO-SQL vs SQLite vs JSON
 

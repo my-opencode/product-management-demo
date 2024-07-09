@@ -128,6 +128,47 @@ Github milestones & issues is a wonderful tool good enough for teams, a little o
 
 Verdict: Github issues
 
+### Github actions
+
+Integrate CI, build & tests to Github actions for automated tests.
+
+```yaml
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+```
+
+Verdict: use actions
+
+
 ## Technologies
 
 ### Core stack
@@ -145,6 +186,7 @@ Verdict: Github issues
 - [x] Built in test library
 - [x] Docker + compose
 - [x] Makefile
+- [x] Github actions
 
 #### Database
 

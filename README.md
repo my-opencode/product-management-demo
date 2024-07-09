@@ -168,7 +168,34 @@ jobs:
 
 Verdict: use actions
 
-###
+### SSL / HTTPS
+
+Fairly simple to implement with a Nginx docker.
+Requires the ability to generate valid SSL certificates, or, to create a private CA, self sign certificates, add certificates to the client machines. Quite a lot of hassle for a demo.
+
+Perhaps as a nice to have or RC feature.
+
+Verdict: TBD
+
+### Logging
+
+Sensible logging should happen in production.
+As we work in docker we have two options:
+- log to stdout and use docker logs
+  - compatible with Kubernetes
+  - requires setting a log driver for docker container
+  - Possible option [https://docs.docker.com/config/containers/logging/configure/#configure-the-default-logging-driver](https://docs.docker.com/config/containers/logging/configure/#configure-the-default-logging-driver)
+- log management in nodejs throught a mounted volume
+  - winston?
+  - morgan?
+
+Verdict: Logging via docker logs + driver
+
+### Data history
+
+When not dealing with a genuine user request for deletion of personal data, and when volumes don't make costs prohibitive, keeping a history of all data changes is a great safeguard, allowing to rebuild a previous state of the db, audit user actions and prevent malicious or erroneous data losses.
+
+Verdict: Implement Data history
 
 ## Technologies
 
@@ -188,6 +215,8 @@ Verdict: use actions
 - [x] Docker + compose
 - [x] Makefile
 - [x] Github actions
+- [x] Https maybe
+- [x] Logging
 
 #### Database
 

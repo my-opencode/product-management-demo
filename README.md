@@ -258,6 +258,72 @@ Verdict: Implement Data history
 
 # 02 Setup
 
+## Database design
+
+Will use MySQL Workbench for the design and generation of the database creation SQL script.
+
+- ProductsCategory Table
+  - id — int — autoincrement, primary key
+  - name – varchar 1024
+
+Yes, the exercice is clear and small, a single product table and a single user table could fulfill all the requirements.
+However, we are dealing with a list of products with associated inventory and price data. It is not far fetched to imagine this application evolving into an ERM or a merchant backend. For these reasons, and because I already chose to use a SQL database, I prefer to split the data into separate tables which will allow adding more features more easily.
+
+- Products Table
+  - id — int — autoincrement, primary key
+  - code — char 255 — autogen in code or with trigger
+  - name — varchar 1024
+  - description — varchar 5120
+  - image — varchar 2048
+  - category_id — int — foreign key
+
+ProductsPrice table is simplified. Depending on use cases, there may be needs for additional information such as: region, timezone, target group, active flag,…
+In this demo, only one price will be applied at a given time, date start can be null defaulting to now, any null date end in the system will update to now when a new price is inserted.
+
+- ProductsPrices Table
+  - id — int — autoincrement, primary key
+  - product_id — int — foreign key
+  - date_start — datetime —
+  - date_end — datetime —
+  - price — decimal (5,2)
+
+Products inventory is simplified. Unit of measurement, reasons for inventory change, 
+
+- ProductsInventory Table
+  - id — int — autoincrement, primary key
+  - product_id — int — foreign key
+  - date — datetime —
+  - quantity — mediumint —
+  - inventory_status – enum('INSTOCK','LOWSTOCK','OUTOFSTOCK')
+
+Product rating tallies all ratings and provides a rating value.
+
+In the real world, a customer rating table would make more sense, linking a user, a product and a purchase to the rating value. Then have cron jobs regularly update the rating value with a formula on the ratings received since the previous update.
+
+- ProductRating Table
+  - id — int — autoincrement, primary key
+  - product_id — int — foreign key
+  - date — datetime —
+  - five — mediumint —
+  - four — mediumint —
+  - three — mediumint —
+  - two — mediumint —
+  - one — mediumint —
+  - zero — mediumint —
+  - rating — tinyint –
+
+
+- Users Table
+  - id — int — autoincrement, primary key
+  - name — varchar 1024
+
+- DataHistory Table
+  - user_id – int — foreign key
+  - database_table — varchar 1024 —
+  - before — JSON —
+  - after — JSON —
+  - timestamp — datetime
+
 ## Tasks
 
 - [x] init git

@@ -386,12 +386,42 @@ Verdict: Implement Data history
 
 # 04 Nice to have features
 
+- [ ] Offline DB failsafe
+  - [ ] mw: offline db failsafe: 
+    - checks for db connection status
+    - if connection is down --> 503
+- [ ] DataHistory implementation
+  - [ ] Through code
+    - [ ] DataHistory can insert to db
+    - [ ] Products model calls to DataHistory on every CRUD operation
+  - [ ] Using triggers
+- [ ] GET /products/changes
+  - [ ] Server mw: auth not logged --> 401
+  - [ ] Server mw: role not matched --> 403
+  - [ ] DataHistory can read db records
+  - [ ] Server route for DELETE /products/{id}
+    - empty result is not an error --> 200 []
+    - on applicative error --> 500
+    - query db throught model
+    - serializes response throught view
+    - return response --> 200
 - [ ] SSL Certificate for HTTPS
 - [ ] Auth system
   - [ ] mw
+    - [ ] auth: verify that user is logged
   - [ ] routes
+    - [ ] proxy redirect to 3rd party / auth server login page
+    - [ ] proxy redirect to 3rd party / auth server logout page
+    - [ ] local POST /login
+      - [ ] User model can interact with auth service
+      - [ ] User model can validate login fields
+      - [ ] server route for POST /login
+        - login error --> 401
+        - login success --> 200 + session/token
+    - [ ] GET /logout
 - [ ] RBAC system
   - [ ] mw
+    - [ ] role: verify user role against route required role
   - [ ] routes
 
 # 05 RC

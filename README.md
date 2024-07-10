@@ -258,6 +258,8 @@ Verdict: Implement Data history
 
 # 02 Setup
 
+## Tasks
+
 - [x] init git
 - [ ] init npm
 - [ ] install TS + tsconfig

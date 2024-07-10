@@ -195,6 +195,9 @@ Verdict: Logging via docker logs + driver
 
 When not dealing with a genuine user request for deletion of personal data, and when volumes don't make costs prohibitive, keeping a history of all data changes is a great safeguard, allowing to rebuild a previous state of the db, audit user actions and prevent malicious or erroneous data losses.
 
+If using a SQL server, use triggers.
+Else, the Products models can call to the DataHistory model whenever performing a CRUD operation.
+
 Verdict: Implement Data history
 
 ## Technologies

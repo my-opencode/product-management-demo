@@ -336,6 +336,7 @@ Verdict: Implement Data history
     - query db throught model
     - serializes response throught view
     - return response --> 200
+    - [ ] Rate limiter on PROXY?
 - [ ] POST /products
   - [ ] Server mw: auth not logged --> 401
   - [ ] Server mw: role not matched --> 403
@@ -359,6 +360,8 @@ Verdict: Implement Data history
     - serializes response throught view
     - return response --> 200
 - [ ] PATCH /products/{id}
+  - [ ] Server mw: auth not logged --> 401
+  - [ ] Server mw: role not matched --> 403
   - [ ] Product model can validate patch fields
     - invalid --> 422
   - [ ] Product model can update in db
@@ -370,6 +373,8 @@ Verdict: Implement Data history
     - serializes response throught view
     - return response --> 201
 - [ ] DELETE /products/{id}
+  - [ ] Server mw: auth not logged --> 401
+  - [ ] Server mw: role not matched --> 403
   - [ ] Product model can update as removed in db
   - [ ] Server route for DELETE /products/{id}
   - [ ] Server controller for route

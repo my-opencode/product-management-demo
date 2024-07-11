@@ -10,7 +10,8 @@
     "built:start": "node server.js",
     "built:test": "node --test --test-concurrency=1",
     "openapi:generate-ng-framework": "npx openapi-generator-cli generate -g typescript-angular -i ./openapi.yaml -o tmp/front-framework/",
-    "openapi:generate-express-stub": "npx openapi-generator-cli generate -g nodejs-express-server -i ./openapi.yaml -o tmp/back-stub/"
+    "openapi:generate-express-stub": "npx openapi-generator-cli generate -g nodejs-express-server -i ./openapi.yaml -o tmp/back-stub/",
+    "openapi:generate-typescript-sdk": "npx api install ./openapi.yaml"
   },
   "keywords": [
     "product",

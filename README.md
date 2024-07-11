@@ -240,24 +240,6 @@ Verdict: Implement Data history
 - [x] Models
 - [ ] None
 
-## Tasks & Deliverables
-
-1. Complete dev setup
-2. Dockerize DB server + express server (one route)
-3. Implement core features & associated tests
-4. Implement additional features & tests
-5. Prepare RC
-6. Production version
-
-## Milestones & Issues
-
-- [ ] 02 setup issues
-- [ ] 03 core feature issues
-- [ ] 04 additional feature issues
-- [ ] 05 rc feature issues
-
-# 02 Setup
-
 ## Database design
 
 Will use MySQL Workbench for the design and generation of the database creation SQL script.
@@ -328,6 +310,24 @@ In the real world, a customer rating table would make more sense, linking a user
 ![](./database_model.png)
 
 [Creation script](database-creation-script.sql)
+
+## Tasks & Deliverables
+
+1. Complete dev setup
+2. Dockerize DB server + express server (one route)
+3. Implement core features & associated tests
+4. Implement additional features & tests
+5. Prepare RC
+6. Production version
+
+## Milestones & Issues
+
+- [ ] 02 setup issues
+- [ ] 03 core feature issues
+- [ ] 04 additional feature issues
+- [ ] 05 rc feature issues
+
+# 02 Setup
 
 ## Tasks
 

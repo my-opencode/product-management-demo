@@ -4,7 +4,9 @@
   "description": "Back End for a product management demo",
   "main": "server.js",
   "scripts": {
-    "test": "ts-node --test **/*.test.ts"
+    "test": "npx tsx --test **/*.test.ts",
+    "start": "npx tsx server.ts",
+    "build": "npx tsc"
   },
   "keywords": [
     "product",
@@ -12,5 +14,10 @@
     "back-end"
   ],
   "author": "\"Ludovic Anterieur <open.code@outlook.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3"
+  }
 }

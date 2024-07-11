@@ -1,14 +1,16 @@
 {
   "name": "product-management-demo-backend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Back End for a product management demo",
   "main": "server.js",
   "scripts": {
-    "test": "npx tsx --test **/*.test.ts",
+    "test": "npx tsx --test --test-concurrency=1",
     "start": "npx tsx server.ts",
     "build": "npx tsc",
-    "openapi:generate-ng-framework":"npx openapi-generator-cli generate -g typescript-angular -i ./openapi.yaml -o tmp/front-framework/",
-    "openapi:generate-express-stub":"npx openapi-generator-cli generate -g nodejs-express-server -i ./openapi.yaml -o tmp/back-stub/"
+    "built:start": "node server.js",
+    "built:test": "node --test --test-concurrency=1",
+    "openapi:generate-ng-framework": "npx openapi-generator-cli generate -g typescript-angular -i ./openapi.yaml -o tmp/front-framework/",
+    "openapi:generate-express-stub": "npx openapi-generator-cli generate -g nodejs-express-server -i ./openapi.yaml -o tmp/back-stub/"
   },
   "keywords": [
     "product",
@@ -22,5 +24,8 @@
     "@types/node": "^20.14.10",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "winston": "^3.13.1"
   }
 }

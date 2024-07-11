@@ -1,0 +1,16 @@
+{
+  "name": "product-management-demo-backend",
+  "version": "1.0.0",
+  "description": "Back End for a product management demo",
+  "main": "server.js",
+  "scripts": {
+    "test": "ts-node --test **/*.test.ts"
+  },
+  "keywords": [
+    "product",
+    "management",
+    "back-end"
+  ],
+  "author": "\"Ludovic Anterieur <open.code@outlook.com>",
+  "license": "ISC"
+}

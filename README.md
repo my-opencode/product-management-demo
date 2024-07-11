@@ -331,14 +331,12 @@ In the real world, a customer rating table would make more sense, linking a user
 
 ## Tasks
 
+- main branch
 - [x] init git
 - [ ] init npm
 - [ ] install TS + tsconfig
 - [ ] install OpenAPI tools
-- [ ] openapi.yaml
-- [ ] install Express
-- [ ] stub files & directories
-  - back-built
+
   - back/server.ts
   - back/server.test.ts
   - back/router.ts

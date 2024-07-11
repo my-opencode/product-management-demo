@@ -6,7 +6,9 @@
   "scripts": {
     "test": "npx tsx --test **/*.test.ts",
     "start": "npx tsx server.ts",
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "openapi:generate-ng-framework":"npx openapi-generator-cli generate -g typescript-angular -i ./openapi.yaml -o tmp/front-framework/",
+    "openapi:generate-express-stub":"npx openapi-generator-cli generate -g nodejs-express-server -i ./openapi.yaml -o tmp/back-stub/"
   },
   "keywords": [
     "product",
@@ -16,6 +18,7 @@
   "author": "\"Ludovic Anterieur <open.code@outlook.com>",
   "license": "ISC",
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.13.4",
     "@types/node": "^20.14.10",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3"

@@ -337,7 +337,241 @@ In the real world, a customer rating table would make more sense, linking a user
 - [ ] install TS + tsconfig
 - [ ] install OpenAPI tools
 
+- alpha branch
+- [ ] init logger
+  - back/middlewares/logger.ts
+    - log mode from env
+    - log levels from env
+    - log file/dir from env
+  - back/middlewares/logger.test.ts
+    - test logging
+- [ ] init db
+  - back/databases/sqlite-connection.ts
+    - [ ] import logger
+    - [ ] install sqlite3
+    - [ ] sqlite file name from env
+    - [ ] reconnect or create db
+  - back/databases/sqlite-connection.test.ts
+    - [ ] test sqlite file is created
   - back/server.ts
+    - [ ] import logger
+    - [ ] import db
+  - back/server.test.ts
+    - [ ] test sqlite file is created
+- [ ] init server
+  - [ ] openapi.yaml
+  - back/server.ts
+    - [ ] install Express
+    - [ ] port & domain from env
+    - [ ] error handler
+  - back/router.ts
+    - [ ] dummy route GET /products
+    - [ ] default 404 route
+  - back/server.ts
+    - [ ] listen
+  - back/controllers/products-get-all.ts
+    - [ ] dummy controller --> 200
+  - back/controllers/products-get-all.test.ts
+    - [ ] test dummy controller
+  - back/router.test.ts
+    - [ ] test route exports
+  - back/server.test.ts
+    - [ ] test listen
+    - [ ] test error
+    - [ ] test 404
+    - [ ] test GET /products
+- [ ] serve
+  - npm script
+  - makefile script
+- [ ] build
+  - back-built directory
+  - npm script
+  - makefile script
+- [ ] run build
+  - npm script
+  - makefile script
+- [ ] list categories
+  - [ ] update openapi.yaml
+  - back/router.ts
+    - [ ] Add GET /categories route
+  - back/router.test.ts
+    - [ ] test export GET /categories route
+  - back/Models/Categories.ts
+    - [ ] Categories class
+      - string name
+      - number id
+    - [ ] static method listFromDatabase
+      - pass db error
+    - [ ] static method databaseResponseToInstance
+      - constructor throws
+    - [ ] static method databaseResponseToInstanceArray
+    - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+  - back/Models/Categories.test.ts
+    - [ ] test new Categories()
+    - [ ] test Categories.listFromDatabase
+    - [ ] test Categories.databaseResponseToInstance
+    - [ ] test Categories.databaseResponseToInstanceArray
+    - [ ] test Categories.List
+  - back/views/Categories.ts
+    - [ ] listArrayToJSON
+  - back/views/Categories.test.ts
+    - [ ] test listArrayToJSON
+  - back/controllers/categories-list-all.ts
+    - [ ] import logger
+    - [ ] get list from model
+    - [ ] serialize to json with view
+    - [ ] return response
+  - back/controllers/categories-list-all.test.ts
+    - [ ] test empty list
+    - [ ] test malformed list
+    - [ ] test valid list
+  - back/server.test.ts
+    - [ ] test GET /categories
+- [ ] list products — no options, no paging
+  - [ ] update openapi.yaml
+  - back/Models/Products.ts
+    - [ ] Products class
+    - [ ] static method listFromDatabase
+      - pass db error
+    - [ ] static method databaseResponseToInstance
+      - constructor throws
+    - [ ] static method databaseResponseToInstanceArray
+    - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+  - back/Models/Products.test.ts
+    - [ ] test new Products()
+    - [ ] test Products.listFromDatabase
+    - [ ] test Products.databaseResponseToInstance
+    - [ ] test Products.databaseResponseToInstanceArray
+    - [ ] test Products.List
+  - back/views/Products.ts
+    - [ ] toJSON
+    - [ ] listArrayToJSON
+  - back/views/Products.test.ts
+    - [ ] test toJSON
+    - [ ] test listArrayToJSON
+  - back/controllers/products-list-all.ts
+    - [ ] import logger
+    - [ ] get list from model
+    - [ ] serialize to json with view
+    - [ ] return response
+  - back/controllers/products-list-all.test.ts
+    - [ ] test empty list
+    - [ ] test malformed list
+    - [ ] test valid list
+  - back/server.test.ts
+    - [ ] update test GET /products
+- [ ] view product by id
+  - [ ] update openapi.yaml
+  - back/router.ts
+    - [ ] Add GET /products/{id} route
+  - back/router.test.ts
+    - [ ] test export GET /products/{id} route
+  - back/Models/Products.ts
+    - [ ] static method getFromDatabaseById
+      - pass db error
+    - [ ] static method getById (calls to databaseResponseToInstance(getFromDatabaseById))
+  - back/Models/Products.test.ts
+    - [ ] test Products.getFromDatabaseById
+    - [ ] test Products.getById
+  - back/controllers/products-get-one-by-id.ts
+    - [ ] import logger
+    - [ ] get one product from model by id
+    - [ ] serialize to json with view
+    - [ ] return response
+  - back/controllers/products-get-one-by-id.test.ts
+    - [ ] test no id
+    - [ ] test unknown/deleted id
+    - [ ] test valid id
+  - back/server.test.ts
+    - [ ] test GET /products/{id}
+- [ ] create new product
+  - [ ] update openapi.yaml
+  - back/router.ts
+    - [ ] Add POST /products route
+  - back/router.test.ts
+    - [ ] test export POST /products route
+  - back/Models/Products.ts
+    - [ ] static method ensureUniqueActiveCode
+      - stored procedure in mysql
+    - [ ] static method createNew
+      - validates post form fields
+      - ensure code is unique among active products
+      - initialises instance without id
+    - [ ] static method insertNewToDatabase
+      - pass db error
+    - [ ] static method updateInDatabaseById
+      - pass db error
+    - [ ] method save (calls to insertNewToDatabase or updateInDatabaseById depending whether id exists or not)
+  - back/Models/Products.test.ts
+    - [ ] test Products.createNew
+    - [ ] test Products.insertNewToDatabase
+    - [ ] test Products.updateInDatabaseById
+    - [ ] test save
+  - back/controllers/products-create.ts
+    - [ ] import logger
+    - [ ] validate post data with model
+    - [ ] 422 if invalid data
+    - [ ] 409 if code exists among active products
+    - [ ] save product to db with model
+    - [ ] serialize to json with view
+    - [ ] return response
+  - back/controllers/products-create.test.ts
+    - [ ] test invalid form
+    - [ ] test existing code
+    - [ ] test valid code
+- [ ] update product
+  - [ ] update openapi.yaml
+  - back/router.ts
+    - [ ] Add PATCH /products/{id} route
+  - back/router.test.ts
+    - [ ] test export PATCH /products/{id} route
+  - back/Models/Products.ts
+    - [ ] updatedFields property
+    - [ ] method updateField
+      - validates one field value
+      - if field is code, ensures code is unique among active products
+      - update instance field value when new
+      - add key to updated fields when new
+  - back/Models/Products.test.ts
+    - [ ] test Products.updateField
+    - [ ] test save updated
+  - back/controllers/products-update.ts
+    - [ ] import logger
+    - [ ] get product with model
+    - [ ] 404 if not found
+    - [ ] update fields with model
+    - [ ] 422 if invalid data
+    - [ ] 409 if code exists among active products
+    - [ ] save product to db with model
+    - [ ] serialize to json with view
+    - [ ] return response
+  - back/controllers/products-create.test.ts
+    - [ ] test invalid form
+    - [ ] test existing code
+    - [ ] test valid data
+- [ ] delete product
+  - [ ] update openapi.yaml
+  - back/router.ts
+    - [ ] Add DELETE /products/{id} route
+  - back/router.test.ts
+    - [ ] test export DELETE /products/{id} route
+  - back/Models/Products.ts
+    - [ ] static method updateAsDeletedInDatabaseById
+    - [ ] static method deleteById calls updateAsDeletedInDatabaseById
+      - pass db error
+  - back/Models/Products.test.ts
+    - [ ] test Products.updateAsDeletedInDatabaseById
+    - [ ] test Products.deleteById
+  - back/controllers/products-delete.ts
+    - [ ] import logger
+    - [ ] call delete by id with model
+    - [ ] 404 if not found
+    - [ ] 500 if error
+    - [ ] return 204 response
+  - back/controllers/products-create.test.ts
+    - [ ] test missing id
+    - [ ] test valid id
+- merge main branch
   - back/server.test.ts
   - back/router.ts
   - back/router.test.ts

@@ -572,35 +572,142 @@ In the real world, a customer rating table would make more sense, linking a user
     - [ ] test missing id
     - [ ] test valid id
 - merge main branch
-  - back/server.test.ts
+
+- beta roles branch
+- [ ] list roles
+  - [ ] update openapi.yaml
   - back/router.ts
+    - [ ] Add GET /roles route
   - back/router.test.ts
-  - back/databases/sql-connection.ts
-  - back/databases/sql-connection.test.ts
-  - [back/databases/sqlite-connection.ts]
-  - [back/databases/sqlite-connection.test.ts]
-  - back/models/Products.ts
-  - back/models/Products.test.ts
+    - [ ] test export GET /roles route
+  - back/Models/Roles.ts
+    - [ ] Roles class
+      - string name
+      - number id
+    - [ ] static method listFromDatabase
+      - pass db error
+    - [ ] static method databaseResponseToInstance
+      - constructor throws
+    - [ ] static method databaseResponseToInstanceArray
+    - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+  - back/Models/Roles.test.ts
+    - [ ] test new Roles()
+    - [ ] test Roles.listFromDatabase
+    - [ ] test Roles.databaseResponseToInstance
+    - [ ] test Roles.databaseResponseToInstanceArray
+    - [ ] test Roles.List
+  - back/views/Roles.ts
+    - [ ] listArrayToJSON
+  - back/views/Roles.test.ts
+    - [ ] test listArrayToJSON
+  - back/controllers/roles-list-all.ts
+    - [ ] import logger
+    - [ ] get list from model
+    - [ ] serialize to json with view
+    - [ ] return response
+  - back/controllers/roles-list-all.test.ts
+    - [ ] test empty list
+    - [ ] test malformed list
+    - [ ] test valid list
+  - back/server.test.ts
+    - [ ] test GET /roles
+- [ ] list users
+  - [ ] update openapi.yaml
+  - back/Models/Users.ts
+    - [ ] Users class
+    - [ ] static method listFromDatabase
+      - pass db error
+    - [ ] static method databaseResponseToInstance
+      - constructor throws
+    - [ ] static method databaseResponseToInstanceArray
+    - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+  - back/Models/Products.test.ts
+    - [ ] test new Products()
+    - [ ] test Products.listFromDatabase
+    - [ ] test Products.databaseResponseToInstance
+    - [ ] test Products.databaseResponseToInstanceArray
+    - [ ] test Products.List
+  - back/views/Products.ts
+    - [ ] toJSON
+    - [ ] listArrayToJSON
+  - back/views/Products.test.ts
+    - [ ] test toJSON
+    - [ ] test listArrayToJSON
+  - back/controllers/products-list-all.ts
+    - [ ] import logger
+    - [ ] get list from model
+    - [ ] serialize to json with view
+    - [ ] return response
+  - back/controllers/products-list-all.test.ts
+    - [ ] test empty list
+    - [ ] test malformed list
+    - [ ] test valid list
+  - back/server.test.ts
+    - [ ] update test GET /products
+- [ ] login mockup
+  - [ ] update openapi.yaml
+  - back/router.ts
+    - [ ] add POST /login route
+  - back/router.test.ts
+    - [ ] test export POST /login route
   - back/models/Users.ts
+    - [ ] static method getByName
   - back/models/Users.test.ts
-  - back/models/Roles.ts
-  - back/models/Roles.test.ts
-  - back/models/DataHistory.ts
-  - back/models/DataHistory.test.ts
-  - back/controllers/products-get-all.ts
-  - back/controllers/products-get-all.test.ts
-  - back/controllers/products-post-new.ts
-  - back/controllers/products-post-new.test.ts
-  - back/controllers/product-get-details.ts
-  - back/controllers/product-get-details.test.ts
-  - back/controllers/product-patch-fields.ts
-  - back/controllers/product-patch-fields.test.ts
-  - back/controllers/product-delete-one.ts
-  - back/controllers/product-delete-one.test.ts
+    - [ ] test getByName
+  - back/controllers/login.ts
+    - [ ] getByName using sanitized post data
+    - [ ] 501 if not found
+    - [ ] serialize response using view
+    - [ ] set user id in session cookie
+    - [ ] return payload
+  - back/controllers/login.test.ts
+    - [ ] test unknown name
+    - [ ] test valid name
+- [ ] secure auth only routes
   - back/middlewares/security-auth.ts
+    - [ ] test req for session cookie & user id
   - back/middlewares/security-auth.test.ts
+    - [ ] test mw
+  - back/router.ts
+    - [ ] POST /products
+    - [ ] PATCH /products/{id}
+    - [ ] DELETE /products/{id}
+  - back/router.test.ts
+    - [ ] test export updates
+  - back/controllers/products-create.test.ts
+    - [ ] update test with auth cases
+  - back/controllers/products-update.test.ts
+    - [ ] update test with auth cases
+  - back/controllers/products-delete.test.ts
+    - [ ] update test with auth cases
+  - back/server.test.ts
+    - [ ] update test with auth cases
+- [ ] secure routes by roles
+  - back/controllers/login.ts
+    - [ ] list user roles using model
+    - [ ] set user roles in session cookie
+    - [ ] return payload
+  - back/controllers/login.test.ts
+    - [ ] test user roles in cookie
   - back/middlewares/security-role.ts
+    - [ ] check roles in session cookie vs mw init role
   - back/middlewares/security-role.test.ts
+    - [ ] test mw
+  - back/router.ts
+    - [ ] POST /products
+    - [ ] PATCH /products/{id}
+    - [ ] DELETE /products/{id}
+  - back/router.test.ts
+    - [ ] test export updates
+  - back/controllers/products-create.test.ts
+    - [ ] update test with role cases
+  - back/controllers/products-update.test.ts
+    - [ ] update test with role cases
+  - back/controllers/products-delete.test.ts
+    - [ ] update test with role cases
+  - back/server.test.ts
+    - [ ] update test with role cases
+- merge main branch
   - back/middlewares/failsafe-db-offline.ts
   - back/middlewares/failsafe-db-offline.test.ts
   - back/middlewares/logger.ts

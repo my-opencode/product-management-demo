@@ -708,16 +708,44 @@ In the real world, a customer rating table would make more sense, linking a user
   - back/server.test.ts
     - [ ] update test with role cases
 - merge main branch
+
+- beta sql branch
+- [ ] switch sqlite to mysql
+  - back/docker-compose.yaml
+    - [ ] database container
+    - [ ] config from env/secret
+  - back/makefile
+    - [ ] update with db from docker-compose
+  - back/package.json
+    - [ ] update with db from docker-compose
+  - back/databases/sqlite-connection.ts
+    - [ ] remove file
+  - back/databases/sqlite-connection.test.ts
+    - [ ] remove file
+  - back/databases/sql-connection.ts
+    - [ ] import mysql library
+    - [ ] auth from env/secret
+  - back/databases/sql-connection.test.ts
+    - [ ] test connection
+  - back/models/*
+    - [ ] convert SQL syntax from sqlite to mysql
+- [ ] automated CI/CD github tests
+  - [ ] update docker-compose.yaml
+  - [ ] add necessary Dockerfiles
+  - .github/workflows/test-with-db.yaml
+    - [ ] configure testing env & cmd
+  - [ ] test on github
+- [ ] db offline failsafe
   - back/middlewares/failsafe-db-offline.ts
+    - [ ] test db connection status
+    - [ ] returns 503 if offline
   - back/middlewares/failsafe-db-offline.test.ts
-  - back/middlewares/logger.ts
-  - back/middlewares/logger.test.ts
-  - back/views/Products.ts
-  - back/views/Products.test.ts
-  - back/views/Users.ts
-  - back/views/Users.test.ts
-  - back/views/UserRoles.ts
-  - back/views/UserRoles.test.ts
+    - [ ] test mw
+  - back/server.ts
+    - [ ] use mw for all
+  - back/server.test.ts
+    - [ ] add db offline test
+- merge main branch
   - back/views/DataHistory.ts
   - back/views/DataHistory.test.ts
 - [ ] dummy build step

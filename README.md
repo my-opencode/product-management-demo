@@ -895,6 +895,7 @@ When applicable
 
 - [ ] migrate prototype env to a prod env
 - [ ] harden features
+  - example: [https://github.com/littlebaydigital/docker-alpine-hardened/blob/master/harden.sh](https://github.com/littlebaydigital/docker-alpine-hardened/blob/master/harden.sh)
 - [ ] migrate to prod DB
 
 # 06 Going further

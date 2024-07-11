@@ -7,7 +7,7 @@ This project's goal is to build a product management back end to showcase one's 
 - [x] Philosophy
 - [x] Select technologies
 - [x] Plan deliverables
-- [ ] Set issues & milestones
+- [x] Set issues & milestones
 
 ## Philosophy & design principles
 

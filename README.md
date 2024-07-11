@@ -746,18 +746,43 @@ In the real world, a customer rating table would make more sense, linking a user
   - back/server.test.ts
     - [ ] add db offline test
 - merge main branch
+
+- beta data history branch
+- [ ] save data history
+  - back/models/DataHistory.ts
+    - [ ] DataHistory class
+    - [ ] static method log inserts to db
+  - back/models/DataHistory.test.ts
+    - [ ] test log
+  - back/models/Products.ts
+    - [ ] update to call to DataHistory.log
+  - back/models/Products.test.ts
+    - [ ] test call to DataHistory.log
+- [ ] list data history
+  - [ ] update openapi.yaml
+  - back/router.ts
+    - [ ] add POST /data-history
+    - [ ] mw: auth, role
+  - back/router.test.ts
+    - [ ] test exported route
+  - back/models/DataHistory.ts
+    - [ ] static method list
+  - back/models/DataHistory.test.ts
+    - [ ] test list
   - back/views/DataHistory.ts
+    - [ ] static method toJSON
+    - [ ] static method listToJSONArray
   - back/views/DataHistory.test.ts
-- [ ] dummy build step
-- [ ] Dockerfile
-- [ ] DB setup script
-- [ ] Docker compose
-- [ ] Docker log driver (local rotation)
-- [ ] Set up testing suite
-- [ ] Set up Github CI/CD Action
-  - build
-  - test
-  [ ] makefile
+    - [ ] test list to JSONArray
+  - back/controllers/data-history-list.ts
+    - [ ] list using model
+    - [ ] serialize using view
+    - [ ] return payload
+  - back/controllers/data-history-list.test.ts
+    - [ ] test controller
+  - back/server.test.ts
+    - [ ] add list data history test
+- merge main branch
 
 # 03 Core features
 

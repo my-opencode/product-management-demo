@@ -1,0 +1,12 @@
+FROM node:22
+ENV NODE_ENV development
+ENV PORT 80
+
+WORKDIR /app
+COPY ./back/package*.json /app/
+RUN npm install --omit=dev
+COPY ./back-dist /app/
+
+RUN chown -R node:node /app
+USER node
+CMD ["npm","run","built:start"]

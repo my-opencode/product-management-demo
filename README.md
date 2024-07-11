@@ -535,7 +535,7 @@ In the real world, a customer rating table would make more sense, linking a user
   - back/Models/Products.test.ts
     - [ ] test Products.updateField
     - [ ] test save updated
-  - back/controllers/products-update.ts
+  - back/controllers/products-update-by-id.ts
     - [ ] import logger
     - [ ] get product with model
     - [ ] 404 if not found
@@ -545,7 +545,7 @@ In the real world, a customer rating table would make more sense, linking a user
     - [ ] save product to db with model
     - [ ] serialize to json with view
     - [ ] return response
-  - back/controllers/products-create.test.ts
+  - back/controllers/products-update-by-id.test.ts
     - [ ] test invalid form
     - [ ] test existing code
     - [ ] test valid data
@@ -562,13 +562,13 @@ In the real world, a customer rating table would make more sense, linking a user
   - back/Models/Products.test.ts
     - [ ] test Products.updateAsDeletedInDatabaseById
     - [ ] test Products.deleteById
-  - back/controllers/products-delete.ts
+  - back/controllers/products-delete-by-id.ts
     - [ ] import logger
     - [ ] call delete by id with model
     - [ ] 404 if not found
     - [ ] 500 if error
     - [ ] return 204 response
-  - back/controllers/products-create.test.ts
+  - back/controllers/products-delete-by-id.test.ts
     - [ ] test missing id
     - [ ] test valid id
 - merge main branch

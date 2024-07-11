@@ -276,6 +276,7 @@ However, we are dealing with a list of products with associated inventory and pr
   - description — varchar 5120
   - image — varchar 2048
   - category_id — int — foreign key
+  - deleted — bool
 
 ProductsPrice table is simplified. Depending on use cases, there may be needs for additional information such as: region, timezone, target group, active flag,…
 In this demo, only one price will be applied at a given time, date start can be null defaulting to now, any null date end in the system will update to now when a new price is inserted.
@@ -300,16 +301,16 @@ Product rating tallies all ratings and provides a rating value.
 
 In the real world, a customer rating table would make more sense, linking a user, a product and a purchase to the rating value. Then have cron jobs regularly update the rating value with a formula on the ratings received since the previous update.
 
-- ProductRating Table
+- ProductRatings Table
   - id — int — autoincrement, primary key
   - product_id — int — foreign key
   - date — datetime —
-  - five — mediumint —
-  - four — mediumint —
-  - three — mediumint —
-  - two — mediumint —
-  - one — mediumint —
-  - zero — mediumint —
+  - rating_count_5 — mediumint —
+  - rating_count_4 — mediumint —
+  - rating_count_3 — mediumint —
+  - rating_count_2 — mediumint —
+  - rating_count_1 — mediumint —
+  - rating_count_0 — mediumint —
   - rating — tinyint –
 
 
@@ -323,6 +324,10 @@ In the real world, a customer rating table would make more sense, linking a user
   - before — JSON —
   - after — JSON —
   - timestamp — datetime
+
+![](./database_model.png)
+
+[Creation script](database-creation-script.sql)
 
 ## Tasks
 

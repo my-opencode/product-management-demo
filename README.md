@@ -333,16 +333,16 @@ In the real world, a customer rating table would make more sense, linking a user
 
 - main branch
 - [x] init git
-- [ ] init npm
-- [ ] install TS + tsconfig
-- [ ] install OpenAPI tools
+- [x] init npm
+- [x] install TS + tsconfig
+- [x] install OpenAPI tools
 
 - alpha branch
-- [ ] init logger
+- [x] init logger
   - back/middlewares/logger.ts
-    - log mode from env
-    - log levels from env
-    - log file/dir from env
+    - ~~mode from env~~
+    - ~~log levels from env~~
+    - ~~log file/dir from env~~
   - back/middlewares/logger.test.ts
     - test logging
 - [ ] init db

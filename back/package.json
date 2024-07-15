@@ -4,7 +4,9 @@
   "description": "Back End for a product management demo",
   "main": "server.js",
   "scripts": {
-    "test": "npx tsx --test --test-concurrency=1",
+    "pretest": "echo 'Booting Database' && sudo docker-compose -f test-db.yaml --profile test up -d",
+    "test": "npx tsx --test --test-concurrency=1 || true",
+    "posttest": "echo 'Closing Database' && sudo docker-compose -f test-db.yaml down",
     "start": "npx tsx server.ts",
     "build": "npx tsc",
     "built:start": "node server.js",

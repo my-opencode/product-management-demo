@@ -1,11 +1,11 @@
-import {describe, it, after} from "node:test";
+import { describe, it, after, before } from "node:test";
 import fs from "node:fs/promises";
 import assert from "node:assert";
 import path from "node:path";
 import startServer from "./server";
 
-async function sleep(){
-  await new Promise (r => setTimeout(r,200));
+async function sleep() {
+  await new Promise(r => setTimeout(r, 200));
 }
 
 describe(`Test log file creation`, function(){

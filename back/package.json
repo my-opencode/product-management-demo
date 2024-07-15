@@ -1,12 +1,12 @@
 {
   "name": "product-management-demo-backend",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Back End for a product management demo",
   "main": "server.js",
   "scripts": {
-    "pretest": "echo 'Booting Database' && sudo docker-compose -f test-db.yaml --profile test up -d",
+    "pretest": "echo 'Booting Database' && sudo docker-compose -f test-db.yaml --profile test up -d -V",
     "test": "npx tsx --test --test-concurrency=1 || true",
-    "posttest": "echo 'Closing Database' && sudo docker-compose -f test-db.yaml down",
+    "posttest": "echo 'Closing Database' && sudo docker-compose -f test-db.yaml down --volumes",
     "start": "npx tsx server.ts",
     "build": "npx tsc",
     "built:start": "node server.js",

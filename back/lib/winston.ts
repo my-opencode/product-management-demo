@@ -1,5 +1,11 @@
 import winston from "winston";
 
+/**
+ * Initialises a winston logger for a service
+ * @param {string} service Name of the service logging
+ * @param {string} [level] Minimum logging level. Defaults to info
+ * @returns {winston.Logger}
+ */
 export default function Logger(service:string, level="info"){
   const logger = winston.createLogger({
     level,

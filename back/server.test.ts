@@ -2,7 +2,7 @@ import {describe, it, after} from "node:test";
 import fs from "node:fs/promises";
 import assert from "node:assert";
 import path from "node:path";
-import server from "./server";
+import startServer from "./server";
 
 async function sleep(){
   await new Promise (r => setTimeout(r,200));
@@ -15,7 +15,7 @@ describe(`Test log file creation`, function(){
       await sleep();
   });
   it(`Should log errors to two files`, async function(){
-    await server();
+    await startServer();
     await sleep();
     const errMsg = `This is an error log.`;
     const testsContents = await fs.readFile(path.resolve(__dirname,`./logs/server.log`), {encoding:`utf-8`});

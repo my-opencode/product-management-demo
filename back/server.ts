@@ -1,7 +1,10 @@
 
 import Logger from "./lib/winston";
 
-export default async function server(){
+/**
+ * Entry point for the server.
+ */
+export default async function startServer(){
   const logger = Logger(`server`);
 
   console.log("Hello World");
@@ -11,7 +14,7 @@ export default async function server(){
 
 if (require.main === module) {
   console.log('called directly');
-  server();
+  startServer();
 } else {
   console.log('required as a module');
 }

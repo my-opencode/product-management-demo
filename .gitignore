@@ -2,4 +2,6 @@ devdoc
 back/node_modules
 back-dist
 back/tmp
+back/logs
 docker-logs
+back/docker-logs

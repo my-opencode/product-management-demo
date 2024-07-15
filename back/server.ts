@@ -1,5 +1,6 @@
 
 import Logger from "./lib/winston";
+import connector, {waitForDbServer} from "./database/connector";
 
 /**
  * Entry point for the server.
@@ -7,9 +8,15 @@ import Logger from "./lib/winston";
 export default async function startServer(){
   const logger = Logger(`server`);
 
-  console.log("Hello World");
-  logger.info("Console just printed 'hello world'.");
-  logger.error("This is an error log.");
+  logger.log(`info`,`Initializing start server sequence.`);
+  logger.log(`debug`,`Connecting DB.`);
+  await waitForDbServer();
+  const connectionPool = connector();
+  logger.log(`debug`, `Connected DB.`);
+  
+  logger.log(`debug`, `Disconnecting DB.`);
+  connectionPool.end();
+  logger.log(`debug`, `Disonnected DB.`);
 }
 
 if (require.main === module) {

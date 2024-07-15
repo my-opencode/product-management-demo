@@ -8,26 +8,31 @@ async function sleep() {
   await new Promise(r => setTimeout(r, 200));
 }
 
-describe(`Test log file creation`, function(){
-  after(async function(){
-      await fs.rm(path.resolve(__dirname,`./logs/error.log`));
-      await fs.rm(path.resolve(__dirname,`./logs/server.log`));
-      await sleep();
+describe(`Test log file creation`, function () {
+  before(async function () {
+    await sleep();
+  })
+  after(async function () {
+    // await fs.rm(path.resolve(__dirname,`./logs/error.log`));
+    await fs.rm(path.resolve(__dirname, `./logs/server.log`));
+    await sleep();
   });
-  it(`Should log errors to two files`, async function(){
+  it(`Should log notices to file`, async function () {
     await startServer();
     await sleep();
-    const errMsg = `This is an error log.`;
-    const testsContents = await fs.readFile(path.resolve(__dirname,`./logs/server.log`), {encoding:`utf-8`});
+    // const errMsg = `This is an error log.`;
+    const testsContents = await fs.readFile(path.resolve(__dirname, `./logs/server.log`), { encoding: `utf-8` });
+    const firstLog = JSON.parse(testsContents.split(`\n`).filter(v => !!v).slice(-1)[0]);
     assert.strictEqual(
-      JSON.parse(testsContents.split(`\n`).filter(v=>!!v).slice(-1)[0]).message,
-      errMsg
+      firstLog.message,
+      `Initializing start server sequence.`
     );
-    const errorContents = await fs.readFile(path.resolve(__dirname,`./logs/error.log`), {encoding:`utf-8`});
-    assert.strictEqual(
-      JSON.parse(errorContents.split(`\n`).filter(v=>!!v).slice(-1)[0]).message,
-      errMsg
-    );
+    assert.strictEqual(firstLog.level, `info`);
+    // const errorContents = await fs.readFile(path.resolve(__dirname,`./logs/error.log`), {encoding:`utf-8`});
+    // assert.strictEqual(
+    //   JSON.parse(errorContents.split(`\n`).filter(v=>!!v).slice(-1)[0]).message,
+    //   errMsg
+    // );
   });
 });
 

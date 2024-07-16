@@ -1,6 +1,7 @@
 import { before, beforeEach, describe, it, mock } from "node:test";
 import * as assert from "assert";
 import Product from "./Products";
+import AppSymbols from "../AppSymbols";
 
 describe(`Product class`, function () {
   let app: any;
@@ -21,7 +22,7 @@ describe(`Product class`, function () {
     it(`should call app.get`, async function () {
       await Product.listFromDatabase(app);
       assert.strictEqual(app.get.mock.callCount(), 1);
-      assert.strictEqual(app.get.mock.calls[0].arguments[0], `poolConnection`);
+      assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
     });
     it(`should call pool.execute`, async function () {
       await Product.listFromDatabase(app);

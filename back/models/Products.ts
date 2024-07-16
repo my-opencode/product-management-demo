@@ -1,5 +1,6 @@
 import { RowDataPacket } from "mysql2";
 import { RichApp } from "../types";
+import AppSymbols from "../AppSymbols";
 
 export interface ProductAsInTheJson extends RowDataPacket {
   id: number;
@@ -16,7 +17,7 @@ export interface ProductAsInTheJson extends RowDataPacket {
 
 export class Product {
   static async listFromDatabase(app:RichApp){
-    const pool = app.get(`poolConnection`);
+    const pool = app.get(AppSymbols.connectionPool);
     const [rows] = await pool.execute(`SELECT 
       p.id, 
       p.code, 

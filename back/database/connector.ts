@@ -47,6 +47,6 @@ export async function waitForDbServer(timeoutInSeconds = 60) {
 
   logger.log(`info`, `Connected after ${iterationCount} attempts.`);
   const result = await _c.query(`SELECT 1 AS nbr;`)
-  logger.log(`debug`, result);
+  // logger.log(`debug`, result);
   _c.end();
 }

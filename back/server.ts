@@ -5,7 +5,7 @@ import express from "express";
 import setRoutes from "./routes/router";
 import { Server } from "http";
 import AppSymbols from "./AppSymbols";
-const logger = Logger(`server`);
+const logger = Logger(`server`, `silly`);
 const PORT = process.env.APP_PORT ? parseInt(process.env.APP_PORT) : 3000;
 export interface StartServerOptions {
   skipDatabase?: boolean;
@@ -34,9 +34,15 @@ export default async function startServer(options?: StartServerOptions) {
     app.set(AppSymbols.connectionPool, connectionPool);
   } else logger.log(`warn`, `Skipping Database`);
 
-  if (!options?.skipRoutes)
+  // route logging
+  app.use((req,res,next)=>{
+    logger.log(`verbose`, `Received ${req.method} request to ${req.url}`);
+    next();
+  });
+
+  if (!options?.skipRoutes){
     setRoutes(app);
-  else logger.log(`warn`, `Skipping Routes`);
+  } else logger.log(`warn`, `Skipping Routes`);
 
   let server: Server;
   if (!options?.skipListen)
@@ -52,11 +58,11 @@ export default async function startServer(options?: StartServerOptions) {
   }
   app.on(`close`, shutdown);
   process.on('SIGTERM', () => {
-    logger.log(`warning`, `Received SIGTERM signal: closing server.`);
+    logger.log(`warn`, `Received SIGTERM signal: closing server.`);
     shutdown();
   });
   process.on('SIGINT', () => {
-    logger.log(`warning`, `Received SIGINT signal: closing server.`);
+    logger.log(`warn`, `Received SIGINT signal: closing server.`);
     shutdown();
   });
 

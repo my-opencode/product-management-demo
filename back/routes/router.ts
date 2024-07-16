@@ -1,8 +1,8 @@
 import { Express } from "express";
-import setProductsRoutes from "./products";
+import productsRouter from "./products";
 import default404 from "../controllers/default.404";
 
-export default function setRoutes(app:Express) {
-  setProductsRoutes(app);
+export default function setRoutes(app: Express) {
+  app.use(`/products`, productsRouter);
   app.use(default404);
 }

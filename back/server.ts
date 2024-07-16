@@ -1,7 +1,6 @@
 
 import Logger from "./lib/winston";
-import connector, {waitForDbServer} from "./database/connector";
-
+const logger = Logger(`server`);
 /**
  * Entry point for the server.
  */
@@ -20,8 +19,8 @@ export default async function startServer(){
 }
 
 if (require.main === module) {
-  console.log('called directly');
+  logger.log(`debug`, `Called directly`);
   startServer();
 } else {
-  console.log('required as a module');
+  logger.log(`debug`,`required as a module`);
 }

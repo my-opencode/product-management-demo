@@ -6,6 +6,9 @@ import startServer from "./server";
 import inject, { Response } from "light-my-request";
 import { Express } from "express";
 import { ProductAsInTheJson } from "./models/Products";
+import productsRouter from "./routes/products";
+import errorHandler from "./controllers/errorHandler";
+import default404 from "./controllers/default.404";
 
 async function sleep() {
   await new Promise(r => setTimeout(r, 200));
@@ -76,6 +79,33 @@ describe(`Test API endpoints`, function () {
     });
     it(`should return all products`, function () {
       assert.strictEqual(json.length, 30);
+    });
+  });
+});
+
+describe(`Test API error endpoint`, function () {
+  let app: Express;
+  before(async function () {
+    app = await startServer({ skipListen: true, skipRoutes:true });
+    
+    app.use(`/error`,function(){throw new Error(`Something went unexpectedly wrong!`);});
+    app.use(`/products`, productsRouter);
+    app.use(errorHandler);
+    app.use(default404);
+  });
+  after(function(){
+    app.emit(`close`);
+  });
+  describe(`Error Handler`, async function () {
+    let response: Response;
+    await before(async function () {
+      response = await inject(app, { method: `get`, url: `/error` });
+    });
+    it(`should return status code 500`, function () {
+      assert.strictEqual(response.statusCode, 500);
+    });
+    it(`should return json array`, function () {
+      assert.strictEqual(response.payload, `Unexpected error. Please contact our support if the error persists.`);
     });
   });
 });

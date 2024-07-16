@@ -11,7 +11,7 @@ describe(`Products get all controller`, function () {
   let response: any;
   let next: any;
   beforeEach(function () {
-    response.json.mock.resetCalls();
+    response.send.mock.resetCalls();
     response.status.mock.resetCalls();
     next.mock.resetCalls();
   });
@@ -28,10 +28,10 @@ describe(`Products get all controller`, function () {
       mockedProductListFromDb = Product.listFromDatabase as Mock<ListFromDatabase>;
       response = {
         status: mock.fn((statusCode: number) => response),
-        json: mock.fn(() => response)
+        send: mock.fn(() => response)
       };
       assert.strictEqual(response.status.mock.callCount(), 0);
-      assert.strictEqual(response.json.mock.callCount(), 0);
+      assert.strictEqual(response.send.mock.callCount(), 0);
       next = mock.fn(() => { });
       assert.strictEqual(next.mock.callCount(), 0);
       assert.strictEqual(mockedProductListFromDb.mock.callCount(), 0);
@@ -51,9 +51,9 @@ describe(`Products get all controller`, function () {
       });
       // await productsGetAll({} as unknown as Request, response, next);
     });
-    it(`should call response.json`, async function () {
+    it(`should call response.send`, async function () {
       await productsGetAll({} as unknown as Request, response, next).finally(() => {
-        assert.strictEqual(response.json.mock.callCount(), 1)
+        assert.strictEqual(response.send.mock.callCount(), 1)
         assert.strictEqual(next.mock.callCount(), 0)
       });
       // await productsGetAll({} as unknown as Request, response, next)
@@ -68,10 +68,10 @@ describe(`Products get all controller`, function () {
       mockedProductListFromDb = Product.listFromDatabase as Mock<ListFromDatabase>;
       response = {
         status: mock.fn((statusCode: number) => response),
-        json: mock.fn(() => response)
+        send: mock.fn(() => response)
       };
       assert.strictEqual(response.status.mock.callCount(), 0);
-      assert.strictEqual(response.json.mock.callCount(), 0);
+      assert.strictEqual(response.send.mock.callCount(), 0);
       next = mock.fn(() => { });
       assert.strictEqual(next.mock.callCount(), 0);
       assert.strictEqual(mockedProductListFromDb.mock.callCount(), 0);
@@ -80,7 +80,7 @@ describe(`Products get all controller`, function () {
       await productsGetAll({} as unknown as Request, response, next).finally(() => {
         assert.strictEqual(mockedProductListFromDb.mock.callCount(), 1)
         assert.strictEqual(response.status.mock.callCount(), 0)
-        assert.strictEqual(response.json.mock.callCount(), 0)
+        assert.strictEqual(response.send.mock.callCount(), 0)
         assert.strictEqual(next.mock.callCount(), 1)
       });
       // await productsGetAll({} as unknown as Request, response, next)

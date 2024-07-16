@@ -10,6 +10,7 @@ export default async function productsGetAll(request: Request, response: Respons
     const productList = await Product.listFromDatabase(request.app as Express);
     const payload = objectToJSON(productList);
     logger.log(`debug`,`Exiting productsGetAll`);
+    response.status(200).send(payload);
   } catch(err){
     logger.log(`debug`,`Error in productsGetAll`);
     next(err);

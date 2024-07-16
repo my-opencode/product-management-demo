@@ -1,18 +1,24 @@
-import { RequestHandler, Express } from "express";
+import express, { RequestHandler, Express, Router } from "express";
 import { describe, it, mock } from "node:test";
 import * as assert from "node:assert";
-import setProductsRoutes from "./products";
+import productsRouter from "./products";
 import productsGetAll from "../controllers/products-get-all";
 
-describe(`Products routes setter`, function(){
-  it(`should add GET /products route`, function(){
-    const app = {
-      get: mock.fn((path:string,...handlers:RequestHandler[])=>{})
-    };
-    assert.strictEqual(app.get.mock.callCount(), 0);
-    setProductsRoutes(app as unknown as Express);
-    assert.strictEqual(app.get.mock.callCount(), 1);
-    const call = app.get.mock.calls[0];
-    assert.deepStrictEqual(call.arguments, [`/products/`, productsGetAll]);
+describe(`Products router`, function () {
+  it(`should return a router function`, function () {
+    assert.strictEqual(productsRouter instanceof Function, true);
+  });
+  it(`with a stack`, function () {
+    assert.strictEqual(Array.isArray(productsRouter.stack), true);
+  });
+  it(`that is not empty`, function () {
+    assert.strictEqual(productsRouter.stack.length, 1);
+  });
+  it(`with a / route`, function () {
+    assert.strictEqual(productsRouter.stack[0]?.route?.path, `/`);
+  });
+  it(`whose get handle is products get all controller`, function () {
+    assert.strictEqual(productsRouter.stack[0]?.route?.stack?.[0]?.method, `get`);
+    assert.strictEqual(productsRouter.stack[0]?.route?.stack?.[0]?.handle, productsGetAll);
   });
 });

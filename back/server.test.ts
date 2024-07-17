@@ -4,7 +4,7 @@ import assert from "node:assert";
 import path from "node:path";
 import startServer from "./server";
 import inject, { Response } from "light-my-request";
-import { Express } from "express";
+import express, { Express } from "express";
 import { ProductAsInTheJson } from "./models/Products";
 import { CategoryFromDb } from "./models/Categories";
 import productsRouter from "./routes/products";
@@ -109,11 +109,13 @@ describe(`Test API error endpoint`, function () {
   before(async function () {
     app = await startServer({ skipListen: true, skipRoutes:true });
     
-    app.use(`/error`,function(){throw new Error(`Something went unexpectedly wrong!`);});
-    app.use(`/categories`, categoriesRouter);
-    app.use(`/products`, productsRouter);
-    app.use(errorHandler);
-    app.use(default404);
+    const router = express.Router();
+    router.use(`/error`, ()=>{throw new Error(`Oops!`)})
+    router.use(`/categories`, categoriesRouter);
+    router.use(`/products`, productsRouter);
+    router.use(errorHandler);
+    router.use(default404);
+    app.use(router);
   });
   after(function(){
     app.emit(`close`);
@@ -126,7 +128,7 @@ describe(`Test API error endpoint`, function () {
     it(`should return status code 500`, function () {
       assert.strictEqual(response.statusCode, 500);
     });
-    it(`should return json array`, function () {
+    it(`should return message`, function () {
       assert.strictEqual(response.payload, `Unexpected error. Please contact our support if the error persists.`);
     });
   });

@@ -16,8 +16,9 @@ export class ProductsService {
     getProducts(): Observable<Product[]> {
         if( ! ProductsService.productslist )
         {
-            this.http.get<any>('assets/products.json').subscribe(data => {
-                ProductsService.productslist = data.data;
+            this.http.get<any>(`/products`).subscribe(data => {
+                console.log(data);
+                ProductsService.productslist = data;
                 
                 this.products$.next(ProductsService.productslist);
             });
@@ -57,7 +58,7 @@ export class ProductsService {
 
         return this.products$;
     }
-
+    
 
     delete(id: number): Observable<Product[]>{
         ProductsService.productslist = ProductsService.productslist.filter(value => { return value.id !== id } );

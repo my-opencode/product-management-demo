@@ -1,0 +1,9 @@
+{
+  "/products": {
+    "target": "http://localhost:8181",
+    "secure": true,
+    "pathRewrite": {
+      "^/products": "http://localhost:8181/products"
+    }
+  }
+}

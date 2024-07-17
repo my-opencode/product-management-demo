@@ -55,7 +55,7 @@ WHERE deleted = 0;`);
   static async getById(app:RichApp, id:number){
     return await this.getFromDatabaseById(app, id);
   }
-  static async getFromDatabaseById(app:RichApp, id:number){
+  static async getFromDatabaseById(app:RichApp, id:number):Promise<ProductAsInTheJson|undefined>{
     const pool = app.get(AppSymbols.connectionPool);
     const [rows] = await pool.execute(`SELECT 
       p.id, 

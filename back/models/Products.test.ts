@@ -18,6 +18,25 @@ describe(`Product class`, function () {
       get: mock.fn((path: string) => pool)
     };
   });
+  describe(`list (listFromDatabase alias)`, function () {
+    it(`should call app.get`, async function () {
+      await Product.list(app);
+      assert.strictEqual(app.get.mock.callCount(), 1);
+      assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+    });
+    it(`should call pool.execute`, async function () {
+      await Product.list(app);
+      assert.strictEqual(pool.execute.mock.callCount(), 1);
+      assert.strictEqual(typeof pool.execute.mock.calls[0].arguments[0], `string`);
+    });
+    it(`should return results`, async function () {
+      const result = await Product.list(app);
+      assert.deepStrictEqual(
+        result,
+        [{ id: 1 }, { id: 2 }]
+      );
+    });
+  });
   describe(`listFromDatabase`, function () {
     it(`should call app.get`, async function () {
       await Product.listFromDatabase(app);
@@ -36,5 +55,5 @@ describe(`Product class`, function () {
         [{ id: 1 }, { id: 2 }]
       );
     });
-  })
+  });
 });

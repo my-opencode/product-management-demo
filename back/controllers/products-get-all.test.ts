@@ -24,8 +24,8 @@ describe(`Products get all controller`, function () {
 
     before(function () {
       const mockResult = [{ id: 1 } as unknown as ProductAsInTheJson];
-      Product.listFromDatabase = mock.fn(() => Promise.resolve(mockResult));
-      mockedProductListFromDb = Product.listFromDatabase as Mock<ListFromDatabase>;
+      Product.list = mock.fn(() => Promise.resolve(mockResult));
+      mockedProductListFromDb = Product.list as Mock<ListFromDatabase>;
       response = {
         status: mock.fn((statusCode: number) => response),
         send: mock.fn(() => response)
@@ -36,7 +36,7 @@ describe(`Products get all controller`, function () {
       assert.strictEqual(next.mock.callCount(), 0);
       assert.strictEqual(mockedProductListFromDb.mock.callCount(), 0);
     });
-    it(`should call Product.listFromDatabase`, async function () {
+    it(`should call Product.list`, async function () {
       await productsGetAll({} as unknown as Request, response, next).finally(() => {
         assert.strictEqual(mockedProductListFromDb.mock.callCount(), 1);
         assert.strictEqual(next.mock.callCount(), 0);
@@ -64,8 +64,8 @@ describe(`Products get all controller`, function () {
     let mockedProductListFromDb: any;
 
     before(function () {
-      Product.listFromDatabase = mock.fn(() => Promise.reject(`Oops`));
-      mockedProductListFromDb = Product.listFromDatabase as Mock<ListFromDatabase>;
+      Product.list = mock.fn(() => Promise.reject(`Oops`));
+      mockedProductListFromDb = Product.list as Mock<ListFromDatabase>;
       response = {
         status: mock.fn((statusCode: number) => response),
         send: mock.fn(() => response)

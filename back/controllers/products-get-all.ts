@@ -7,7 +7,7 @@ const logger = Logger(`controllers/products-get-all`);
 export default async function productsGetAll(request: Request, response: Response, next: NextFunction) {
   logger.log(`debug`,`Entering productsGetAll`);
   try {
-    const productList = await Product.listFromDatabase(request.app as Express);
+    const productList = await Product.list(request.app as Express);
     const payload = objectToJSON(productList);
     logger.log(`debug`,`Exiting productsGetAll`);
     response.status(200).send(payload);

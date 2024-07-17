@@ -16,6 +16,9 @@ export interface ProductAsInTheJson extends RowDataPacket {
 }
 
 export class Product {
+  static async list(app:RichApp){
+    return await this.listFromDatabase(app);
+  }
   static async listFromDatabase(app:RichApp){
     const pool = app.get(AppSymbols.connectionPool);
     const [rows] = await pool.execute(`SELECT 

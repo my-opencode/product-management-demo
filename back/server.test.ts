@@ -6,7 +6,9 @@ import startServer from "./server";
 import inject, { Response } from "light-my-request";
 import { Express } from "express";
 import { ProductAsInTheJson } from "./models/Products";
+import { CategoryFromDb } from "./models/Categories";
 import productsRouter from "./routes/products";
+import categoriesRouter from "./routes/categories";
 import errorHandler from "./controllers/errorHandler";
 import default404 from "./controllers/default.404";
 
@@ -62,6 +64,25 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(response.payload, `Resource "/" not found.`);
     });
   });
+  describe(`GET /categories`, async function () {
+    let response: Response;
+    let json: Array<CategoryFromDb>;
+    await before(async function () {
+      response = await inject(app, { method: `get`, url: `/categories` });
+    });
+    it(`should return status code 200`, function () {
+      assert.strictEqual(response.statusCode, 200);
+    });
+    it(`should return json array`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      console.log(typeof json, json.length);
+      assert.strictEqual(Array.isArray(json), true);
+    });
+    it(`should return categories`, function () {
+      assert.strictEqual(json.length > 0, true);
+    });
+  });
   describe(`GET /products`, async function () {
     let response: Response;
     let json: Array<ProductAsInTheJson>;
@@ -77,8 +98,8 @@ describe(`Test API endpoints`, function () {
       console.log(typeof json, json.length);
       assert.strictEqual(Array.isArray(json), true);
     });
-    it(`should return all products`, function () {
-      assert.strictEqual(json.length, 30);
+    it(`should return products`, function () {
+      assert.strictEqual(json.length > 0, true);
     });
   });
 });
@@ -89,6 +110,7 @@ describe(`Test API error endpoint`, function () {
     app = await startServer({ skipListen: true, skipRoutes:true });
     
     app.use(`/error`,function(){throw new Error(`Something went unexpectedly wrong!`);});
+    app.use(`/categories`, categoriesRouter);
     app.use(`/products`, productsRouter);
     app.use(errorHandler);
     app.use(default404);

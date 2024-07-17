@@ -15,18 +15,22 @@ describe(`Router routes setter`, function () {
     setRoutes(app as unknown as Express);
   });
   it(`should call app.use for each sub route`, function () {
-    assert.strictEqual(app.use.mock.callCount(), 3);
+    assert.strictEqual(app.use.mock.callCount(), 4);
   });
   it(`should add products routes`, function () {
     const call = app.use.mock.calls[0];
+    assert.strictEqual(call.arguments?.[0], `/categories`);
+  });
+  it(`should add products routes`, function () {
+    const call = app.use.mock.calls[1];
     assert.strictEqual(call.arguments?.[0], `/products`);
   });
   it(`should add use error route`, function () {
-    const call = app.use.mock.calls[1];
+    const call = app.use.mock.calls[2];
     assert.deepStrictEqual(call.arguments, [errorHandler]);
   });
   it(`should add use 404 route`, function () {
-    const call = app.use.mock.calls[2];
+    const call = app.use.mock.calls[3];
     assert.deepStrictEqual(call.arguments, [default404]);
   });
 });

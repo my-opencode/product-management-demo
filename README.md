@@ -476,21 +476,21 @@ In the real world, a customer rating table would make more sense, linking a user
   - back/server.test.ts
     - [ ] test GET /categories
 - [ ] list products — no options, no paging
-  - [ ] update openapi.yaml
+  - ~~[ ] update openapi.yaml~~ (prepopulated)
   - back/Models/Products.ts
     - [x] Products class
     - [x] static method listFromDatabase
       - [x] pass db error
-    - [ ] static method databaseResponseToInstance
-      - constructor throws
+    - ~~[ ] static method databaseResponseToInstance~~
+      - ~~constructor throws~~
     - ~~[ ] static method databaseResponseToInstanceArray~~
-    - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+    - [x] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
   - back/Models/Products.test.ts
-    - [ ] test new Products()
+    - ~~[ ] test new Products()~~
     - [x] test Products.listFromDatabase
-    - [ ] test Products.databaseResponseToInstance
-    - [ ] test Products.databaseResponseToInstanceArray
-    - [ ] test Products.List
+    - ~~[ ] test Products.databaseResponseToInstance~~
+    - ~~[ ] test Products.databaseResponseToInstanceArray~~
+    - [x] test Products.List
   - [x] back/views/objectToJSON.ts
   - [x] back/views/objectToJSON.test.ts
   - ~~back/views/Products.ts~~
@@ -557,6 +557,7 @@ In the real world, a customer rating table would make more sense, linking a user
       - pass db error
     - [ ] method save (calls to insertNewToDatabase or updateInDatabaseById depending whether id exists or not)
   - back/Models/Products.test.ts
+    - [ ] test new Products()
     - [ ] test Products.createNew
     - [ ] test Products.insertNewToDatabase
     - [ ] test Products.updateInDatabaseById
@@ -580,6 +581,8 @@ In the real world, a customer rating table would make more sense, linking a user
   - back/router.test.ts
     - [ ] test export PATCH /products/{id} route
   - back/Models/Products.ts
+    - [ ] static method databaseResponseToInstance
+      - constructor throws
     - [ ] updatedFields property
     - [ ] method updateField
       - validates one field value
@@ -587,6 +590,7 @@ In the real world, a customer rating table would make more sense, linking a user
       - update instance field value when new
       - add key to updated fields when new
   - back/Models/Products.test.ts
+    - [ ] test Products.databaseResponseToInstance
     - [ ] test Products.updateField
     - [ ] test save updated
   - back/controllers/products-update-by-id.ts

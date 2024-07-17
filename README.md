@@ -475,7 +475,7 @@ In the real world, a customer rating table would make more sense, linking a user
     - [ ] test valid list
   - back/server.test.ts
     - [ ] test GET /categories
-- [ ] list products — no options, no paging
+- [x] list products — no options, no paging
   - ~~[ ] update openapi.yaml~~ (prepopulated)
   - back/Models/Products.ts
     - [x] Products class

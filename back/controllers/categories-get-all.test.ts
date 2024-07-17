@@ -28,7 +28,8 @@ describe(`Categories get all controller`, function () {
       mockedProductListFromDb = Category.list as Mock<ListFromDatabase>;
       response = {
         status: mock.fn((statusCode: number) => response),
-        send: mock.fn(() => response)
+        send: mock.fn(() => response),
+        set: mock.fn(() => response),
       };
       assert.strictEqual(response.status.mock.callCount(), 0);
       assert.strictEqual(response.send.mock.callCount(), 0);
@@ -68,7 +69,8 @@ describe(`Categories get all controller`, function () {
       mockedProductListFromDb = Category.list as Mock<ListFromDatabase>;
       response = {
         status: mock.fn((statusCode: number) => response),
-        send: mock.fn(() => response)
+        send: mock.fn(() => response),
+        set: mock.fn(() => response),
       };
       assert.strictEqual(response.status.mock.callCount(), 0);
       assert.strictEqual(response.send.mock.callCount(), 0);

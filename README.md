@@ -543,7 +543,7 @@ In the real world, a customer rating table would make more sense, linking a user
     - [x] test export GET /products/{id} route
   - ~~[ ] update openapi.yaml~~
   - back/server.test.ts
-    - [ ] test GET /products/{id}
+    - [x] test GET /products/{id}
 - [ ] create new product
   - [ ] update openapi.yaml
   - back/router.ts

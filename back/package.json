@@ -1,6 +1,6 @@
 {
   "name": "product-management-demo-backend",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Back End for a product management demo",
   "main": "server.js",
   "scripts": {

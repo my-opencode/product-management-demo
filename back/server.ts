@@ -2,7 +2,7 @@
 import Logger from "./lib/winston";
 import connector, { waitForDbServer } from "./database/connector";
 import express from "express";
-import setRoutes from "./routes/router";
+import router from "./routes/router";
 import { Server } from "http";
 import AppSymbols from "./AppSymbols";
 const logger = Logger(`server`, `silly`);
@@ -41,7 +41,7 @@ export default async function startServer(options?: StartServerOptions) {
   });
 
   if (!options?.skipRoutes){
-    setRoutes(app);
+    app.use(router);
   } else logger.log(`warn`, `Skipping Routes`);
 
   let server: Server;

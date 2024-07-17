@@ -507,28 +507,41 @@ In the real world, a customer rating table would make more sense, linking a user
     - [x] back/routes/products.test.ts
     - [x] back/routes/router.test.ts
     - [x] back/server.test.ts
-- [ ] view product by id
-  - [ ] update openapi.yaml
-  - back/router.ts
-    - [ ] Add GET /products/{id} route
-  - back/router.test.ts
-    - [ ] test export GET /products/{id} route
-  - back/Models/Products.ts
-    - [ ] static method getFromDatabaseById
+- [x] view product by id
+  - [x] Add Id model
+    - back/models/Id.ts
+    - [x] Id.validator static method
+    - back/models/Id.test.ts
+    - [x] Id.validator tests
+  - [x] Add Products.getById static method
+    - back/Models/Products.ts
+    - [x] static method getFromDatabaseById
       - pass db error
-    - [ ] static method getById (calls to databaseResponseToInstance(getFromDatabaseById))
-  - back/Models/Products.test.ts
-    - [ ] test Products.getFromDatabaseById
-    - [ ] test Products.getById
-  - back/controllers/products-get-one-by-id.ts
-    - [ ] import logger
-    - [ ] get one product from model by id
-    - [ ] serialize to json with view
-    - [ ] return response
-  - back/controllers/products-get-one-by-id.test.ts
-    - [ ] test no id
-    - [ ] test unknown/deleted id
-    - [ ] test valid id
+    - [x] static method getById (calls to databaseResponseToInstance(getFromDatabaseById))
+    - back/Models/Products.test.ts
+    - [x] test Products.getFromDatabaseById
+    - [x] test Products.getById
+  - [x] URL param mw validation
+    - back/middleware/param-id.ts
+    - back/middleware/param-id.test.ts
+    - [x] add mw to router
+      - back/routes/router.ts
+  - [x] Controller
+    - back/controllers/products-get-one-by-id.ts
+    - [x] import logger
+    - [x] get one product from model by id
+    - [x] serialize to json with view
+    - [x] return response
+    - back/controllers/products-get-one-by-id.test.ts
+      - [x] test no id
+      - [x] test unknown/deleted id
+      - [x] test valid id
+  - [x] add GET /products/:id route
+    - back/routes/products.ts
+    - [x] Add GET /products/{id} route
+    - back/routes/products.test.ts
+    - [x] test export GET /products/{id} route
+  - ~~[ ] update openapi.yaml~~
   - back/server.test.ts
     - [ ] test GET /products/{id}
 - [ ] create new product

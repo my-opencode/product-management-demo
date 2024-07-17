@@ -339,57 +339,105 @@ In the real world, a customer rating table would make more sense, linking a user
 
 - alpha branch
 - [x] init logger
-  - back/middlewares/logger.ts
+  - [x] imported library instead using winston
+  - [x] back/lib/winston.ts
+  - [x] back/lib/winston.test.ts
+  - [x] testing standard out logs
+  - [x] testing file logs
+  - ~~back/middlewares/logger.ts~~
     - ~~mode from env~~
     - ~~log levels from env~~
     - ~~log file/dir from env~~
-  - back/middlewares/logger.test.ts
-    - test logging
-- [ ] init db
-  - back/databases/sqlite-connection.ts
-    - [ ] import logger
-    - [ ] install sqlite3
-    - [ ] sqlite file name from env
-    - [ ] reconnect or create db
-  - back/databases/sqlite-connection.test.ts
-    - [ ] test sqlite file is created
+  - ~~back/middlewares/logger.test.ts~~
+    ~~- test logging~~
+- [x] init db
+  - [x] mysql connection pool
+    - back/database/connector.ts
+    - back/database/connector.test.ts
+  - [x] config from env
+    - back/database/config.ts
+    - back/database/config.test.ts
+  - [x] env file
+    - back/database/devdb.env
+  - [x] utility to convert initial json to sql insert statement
+    - back/database/products.json.to.sql.js
+    - docker-entrypoint-initdb.d/002-database-state-insert.sql
+  - [x] automated tests with live test db
+    - back/test-db.yaml
+  - [x] database creation script
+    - database-model.mwb
+    - docker-entrypoint-initdb.d/001-database-model.sql
+  ~~- back/databases/sqlite-connection.ts~~
+    ~~- [ ] import logger~~
+    ~~- [ ] install sqlite3~~
+    ~~- [ ] sqlite file name from env~~
+    ~~- [ ] reconnect or create db~~
+  ~~- back/databases/sqlite-connection.test.ts~~
+    ~~- [ ] test sqlite file is created~~
   - back/server.ts
-    - [ ] import logger
-    - [ ] import db
+    - [x] import logger
+    - [x] import db
   - back/server.test.ts
-    - [ ] test sqlite file is created
-- [ ] init server
-  - [ ] openapi.yaml
+    - [x] test logs
+    - [x] test db connection
+    ~~- [ ] test sqlite file is created~~
+- [x] init server
+  - [x] openapi.yaml
   - back/server.ts
-    - [ ] install Express
-    - [ ] port & domain from env
-    - [ ] error handler
-  - back/router.ts
-    - [ ] dummy route GET /products
-    - [ ] default 404 route
+    - [x] install Express
+    - [x] port ~~& domain~~ from env
+    - [x] export app for tests
+    - [x] conditional call to main method
+      - does not call if imported
+      - calls if entrypoint
+  - [x] error handler
+    - back/controllers/errorHandler.ts
+    - back/controllers/errorHandler.test.ts
   - back/server.ts
-    - [ ] listen
-  - back/controllers/products-get-all.ts
-    - [ ] dummy controller --> 200
-  - back/controllers/products-get-all.test.ts
-    - [ ] test dummy controller
-  - back/router.test.ts
-    - [ ] test route exports
+    - [x] listen
+  - [x] products route and controller
+    - directly implemented a real get /products controller
+      - checking relevant tasks further ahead
+    - back/controllers/products-get-all.ts
+      - [x] ~~dummy~~ controller --> 200
+    - back/controllers/products-get-all.test.ts
+      - [x] test ~~dummy~~ controller
+    - back/routes/products.ts
+      - [x] /products sub router
+    - back/routes/products.test.ts
+      - [x] test router export
+  - [x] centralized router
+  - back/routes/router.ts
+    - [x] ~~dummy~~ route GET /products
+    - [x] error handler route
+    - [x] default 404 route
+    - back/routes/router.test.ts
+      - [x] test route exports
   - back/server.test.ts
-    - [ ] test listen
-    - [ ] test error
-    - [ ] test 404
-    - [ ] test GET /products
-- [ ] serve
-  - npm script
-  - makefile script
-- [ ] build
-  - back-built directory
-  - npm script
-  - makefile script
-- [ ] run build
-  - npm script
-  - makefile script
+    - ~~[ ] test listen~~
+    - [x] test routes
+    - [x] test error
+    - [x] test 404
+    - [x] test GET /products
+- [x] serve
+  - [x] npm script
+    - npm start
+  - [x] makefile script
+    - make start
+- [x] build
+  - [x] build TS->JS into back-dist directory
+  - [x] npm script
+    - npm run build
+  - [x] makefile script
+    make build-back
+  - [x] [DEPRECATED] stand alone dockerfile build of the backend
+  - [x] Docker build within docker-compose
+- [x] run build
+  - [x] npm script
+    - [DEPRECATED][TO-REFACTOR] npm run built:start
+  - [x] makefile script
+    - [DEPRECATED] test-built
+    - make start
 - [ ] list categories
   - [ ] update openapi.yaml
   - back/router.ts
@@ -430,36 +478,42 @@ In the real world, a customer rating table would make more sense, linking a user
 - [ ] list products — no options, no paging
   - [ ] update openapi.yaml
   - back/Models/Products.ts
-    - [ ] Products class
-    - [ ] static method listFromDatabase
-      - pass db error
+    - [x] Products class
+    - [x] static method listFromDatabase
+      - [x] pass db error
     - [ ] static method databaseResponseToInstance
       - constructor throws
-    - [ ] static method databaseResponseToInstanceArray
+    - ~~[ ] static method databaseResponseToInstanceArray~~
     - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
   - back/Models/Products.test.ts
     - [ ] test new Products()
-    - [ ] test Products.listFromDatabase
+    - [x] test Products.listFromDatabase
     - [ ] test Products.databaseResponseToInstance
     - [ ] test Products.databaseResponseToInstanceArray
     - [ ] test Products.List
-  - back/views/Products.ts
-    - [ ] toJSON
-    - [ ] listArrayToJSON
-  - back/views/Products.test.ts
-    - [ ] test toJSON
-    - [ ] test listArrayToJSON
+  - [x] back/views/objectToJSON.ts
+  - [x] back/views/objectToJSON.test.ts
+  - ~~back/views/Products.ts~~
+    - ~~[ ] toJSON~~
+    - ~~[ ] listArrayToJSON~~
+  - ~~back/views/Products.test.ts~~
+    - ~~[ ] test toJSON~~
+    - ~~[ ] test listArrayToJSON~~
   - back/controllers/products-list-all.ts
-    - [ ] import logger
-    - [ ] get list from model
-    - [ ] serialize to json with view
-    - [ ] return response
+    - [x] import logger
+    - [x] get list from model
+    - [x] serialize to json with view
+    - [x] return response
   - back/controllers/products-list-all.test.ts
-    - [ ] test empty list
-    - [ ] test malformed list
-    - [ ] test valid list
-  - back/server.test.ts
-    - [ ] update test GET /products
+    - [x] test with db error
+    - [x] test withouterror
+    - ~~[ ] test empty list~~
+    - ~~[ ] test malformed list~~
+    - ~~[ ] test valid list~~
+  - update tests
+    - [x] back/routes/products.test.ts
+    - [x] back/routes/router.test.ts
+    - [x] back/server.test.ts
 - [ ] view product by id
   - [ ] update openapi.yaml
   - back/router.ts
@@ -710,25 +764,27 @@ In the real world, a customer rating table would make more sense, linking a user
 - merge main branch
 
 - beta sql branch
-- [ ] switch sqlite to mysql
-  - back/docker-compose.yaml
-    - [ ] database container
-    - [ ] config from env/secret
-  - back/makefile
-    - [ ] update with db from docker-compose
-  - back/package.json
-    - [ ] update with db from docker-compose
-  - back/databases/sqlite-connection.ts
-    - [ ] remove file
-  - back/databases/sqlite-connection.test.ts
-    - [ ] remove file
-  - back/databases/sql-connection.ts
-    - [ ] import mysql library
-    - [ ] auth from env/secret
-  - back/databases/sql-connection.test.ts
-    - [ ] test connection
-  - back/models/*
-    - [ ] convert SQL syntax from sqlite to mysql
+- [x] ~~switch sqlite to~~ mysql
+  - [x] dockerized db
+    - back/test-db.yaml
+    - docker-compose.yaml
+    - [x] database container
+    - [x] config from env/secret
+  - ~~back/makefile~~
+    - ~~[ ] update with db from docker-compose~~
+  - ~~back/package.json~~
+    - ~~[ ] update with db from docker-compose~~
+  - ~~back/databases/sqlite-connection.ts~~
+    - ~~[ ] remove file~~
+  - ~~back/databases/sqlite-connection.test.ts~~
+    - ~~[ ] remove file~~
+  - ~~back/databases/sql-connection.ts~~
+    - ~~[ ] import mysql library~~
+    - ~~[ ] auth from env/secret~~
+  - ~~back/databases/sql-connection.test.ts~~
+    ~~- [ ] test connection~~
+  - ~~back/models/*~~
+    ~~- [ ] convert SQL syntax from sqlite to mysql~~
 - [ ] automated CI/CD github tests
   - [ ] update docker-compose.yaml
   - [ ] add necessary Dockerfiles
@@ -787,15 +843,15 @@ In the real world, a customer rating table would make more sense, linking a user
 # 03 Core features
 
 - [ ] GET /products
-  - [ ] Server initializes db connection (using secrets)
-  - [ ] Server listens to port
-  - [ ] Server default route --> 404
+  - [x] Server initializes db connection (using secrets)
+  - [x] Server listens to port
+  - [x] Server default route --> 404
   - [ ] Server mw: failsafe when db offline --> 503
-  - [ ] Product model can select from db
+  - [x] Product model can select from db
   - [ ] DataHistory model can insert to db
-  - [ ] Product model can serialize db response into JSON
-  - [ ] Server route for GET /products
-  - [ ] Server controller for route
+  - [x] Product model can serialize db response into JSON
+  - [x] Server route for GET /products
+  - [x] Server controller for route
     - empty result is not an error
     - on applicative error --> 500
     - query db throught model

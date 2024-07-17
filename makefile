@@ -4,6 +4,7 @@
 start:
 	make build-back;
 	mkdir -p ./docker-logs/controllers;
+	sudo docker builder prune -f;
 	sudo docker-compose --profile serve up -V --force-recreate;
 
 # test-back

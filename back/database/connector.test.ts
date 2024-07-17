@@ -2,7 +2,6 @@ import connector, {waitForDbServer} from "./connector";
 import { describe, it, after, before } from "node:test";
 import * as assert from "node:assert";
 import mysql, { FieldPacket, RowDataPacket } from "mysql2/promise";
-import databaseConfig from "./config";
 
 // from mysql2/lib/constants/types.js
 const typeDict: { [key: number]: string } = {

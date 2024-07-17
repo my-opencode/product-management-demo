@@ -56,4 +56,42 @@ describe(`Product class`, function () {
       );
     });
   });
+  describe(`getById (getFromDatabaseById alias)`, function () {
+    it(`should call app.get`, async function () {
+      await Product.getById(app, 1);
+      assert.strictEqual(app.get.mock.callCount(), 1);
+      assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+    });
+    it(`should call pool.execute`, async function () {
+      await Product.getById(app,1);
+      assert.strictEqual(pool.execute.mock.callCount(), 1);
+      assert.strictEqual(typeof pool.execute.mock.calls[0].arguments[0], `string`);
+    });
+    it(`should return results`, async function () {
+      const result = await Product.getById(app, 1);
+      assert.deepStrictEqual(
+        result,
+        { id: 1 }
+      );
+    });
+  });
+  describe(`getFromDatabaseById`, function () {
+    it(`should call app.get`, async function () {
+      await Product.getFromDatabaseById(app, 1);
+      assert.strictEqual(app.get.mock.callCount(), 1);
+      assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+    });
+    it(`should call pool.execute`, async function () {
+      await Product.getFromDatabaseById(app,1);
+      assert.strictEqual(pool.execute.mock.callCount(), 1);
+      assert.strictEqual(typeof pool.execute.mock.calls[0].arguments[0], `string`);
+    });
+    it(`should return results`, async function () {
+      const result = await Product.getFromDatabaseById(app, 1);
+      assert.deepStrictEqual(
+        result,
+        { id: 1 }
+      );
+    });
+  });
 });

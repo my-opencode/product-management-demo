@@ -438,43 +438,36 @@ In the real world, a customer rating table would make more sense, linking a user
   - [x] makefile script
     - [DEPRECATED] test-built
     - make start
-- [ ] list categories
-  - [ ] update openapi.yaml
-  - back/router.ts
-    - [ ] Add GET /categories route
-  - back/router.test.ts
-    - [ ] test export GET /categories route
-  - back/Models/Categories.ts
-    - [ ] Categories class
+- [x] list categories
+  - ~~[ ] update openapi.yaml~~ (prepopulated)
+  - [x] Add model
+    - back/Models/Categories.ts
+    - [x] Categories class
       - string name
       - number id
-    - [ ] static method listFromDatabase
+    - [x] static method listFromDatabase
       - pass db error
-    - [ ] static method databaseResponseToInstance
-      - constructor throws
-    - [ ] static method databaseResponseToInstanceArray
-    - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+    - [x] static method List (alias)
   - back/Models/Categories.test.ts
-    - [ ] test new Categories()
-    - [ ] test Categories.listFromDatabase
-    - [ ] test Categories.databaseResponseToInstance
-    - [ ] test Categories.databaseResponseToInstanceArray
-    - [ ] test Categories.List
-  - back/views/Categories.ts
-    - [ ] listArrayToJSON
-  - back/views/Categories.test.ts
-    - [ ] test listArrayToJSON
+    - [x] test Categories.listFromDatabase
+    - [x] test Categories.list
   - back/controllers/categories-list-all.ts
-    - [ ] import logger
-    - [ ] get list from model
-    - [ ] serialize to json with view
-    - [ ] return response
+    - [x] import logger
+    - [x] get list from model
+    - [x] serialize to json with view
+    - [x] return response
   - back/controllers/categories-list-all.test.ts
-    - [ ] test empty list
-    - [ ] test malformed list
-    - [ ] test valid list
+    - [x] test with db error
+    - [x] test without error
+  - Add route
+    - [x] Add GET /categories route
+      - back/routes/categories.ts
+      - back/routes/router.ts
+    - [x] test export GET /categories route
+      - back/routes/categories.test.ts
+      - back/routes/router.test.ts
   - back/server.test.ts
-    - [ ] test GET /categories
+    - [x] test GET /categories
 - [x] list products — no options, no paging
   - ~~[ ] update openapi.yaml~~ (prepopulated)
   - back/Models/Products.ts

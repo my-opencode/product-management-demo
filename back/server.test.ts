@@ -102,6 +102,42 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(json.length > 0, true);
     });
   });
+  describe(`GET /products/:id`, async function () {
+    let response: Response;
+    let json: ProductAsInTheJson;
+    await before(async function () {
+      response = await inject(app, { method: `get`, url: `/products/1` });
+    });
+    it(`should return status code 200`, function () {
+      assert.strictEqual(response.statusCode, 200);
+    });
+    it(`should return json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      console.log(typeof json, json.length);
+      assert.strictEqual(json.id, 1);
+    });
+  });
+  describe(`GET /products/:id 400`, async function () {
+    let response: Response;
+    let json: ProductAsInTheJson;
+    await before(async function () {
+      response = await inject(app, { method: `get`, url: `/products/0` });
+    });
+    it(`should return status code 400`, function () {
+      assert.strictEqual(response.statusCode, 400);
+    });
+  });
+  describe(`GET /products/:id 404`, async function () {
+    let response: Response;
+    let json: ProductAsInTheJson;
+    await before(async function () {
+      response = await inject(app, { method: `get`, url: `/products/999999` });
+    });
+    it(`should return status code 404`, function () {
+      assert.strictEqual(response.statusCode, 404);
+    });
+  });
 });
 
 describe(`Test API error endpoint`, function () {

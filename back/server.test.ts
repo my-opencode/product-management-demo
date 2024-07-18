@@ -149,17 +149,17 @@ describe(`Test API endpoints`, function () {
 describe(`Test API error endpoint`, function () {
   let app: Express;
   before(async function () {
-    app = await startServer({ skipListen: true, skipRoutes:true });
-    
+    app = await startServer({ skipListen: true, skipRoutes: true });
+
     const router = express.Router();
-    router.use(`/error`, ()=>{throw new Error(`Oops!`)})
+    router.use(`/error`, () => { throw new Error(`Oops!`) })
     router.use(`/categories`, categoriesRouter);
     router.use(`/products`, productsRouter);
     router.use(errorHandler);
     router.use(default404);
     app.use(router);
   });
-  after(function(){
+  after(function () {
     app.emit(`close`);
   });
   describe(`Error Handler`, async function () {

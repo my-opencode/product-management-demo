@@ -37,12 +37,12 @@ export default async function startServer(options?: StartServerOptions) {
   } else logger.log(`warn`, `Skipping Database`);
 
   // route logging
-  app.use((req,res,next)=>{
+  app.use((req, res, next) => {
     logger.log(`verbose`, `Received ${req.method} request to ${req.url}`);
     next();
   });
 
-  if (!options?.skipRoutes){
+  if (!options?.skipRoutes) {
     app.use(router);
   } else logger.log(`warn`, `Skipping Routes`);
 
@@ -76,5 +76,5 @@ if (require.main === module) {
   logger.log(`debug`, `Called directly`);
   startServer();
 } else {
-  logger.log(`debug`,`required as a module`);
+  logger.log(`debug`, `required as a module`);
 }

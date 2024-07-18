@@ -7,6 +7,12 @@ start:
 	sudo docker builder prune -f;
 	sudo docker-compose --profile serve up -V --force-recreate;
 
+
+# stop
+# Stops running containers
+stop:
+	sudo docker-compose down -v;
+
 # test-back
 # Runs tests in the back directory
 test-back:

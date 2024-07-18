@@ -16,6 +16,11 @@ start-attached:
 	sudo docker builder prune -f;
 	sudo docker-compose --profile serve up -V --force-recreate;
 
+# start-all
+# Starts back and front ends
+start-all:
+	make start;
+	make serve-front;
 
 # stop
 # Stops running containers

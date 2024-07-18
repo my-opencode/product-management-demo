@@ -13,6 +13,11 @@ start:
 stop:
 	sudo docker-compose down -v;
 
+# serve-front
+# Starts the front server
+serve-front:
+	cd front && npm run start;
+
 # test-back
 # Runs tests in the back directory
 test-back:

@@ -54,8 +54,14 @@ describe(`Test API endpoints`, function () {
   before(async function () {
     app = await startServer({ skipListen: true });
   });
-  after(function(){
+  after(function () {
     app.emit(`close`);
+  });
+  describe(`CORS`, function () {
+    it(`should allow cross origin in header`, async function () {
+      const response = await inject(app, { method: `get`, url: `/` });
+      assert.strictEqual(response.headers["access-control-allow-origin"], `*`);
+    });
   });
   describe(`404`, function () {
     it(`should return status code 404`, async function () {

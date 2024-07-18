@@ -5,6 +5,7 @@ import express from "express";
 import router from "./routes/router";
 import { Server } from "http";
 import AppSymbols from "./AppSymbols";
+import setCors from "./middleware/cors";
 const logger = Logger(`server`, `silly`);
 const PORT = process.env.APP_PORT ? parseInt(process.env.APP_PORT) : 3000;
 export interface StartServerOptions {
@@ -17,6 +18,7 @@ export interface StartServerOptions {
  */
 export default async function startServer(options?: StartServerOptions) {
   const app = express();
+  setCors(app);
 
   let disconnectDatabase = function () { };
   logger.log(`info`, `Initializing start server sequence.`);

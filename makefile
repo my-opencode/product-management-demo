@@ -5,6 +5,15 @@ start:
 	make build-back;
 	mkdir -p ./docker-logs/controllers;
 	sudo docker builder prune -f;
+	sudo docker-compose --profile serve up -V --force-recreate -d;
+
+# start-attached
+# - calls back end build
+# - call docker compose to build and run
+start-attached:
+	make build-back;
+	mkdir -p ./docker-logs/controllers;
+	sudo docker builder prune -f;
 	sudo docker-compose --profile serve up -V --force-recreate;
 
 

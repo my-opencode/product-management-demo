@@ -5,3 +5,4 @@ back/tmp
 back/logs
 docker-logs
 back/docker-logs
+tmp

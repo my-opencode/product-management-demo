@@ -545,80 +545,89 @@ In the real world, a customer rating table would make more sense, linking a user
   - back/server.test.ts
     - [x] test GET /products/{id}
 - [ ] create new product
+  - [ ] Model
+    - back/Models/Products.ts
+      - [ ] static method ensureUniqueActiveCode
+        - stored procedure in mysql
+      - [ ] static method createNew
+        - validates post form fields
+        - ensure code is unique among active products
+        - initialises instance without id
+      - [ ] static method insertNewToDatabase
+        - pass db error
+      - [ ] static method updateInDatabaseById
+        - pass db error
+      - [ ] method save (calls to insertNewToDatabase or updateInDatabaseById depending whether id exists or not)
+    - back/Models/Products.test.ts
+      - [ ] test new Products()
+      - [ ] test Products.createNew
+      - [ ] test Products.insertNewToDatabase
+      - [ ] test Products.updateInDatabaseById
+      - [ ] test save
+  - [ ] Controller
+    - back/controllers/products-create.ts
+      - [ ] import logger
+      - [ ] validate post data with model
+      - [ ] 422 if invalid data
+      - [ ] 409 if code exists among active products
+      - [ ] save product to db with model
+      - [ ] serialize to json with view
+      - [ ] return response
+    - back/controllers/products-create.test.ts
+      - [ ] test invalid form
+      - [ ] test existing code
+      - [ ] test valid code
+  - [ ] Route
+    - [ ] update back/routes/products.ts
+    - [ ] update test back/routes/products.test.ts
+  - [ ] Test updates
+    - back/router.test.ts
+      - [ ] test export POST /products route
+    - back/server.test.ts
+      - [ ] test endpoint
   - [ ] update openapi.yaml
-  - back/router.ts
-    - [ ] Add POST /products route
-  - back/router.test.ts
-    - [ ] test export POST /products route
-  - back/Models/Products.ts
-    - [ ] static method ensureUniqueActiveCode
-      - stored procedure in mysql
-    - [ ] static method createNew
-      - validates post form fields
-      - ensure code is unique among active products
-      - initialises instance without id
-    - [ ] static method insertNewToDatabase
-      - pass db error
-    - [ ] static method updateInDatabaseById
-      - pass db error
-    - [ ] method save (calls to insertNewToDatabase or updateInDatabaseById depending whether id exists or not)
-  - back/Models/Products.test.ts
-    - [ ] test new Products()
-    - [ ] test Products.createNew
-    - [ ] test Products.insertNewToDatabase
-    - [ ] test Products.updateInDatabaseById
-    - [ ] test save
-  - back/controllers/products-create.ts
-    - [ ] import logger
-    - [ ] validate post data with model
-    - [ ] 422 if invalid data
-    - [ ] 409 if code exists among active products
-    - [ ] save product to db with model
-    - [ ] serialize to json with view
-    - [ ] return response
-  - back/controllers/products-create.test.ts
-    - [ ] test invalid form
-    - [ ] test existing code
-    - [ ] test valid code
 - [ ] update product
+  - [ ] Model
+    - back/Models/Products.ts
+      - [ ] static method databaseResponseToInstance
+        - constructor throws
+      - [ ] updatedFields property
+      - [ ] method updateField
+        - validates one field value
+        - if field is code, ensures code is unique among active products
+        - update instance field value when new
+        - add key to updated fields when new
+    - back/Models/Products.test.ts
+      - [ ] test Products.databaseResponseToInstance
+      - [ ] test Products.updateField
+      - [ ] test save updated
+  - [ ] Controller
+    - back/controllers/products-update-by-id.ts
+      - [ ] import logger
+      - [ ] get product with model
+      - [ ] 404 if not found
+      - [ ] update fields with model
+      - [ ] 422 if invalid data
+      - [ ] 409 if code exists among active products
+      - [ ] save product to db with model
+      - [ ] serialize to json with view
+      - [ ] return response
+    - back/controllers/products-update-by-id.test.ts
+      - [ ] test invalid form
+      - [ ] test existing code
+      - [ ] test valid data
+  - [ ] Routes
+    - back/routes/products.ts
+      - [ ] Add PATCH /products/{id} route
+    - back/routes/products.test.ts
+  - [ ] Test updates
+    - back/router.test.ts
+      - [ ] test export PATCH /products/{id} route
+    - back/server.test.ts
+      - [ ] test endpoint
   - [ ] update openapi.yaml
-  - back/router.ts
-    - [ ] Add PATCH /products/{id} route
-  - back/router.test.ts
-    - [ ] test export PATCH /products/{id} route
-  - back/Models/Products.ts
-    - [ ] static method databaseResponseToInstance
-      - constructor throws
-    - [ ] updatedFields property
-    - [ ] method updateField
-      - validates one field value
-      - if field is code, ensures code is unique among active products
-      - update instance field value when new
-      - add key to updated fields when new
-  - back/Models/Products.test.ts
-    - [ ] test Products.databaseResponseToInstance
-    - [ ] test Products.updateField
-    - [ ] test save updated
-  - back/controllers/products-update-by-id.ts
-    - [ ] import logger
-    - [ ] get product with model
-    - [ ] 404 if not found
-    - [ ] update fields with model
-    - [ ] 422 if invalid data
-    - [ ] 409 if code exists among active products
-    - [ ] save product to db with model
-    - [ ] serialize to json with view
-    - [ ] return response
-  - back/controllers/products-update-by-id.test.ts
-    - [ ] test invalid form
-    - [ ] test existing code
-    - [ ] test valid data
 - [ ] delete product
-  - [ ] update openapi.yaml
-  - back/router.ts
-    - [ ] Add DELETE /products/{id} route
-  - back/router.test.ts
-    - [ ] test export DELETE /products/{id} route
+  - [ ] Model
   - back/Models/Products.ts
     - [ ] static method updateAsDeletedInDatabaseById
     - [ ] static method deleteById calls updateAsDeletedInDatabaseById
@@ -626,107 +635,126 @@ In the real world, a customer rating table would make more sense, linking a user
   - back/Models/Products.test.ts
     - [ ] test Products.updateAsDeletedInDatabaseById
     - [ ] test Products.deleteById
-  - back/controllers/products-delete-by-id.ts
-    - [ ] import logger
-    - [ ] call delete by id with model
-    - [ ] 404 if not found
-    - [ ] 500 if error
-    - [ ] return 204 response
-  - back/controllers/products-delete-by-id.test.ts
-    - [ ] test missing id
-    - [ ] test valid id
+  - [ ] Controller
+    - back/controllers/products-delete-by-id.ts
+      - [ ] import logger
+      - [ ] call delete by id with model
+      - [ ] 404 if not found
+      - [ ] 500 if error
+      - [ ] return 204 response
+    - back/controllers/products-delete-by-id.test.ts
+      - [ ] test missing id
+      - [ ] test valid id
+  - [ ] Routes
+    - back/routes/products.ts
+      - [ ] Add DELETE /products/{id} route
+    - back/routes/products.test.ts
+  - [ ] Test updates
+    - back/router.test.ts
+      - [ ] test export DELETE /products/{id} route
+    - back/server.test.ts
+      - [ ] test endpoint
+  - [ ] update openapi.yaml
 - merge main branch
 
 - beta roles branch
 - [ ] list roles
+  - [ ] Model
+    - back/Models/Roles.ts
+      - [ ] Roles class
+        - string name
+        - number id
+      - [ ] static method listFromDatabase
+        - pass db error
+      - [ ] static method databaseResponseToInstance
+        - constructor throws
+      - [ ] static method databaseResponseToInstanceArray
+      - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+    - back/Models/Roles.test.ts
+      - [ ] test new Roles()
+      - [ ] test Roles.listFromDatabase
+      - [ ] test Roles.databaseResponseToInstance
+      - [ ] test Roles.databaseResponseToInstanceArray
+      - [ ] test Roles.List
+  - [ ] Controller
+    - back/controllers/roles-list-all.ts
+      - [ ] import logger
+      - [ ] get list from model
+      - [ ] serialize to json with view
+      - [ ] return response
+    - back/controllers/roles-list-all.test.ts
+      - [ ] test empty list
+      - [ ] test malformed list
+      - [ ] test valid list
+  - [ ] Routes
+    - back/routes/roles.ts
+      - [ ] Add GET /roles route
+    - back/routes/roles.test.ts
+  - [ ] Test updates
+    - back/router.test.ts
+      - [ ] test export GET /roles route
+    - back/server.test.ts
+      - [ ] test GET /roles
   - [ ] update openapi.yaml
-  - back/router.ts
-    - [ ] Add GET /roles route
-  - back/router.test.ts
-    - [ ] test export GET /roles route
-  - back/Models/Roles.ts
-    - [ ] Roles class
-      - string name
-      - number id
-    - [ ] static method listFromDatabase
-      - pass db error
-    - [ ] static method databaseResponseToInstance
-      - constructor throws
-    - [ ] static method databaseResponseToInstanceArray
-    - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
-  - back/Models/Roles.test.ts
-    - [ ] test new Roles()
-    - [ ] test Roles.listFromDatabase
-    - [ ] test Roles.databaseResponseToInstance
-    - [ ] test Roles.databaseResponseToInstanceArray
-    - [ ] test Roles.List
-  - back/views/Roles.ts
-    - [ ] listArrayToJSON
-  - back/views/Roles.test.ts
-    - [ ] test listArrayToJSON
-  - back/controllers/roles-list-all.ts
-    - [ ] import logger
-    - [ ] get list from model
-    - [ ] serialize to json with view
-    - [ ] return response
-  - back/controllers/roles-list-all.test.ts
-    - [ ] test empty list
-    - [ ] test malformed list
-    - [ ] test valid list
-  - back/server.test.ts
-    - [ ] test GET /roles
 - [ ] list users
+  - [ ] Model
+    - back/Models/Users.ts
+      - [ ] Users class
+      - [ ] static method listFromDatabase
+        - pass db error
+      - [ ] static method databaseResponseToInstance
+        - constructor throws
+      - [ ] static method databaseResponseToInstanceArray
+      - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+    - back/Models/Products.test.ts
+      - [ ] test new Products()
+      - [ ] test Products.listFromDatabase
+      - [ ] test Products.databaseResponseToInstance
+      - [ ] test Products.databaseResponseToInstanceArray
+      - [ ] test Products.List
+  - [ ] Controller
+    - back/controllers/products-list-all.ts
+      - [ ] import logger
+      - [ ] get list from model
+      - [ ] serialize to json with view
+      - [ ] return response
+    - back/controllers/products-list-all.test.ts
+      - [ ] test empty list
+      - [ ] test malformed list
+      - [ ] test valid list
+  - [ ] Routes
+  - [ ] Test updates
+    - back/routes/router.test.ts
+      - [ ] test exports GET /users route
+    - back/server.test.ts
+      - [ ] update test GET /users
   - [ ] update openapi.yaml
-  - back/Models/Users.ts
-    - [ ] Users class
-    - [ ] static method listFromDatabase
-      - pass db error
-    - [ ] static method databaseResponseToInstance
-      - constructor throws
-    - [ ] static method databaseResponseToInstanceArray
-    - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
-  - back/Models/Products.test.ts
-    - [ ] test new Products()
-    - [ ] test Products.listFromDatabase
-    - [ ] test Products.databaseResponseToInstance
-    - [ ] test Products.databaseResponseToInstanceArray
-    - [ ] test Products.List
-  - back/views/Products.ts
-    - [ ] toJSON
-    - [ ] listArrayToJSON
-  - back/views/Products.test.ts
-    - [ ] test toJSON
-    - [ ] test listArrayToJSON
-  - back/controllers/products-list-all.ts
-    - [ ] import logger
-    - [ ] get list from model
-    - [ ] serialize to json with view
-    - [ ] return response
-  - back/controllers/products-list-all.test.ts
-    - [ ] test empty list
-    - [ ] test malformed list
-    - [ ] test valid list
-  - back/server.test.ts
-    - [ ] update test GET /products
 - [ ] login mockup
+  - [ ] Model
+    - back/models/Users.ts
+      - [ ] static method getByName
+    - back/models/Users.test.ts
+      - [ ] test getByName
+  - [ ] Controller
+    - back/controllers/login.ts
+      - [ ] getByName using sanitized post data
+      - [ ] 501 if not found
+      - [ ] serialize response using view
+      - [ ] set user id in session cookie
+      - [ ] return payload
+    - back/controllers/login.test.ts
+      - [ ] test unknown name
+      - [ ] test valid name
+  - [ ] Routes
+    - back/routes/users.ts
+      - [ ] add POST /login route
+    - back/routes/users.test.ts
+  - [ ] Test updates
+    - back/router.test.ts
+      - [ ] test export POST /login route
+    - back/server.test.ts
+      - [ ] test endpoint
   - [ ] update openapi.yaml
-  - back/router.ts
-    - [ ] add POST /login route
-  - back/router.test.ts
-    - [ ] test export POST /login route
-  - back/models/Users.ts
-    - [ ] static method getByName
-  - back/models/Users.test.ts
-    - [ ] test getByName
-  - back/controllers/login.ts
-    - [ ] getByName using sanitized post data
-    - [ ] 501 if not found
-    - [ ] serialize response using view
-    - [ ] set user id in session cookie
-    - [ ] return payload
-  - back/controllers/login.test.ts
-    - [ ] test unknown name
-    - [ ] test valid name
 - [ ] secure auth only routes
   - back/middlewares/security-auth.ts
     - [ ] test req for session cookie & user id

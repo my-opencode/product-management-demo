@@ -166,4 +166,55 @@ describe(`Product class`, function () {
       });
     });
   });
+  describe(`Product.save`, function () {
+    let p:Product;
+    before(function () {
+      pool = {
+        execute: mock.fn(() => Promise.resolve([[{ id: 18 }]]))
+      };
+      app = {
+        get: mock.fn(() => pool)
+      };
+    });
+    beforeEach(function(){
+      p = new Product({
+        code: `abc`,
+        name: `product abc`,
+        description: `product desc`,
+        image: `abc.png`,
+        category: 1,
+        quantity: 10,
+        price: 100,
+        rating: 3
+      });
+    });
+    it(`should call app.get`, async function () {
+      await p.save(app);
+      assert.strictEqual(app.get.mock.callCount(), 1);
+      assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+    });
+    it(`should call pool.execute`, async function () {
+      await p.save(app);
+      assert.strictEqual(pool.execute.mock.callCount(), 1);
+      assert.strictEqual(typeof pool.execute.mock.calls[0].arguments[0], `string`);
+    });
+    it(`should return product`, async function () {
+      const result = await p.save(app);
+      assert.ok(
+        result instanceof Product
+      );
+    });
+    it(`should update product`, async function () {
+      assert.deepStrictEqual(
+        p.isSaved,
+        false
+      );
+      await p.save(app);
+      assert.strictEqual(p.id, 18);
+      assert.deepStrictEqual(
+        p.isSaved,
+        true
+      );
+    });
+  });
 });

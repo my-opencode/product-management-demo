@@ -20,6 +20,10 @@ export interface ProductBase {
   rating?: number;
 }
 
+/**
+ * Product Class
+ * Note: rating is updated/saved independently to the product.
+ */
 export class Product {
   isSaved = false;
   _id: number | undefined = undefined;
@@ -139,6 +143,25 @@ export class Product {
     if (validationErrors.length) {
       throw new ValidationError(`Invalid Product: ${validationErrors.join(`; `)}`);
     }
+  }
+  /**
+   * Saves a new Product
+   * Updates an existing Product
+   * @param {RichApp} app express application
+   * @returns {Promise<Product>}
+   */
+  async save(app: RichApp) {
+    if (this.isSaved)
+      return await this.update(app);
+    const pool = app.get(AppSymbols.connectionPool);
+    const [result] = await pool.execute(`CALL product_new( "${this.code}", "${this.name}", "${this.description}", ${this.image ? `, "${this.image}"` : `NULL`}, ${this.category}, ${this.price.toFixed(2)}, ${this.quantity});`);
+    const productId: number = (result as RowDataPacket)[0].id;
+    this.id = productId;
+    this.isSaved = true;
+    return this;
+  }
+  async update(app: RichApp): Promise<Product> {
+    throw new Error(`Not implemented`);
   }
   static async list(app: RichApp) {
     return await this.listFromDatabase(app);

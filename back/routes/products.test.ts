@@ -4,6 +4,8 @@ import productsRouter from "./products";
 import productsGetAll from "../controllers/products-get-all";
 import productsGetOneById from "../controllers/products-get-one-by-id";
 import { RequestHandler } from "express";
+import productsCreate from "../controllers/products-post-create";
+import jsonBodyParser from "../lib/jsonBodyParser";
 
 describe(`Products router`, function () {
   it(`should return a router function`, function () {
@@ -12,12 +14,15 @@ describe(`Products router`, function () {
   it(`with a stack`, function () {
     assert.strictEqual(Array.isArray(productsRouter.stack), true);
   });
-  const stack: [string, ["get" | "post" | "patch" | "delete" | "put" | "all", RequestHandler][]][] = [
+  const stack: [string, ["get" | "post" | "patch" | "delete" | "put" | "all", RequestHandler[]][]][] = [
     [`/:id`, [
-      [`get`, productsGetOneById],
+      [`get`, [productsGetOneById]],
     ]],
     [`/`, [
-      [`get`, productsGetAll],
+      [`get`, [productsGetAll]],
+    ]],
+    [`/`, [
+      [`post`, [jsonBodyParser,productsCreate]],
     ]]
   ];
   it(`that is not empty`, function () {
@@ -27,10 +32,12 @@ describe(`Products router`, function () {
     it(`with ${url}`, function () {
       assert.strictEqual(productsRouter.stack[i]?.route?.path, url);
     });
-    substack.forEach(([method, controller]) => {
+    substack.forEach(([method, controllers]) => {
       it(`with ${method} ${url} controller`, function () {
         assert.strictEqual(productsRouter.stack[i]?.route?.stack?.[0]?.method, method);
-        assert.strictEqual(productsRouter.stack[i]?.route?.stack?.[0]?.handle, controller);
+        controllers.forEach((controller,j) => 
+          assert.deepEqual(productsRouter.stack[i]?.route?.stack?.[j]?.handle, controller)
+        )
       });
     });
   });

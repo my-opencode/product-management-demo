@@ -1,14 +1,21 @@
+import { validateInt, ValidationError } from "../lib/validators";
+
 export default class Id {
   /**
    * Validates an id value
    * @param {String|Number} candidate candidate value for a database id
    * @param {String} [errMessage] error message override
    * @returns {Number}
+   * @throws {ValidationError}
    */
-  static validator(candidate: string | number, errMessage = `Invalid 'id' value.`): number {
-    candidate = parseInt(String(candidate));
-    if (!isNaN(candidate) && isFinite(candidate) && candidate > 0)
-      return candidate;
-    throw new TypeError(errMessage);
+  static validator(candidate: string | number, errMessage = `Invalid 'id' value.`, fieldName?: string): number {
+    fieldName = fieldName || `id`;
+    try {
+      return validateInt(candidate, undefined, 1, fieldName);
+    } catch (err) {
+      if (err instanceof Error)
+        err.message = errMessage;
+      throw err;
+    }
   }
 }

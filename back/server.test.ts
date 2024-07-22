@@ -105,7 +105,100 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(Array.isArray(json.data), true);
     });
     it(`should return products`, function () {
-      assert.strictEqual(json.length > 0, true);
+      assert.strictEqual(json.data.length > 0, true);
+    });
+  });
+  describe(`POST /products 422`, async function () {
+    let response: Response;
+    let json: ValidationErrorResponseJson;
+    await before(async function () {
+      response = await inject(app, {
+        method: `post`,
+        url: `/products`,
+        body: `{"rating":6}`,
+        headers: {
+          "content-type": `application/json`
+        }
+      });
+    });
+    it(`should return status code 422`, function () {
+      assert.strictEqual(response.statusCode, 422);
+    });
+    it(`should return error json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      assert.strictEqual(json.description, `Invalid Product`);
+    });
+    it(`should list errors`, function () {
+      assert.strictEqual(json.errors[`product.rating`], `Too high. Max value: 5.`);
+    });
+  });
+  describe(`POST /products 409 Category_id`, async function () {
+    let response: Response;
+    let json: ValidationErrorResponseJson;
+    await before(async function () {
+      response = await inject(app, {
+        method: `post`,
+        url: `/products`,
+        headers: {
+          "content-type": `application/json`
+        },
+        body: JSON.stringify(
+          {
+            category: 20,
+            code: `a`,
+            name: `a`,
+            description: `a`,
+            quantity: 10,
+            price: 10.1,
+          }
+        )
+      });
+    });
+    it(`should return status code 409`, function () {
+      assert.strictEqual(response.statusCode, 409);
+    });
+    it(`should return error json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      assert.strictEqual(json.description, `Conflicting Product`);
+    });
+    it(`should list errors`, function () {
+      assert.strictEqual(json.errors[`product.category`], `Product Category does not exist.`);
+    });
+  });
+  describe(`POST /products 409 code`, async function () {
+    let response: Response;
+    let json: ValidationErrorResponseJson;
+    await before(async function () {
+      response = await inject(app, {
+        method: `post`,
+        url: `/products`,
+        headers: {
+          "content-type": `application/json`
+        },
+        body: JSON.stringify(
+          {
+            category: 2,
+            code: `f230fh0g3`,
+            name: `a`,
+            description: `a`,
+            quantity: 10,
+            price: 10.1,
+          }
+        )
+      });
+    });
+    it(`should return status code 409`, function () {
+      assert.strictEqual(response.statusCode, 409);
+    });
+    it(`should return error json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      assert.strictEqual(json.description, `Conflicting Product`);
+    });
+    it(`should list errors`, function () {
+      assert.strictEqual(json.errors[`product.code`], `Duplicate value for code.`);
     });
   });
   describe(`GET /products/:id`, async function () {

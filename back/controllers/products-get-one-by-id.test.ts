@@ -3,6 +3,7 @@ import { RequestWithProduct } from "../types";
 import * as assert from "node:assert";
 import { NextFunction, Request } from "express";
 import productsGetOneById from "./products-get-one-by-id";
+import Product from "../models/Products";
 
 describe(`Products get one by id controller`, function () {
   let request = {
@@ -35,7 +36,7 @@ describe(`Products get one by id controller`, function () {
   describe(`Found`, function (){
     before(async function () {
       // update request
-      request.product = {id:1};
+      request.product = new Product({id:1,name:`a`,code:`a`,description:`a`,quantity:1,price:10, category:2});
       response.send.mock.resetCalls();
       response.status.mock.resetCalls();
       next.mock.resetCalls();
@@ -48,7 +49,7 @@ describe(`Products get one by id controller`, function () {
     });
     it(`should call response.send with payload`,function(){
       assert.strictEqual(response.send.mock.callCount(),1);
-      assert.strictEqual(response.send.mock.calls[0]?.arguments?.[0], `{"id":1}`);
+      assert.strictEqual(response.send.mock.calls[0]?.arguments?.[0], `{"data":{"id":1,"code":"a","name":"a","category":2,"description":"a","quantity":1,"price":10}}`);
     });
   });
 });

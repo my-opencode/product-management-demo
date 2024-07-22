@@ -1,7 +1,7 @@
 import { RequestWithProduct } from "../types";
-import { Response, NextFunction, Express, RequestHandler } from "express";
-import objectToJSON from "../views/objectToJSON";
+import { Response, NextFunction } from "express";
 import Logger from "../lib/winston";
+import renderer from "../views/product-details";
 const logger = Logger(`controllers/products-get-one-by-id`);
 
 export default async function productsGetOneById(request: RequestWithProduct, response: Response, next: NextFunction) {
@@ -11,7 +11,7 @@ export default async function productsGetOneById(request: RequestWithProduct, re
       response.status(404);
       return;
     }
-    const payload = objectToJSON(request.product);
+    const payload = renderer(request.product);
     logger.log(`debug`, `Exiting productsGetOneById`);
     response.status(200).set('Content-Type', 'application/json').send(payload);
   } catch (err) {

@@ -1,6 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import { RequestWithId } from "../types";
 import Id from "../models/Id";
+import { ValidationError } from "../lib/validators";
 
 /**
  * Express Application.param middleware.
@@ -31,7 +32,7 @@ export function paramValidatorMwId (req:RequestWithId, res:Response, next:NextFu
     req.params[param] = String(req.id);
     next();
   } catch(err){
-    if (err instanceof TypeError)
+    if (err instanceof ValidationError)
       res.status(400).send(err.message);
     else
       next(err);

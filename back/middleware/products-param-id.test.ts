@@ -4,6 +4,7 @@ import { NextFunction } from "express";
 import productsParamMwGetProductById from "./products-param-id";
 import assert from "node:assert";
 import Product, { ProductAsInTheJson } from "../models/Products";
+import { ValidationError } from "../lib/validators";
 
 describe(`Products Id param middleware`, function () {
   let response = {
@@ -37,7 +38,7 @@ describe(`Products Id param middleware`, function () {
     it(`should call next with error`, function () {
       assert.strictEqual(next.mock.callCount(), 1);
       // console.log(next.mock.calls[0]?.arguments?.[0])
-      assert.deepEqual(next.mock.calls[0]?.arguments?.[0], new Error(`Missing product id.`));
+      assert.ok ((next.mock.calls[0]?.arguments?.[0] as any) instanceof ValidationError);
     });
   });
   describe(`Not found`, async function () {

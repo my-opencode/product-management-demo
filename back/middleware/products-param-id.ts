@@ -1,6 +1,7 @@
 import { NextFunction, Response, RequestParamHandler } from "express";
 import { RequestWithProduct } from "../types";
 import Product from "../models/Products";
+import { ValidationError } from "../lib/validators";
 
 /**
  * Express Application.param middleware.
@@ -14,7 +15,7 @@ import Product from "../models/Products";
  */
 async function productsParamMwGetProductById (req:RequestWithProduct, res:Response, next:NextFunction, val:string|number, param:string) {
   if(!req.id)
-    return next(new Error(`Missing product id.`));
+    return next(new ValidationError(`Missing product id.`,`/products/{id}`, 400));
   try {
     req.product = await Product.getById(req.app, req.id);
     if(!req.product){

@@ -36,7 +36,11 @@ describe(`Products get one by id controller`, function () {
   describe(`Found`, function (){
     before(async function () {
       // update request
-      request.product = new Product({id:1,name:`a`,code:`a`,description:`a`,quantity:1,price:10, category:2});
+      request.product = 
+      new Product(
+        {id:1,name:`a`,code:`a`,description:`a`,quantity:1,price:10, category:2}
+      )
+      ;
       response.send.mock.resetCalls();
       response.status.mock.resetCalls();
       next.mock.resetCalls();

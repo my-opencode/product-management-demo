@@ -71,7 +71,7 @@ describe(`Products Id param middleware`, function () {
       params: { id: "1" }
     } as unknown as RequestWithProduct;
     before(async function () {
-      Product.getById = mock.fn(() => Promise.resolve({ id: 1 } as ProductAsInTheJson));
+      Product.getById = mock.fn(() => Promise.resolve({ id: 1 } as Product));
       // update request
       response.send.mock.resetCalls();
       response.status.mock.resetCalls();

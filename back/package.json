@@ -5,8 +5,9 @@
   "main": "server.js",
   "scripts": {
     "pretest": "echo 'Booting Database' && sudo docker-compose -f test-db.yaml --profile test up -d -V",
-    "test": "npx tsx --test --test-concurrency=1 || true",
+    "test": "npm run clearlogs && npx tsx --test --test-concurrency=1 || true",
     "posttest": "echo 'Closing Database' && sudo docker-compose -f test-db.yaml down --volumes",
+    "clearlogs": "rm -rf ./logs/controllers/* ./logs/models/* ./logs/*.log",
     "prestart": "echo 'Booting Database' && sudo docker-compose -f test-db.yaml --profile test up -d -V",
     "start": "npx tsx server.ts",
     "build": "npx tsc",

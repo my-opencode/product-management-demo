@@ -1,4 +1,4 @@
-import { validateInt, ValidationError } from "../lib/validators";
+import { validateInt } from "../lib/validators";
 
 export default class Id {
   /**

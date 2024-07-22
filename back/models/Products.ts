@@ -2,7 +2,11 @@ import { RowDataPacket } from "mysql2";
 import { RichApp } from "../types";
 import AppSymbols from "../AppSymbols";
 import Id from "./Id";
-import { validateFloat, validateInt, validateString, validateTinyInt, ValidationError } from "../lib/validators";
+import { validateFloat, validateInt, validateString, validateTinyInt, ValidationError, ValidationErrorStack } from "../lib/validators";
+import Logger from "../lib/winston";
+const logger = Logger(`models/Product`, `debug`);
+
+type InventoryStatus = "OUTOFSTOCK" | "LOWSTOCK" | "INSTOCK";
 
 export interface ProductAsInTheJson extends RowDataPacket, ProductBase {
 }
@@ -16,7 +20,7 @@ export interface ProductBase {
   price: number;
   category: number;
   quantity: number;
-  inventoryStatus: string;
+  inventoryStatus: InventoryStatus;
   rating?: number;
 }
 
@@ -26,13 +30,15 @@ export interface ProductBase {
  */
 export class Product {
   isSaved = false;
+  isReadOnly = true;
   _id: number | undefined = undefined;
   _code = ``;
   _name = ``;
   _description = ``;
   _image: string | undefined = ``;
   _price = -1;
-  _category = -1;
+  _category: number | undefined = -1;
+  _category_name = ``;
   _quantity = -1;
   _inventoryStatus = ``;
   _rating = -1;
@@ -44,8 +50,7 @@ export class Product {
       this._id = undefined;
       this.isSaved = false;
     } else {
-      console.log(`this is the id value to test "${val}"`)
-      this._id = Id.validator(val);
+      this._id = Id.validator(val, undefined, `product.id`);
       if (this._id)
         this.isSaved = true;
     }
@@ -54,19 +59,19 @@ export class Product {
     return this._code;
   }
   set code(val: string) {
-    this._code = validateString(val, 255, 1);
+    this._code = validateString(val, 255, 1, `product.code`);
   }
   get name(): string {
     return this._name;
   }
   set name(val: string) {
-    this._name = validateString(val, 1024, 1);
+    this._name = validateString(val, 1024, 1, `product.name`);
   }
   get description(): string {
     return this._description;
   }
   set description(val: string) {
-    this._description = validateString(val, 5120, 1);
+    this._description = validateString(val, 5120, 1, `product.description`);
   }
   get image(): string | undefined {
     return this._image;
@@ -75,29 +80,53 @@ export class Product {
     if (val === undefined)
       this._image = undefined;
     else
-      this._image = validateString(val, 2048) || undefined;
+      this._image = validateString(val, 2048, undefined, `product.image`) || undefined;
   }
-  get category(): number {
+  get category(): number | string {
+    return this._category || this._category_name;
+  }
+  set category(val: number | string) {
+    let isSet = false;
+    let error: ValidationError | undefined = undefined;
+    try {
+      this.categoryId = val;
+      isSet = true;
+    } catch (err) {
+      if (err instanceof ValidationError) error = err;
+      else throw err;
+    }
+    if (!isSet && typeof val === `string`) {
+      this.categoryName = val;
+    }
+    else if (error !== undefined)
+      throw error;
+  }
+  get categoryId(): number | undefined {
     return this._category;
   }
-  set category(val: number) {
-    try {
-      this._category = Id.validator(val);
-    } catch (err){
-      throw new ValidationError(`Invalid foreign id key.`);
-    }
+  set categoryId(val: number | string) {
+    this._category = Id.validator(val, undefined, `product.category`);
+    this.isReadOnly = false;
+  }
+  get categoryName(): string {
+    return this._category_name;
+  }
+  set categoryName(val: string) {
+    this._category_name = validateString(val, 1024, undefined, `product.categoryName`);
+    if (!this._category || this._category < 1)
+      this.isReadOnly = true;
   }
   get quantity(): number {
     return this._quantity;
   }
   set quantity(val: number) {
-    this._quantity = validateInt(val, 16777215, 0);
+    this._quantity = validateInt(val, 16777215, 0, `product.quantity`);
   }
   get price(): number {
     return this._price;
   }
   set price(val: number | string) {
-    this._price = validateFloat(val, undefined, 0.01);
+    this._price = validateFloat(val, undefined, 0.01, `product.price`);
   }
   get rating(): number {
     return this._rating;
@@ -106,42 +135,46 @@ export class Product {
     if (val === undefined)
       this._rating = 0;
     else
-      this._rating = validateTinyInt(val, 5, 0);
+      this._rating = validateTinyInt(val, 5, 0, `product.rating`);
   }
   get inventoryStatus() {
     return this._inventoryStatus;
   }
   set inventoryStatus(val: string) {
-    const inventoryStatusValues = [
+    const inventoryStatusValues: InventoryStatus[] = [
       `OUTOFSTOCK`,
       `LOWSTOCK`,
       `INSTOCK`
     ];
-    if (val && inventoryStatusValues.includes(val.toUpperCase()))
+    if (val && inventoryStatusValues.includes(val.toUpperCase() as any))
       this._inventoryStatus = val.toUpperCase();
   }
   constructor(val: Partial<ProductBase>) {
     // invalid id is breaking
+    // empty id is allowed (new product)
+    if(!val) throw new TypeError(`Missing product value in Product constructor.`);
+    if (val.id !== undefined)
     this.id = val.id;
     // aggregate validation errors
-    const validationErrors: string[] = [];
-    const valErrHandler = (field: string, e: any) => {
+    const validationErrors: ValidationError[] = [];
+    const valErrHandler = (e: any) => {
       if (e instanceof ValidationError)
-        validationErrors.push(field + `: ` + e.message);
+        validationErrors.push(e);
       else throw e;
     };
     // validate & set fields
-    try { this.code = val.code || ``; } catch (e) { valErrHandler(`code`, e); }
-    try { this.name = val.name || ``; } catch (e) { valErrHandler(`name`, e); }
-    try { this.description = val.description || ``; } catch (e) { valErrHandler(`description`, e); }
-    try { this.image = val.image; } catch (e) { valErrHandler(`image`, e); }
-    try { this.category = val.category || -1; } catch (e) { valErrHandler(`category`, e); }
-    try { this.quantity = val.quantity || -1; } catch (e) { valErrHandler(`quantity`, e); }
-    try { this.price = val.price || -1; } catch (e) { valErrHandler(`price`, e); }
-    try { this.rating = val.rating; } catch (e) { valErrHandler(`rating`, e); }
+    try { this.code = val.code || ``; } catch (e) { valErrHandler(e); }
+    try { this.name = val.name || ``; } catch (e) { valErrHandler(e); }
+    try { this.description = val.description || ``; } catch (e) { valErrHandler(e); }
+    try { this.image = val.image; } catch (e) { valErrHandler(e); }
+    try { this.category = val.category || -1; } catch (e) { valErrHandler(e); }
+    try { this.quantity = val.quantity || -1; } catch (e) { valErrHandler(e); }
+    try { this.price = val.price || -1; } catch (e) { valErrHandler(e); }
+    try { this.rating = val.rating; } catch (e) { valErrHandler(e); }
+    try { this.inventoryStatus = val.inventoryStatus || ``; } catch (e) { valErrHandler(e); }
     // throw for invalid fields
     if (validationErrors.length) {
-      throw new ValidationError(`Invalid Product: ${validationErrors.join(`; `)}`);
+      throw new ValidationErrorStack(validationErrors, `Invalid Product`);
     }
   }
   /**

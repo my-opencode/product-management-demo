@@ -11,6 +11,8 @@ import productsRouter from "./routes/products";
 import categoriesRouter from "./routes/categories";
 import errorHandler from "./controllers/errorHandler";
 import default404 from "./controllers/default.404";
+import validationErrorHandler from "./controllers/validation-error-handler";
+import { ValidationErrorResponseJson } from "./views/422-validation";
 
 async function sleep() {
   await new Promise(r => setTimeout(r, 200));
@@ -72,7 +74,7 @@ describe(`Test API endpoints`, function () {
   });
   describe(`GET /categories`, async function () {
     let response: Response;
-    let json: Array<CategoryFromDb>;
+    let json: { data: Array<CategoryFromDb> };
     await before(async function () {
       response = await inject(app, { method: `get`, url: `/categories` });
     });
@@ -82,16 +84,15 @@ describe(`Test API endpoints`, function () {
     it(`should return json array`, function () {
       assert.strictEqual(typeof response.payload, `string`);
       json = JSON.parse(response.payload);
-      console.log(typeof json, json.length);
-      assert.strictEqual(Array.isArray(json), true);
+      assert.strictEqual(Array.isArray(json.data), true);
     });
     it(`should return categories`, function () {
-      assert.strictEqual(json.length > 0, true);
+      assert.strictEqual(json.data.length > 0, true);
     });
   });
   describe(`GET /products`, async function () {
     let response: Response;
-    let json: Array<ProductAsInTheJson>;
+    let json: { data: Array<ProductAsInTheJson> };
     await before(async function () {
       response = await inject(app, { method: `get`, url: `/products` });
     });
@@ -101,8 +102,7 @@ describe(`Test API endpoints`, function () {
     it(`should return json array`, function () {
       assert.strictEqual(typeof response.payload, `string`);
       json = JSON.parse(response.payload);
-      console.log(typeof json, json.length);
-      assert.strictEqual(Array.isArray(json), true);
+      assert.strictEqual(Array.isArray(json.data), true);
     });
     it(`should return products`, function () {
       assert.strictEqual(json.length > 0, true);
@@ -110,7 +110,7 @@ describe(`Test API endpoints`, function () {
   });
   describe(`GET /products/:id`, async function () {
     let response: Response;
-    let json: ProductAsInTheJson;
+    let json: { data: ProductAsInTheJson };
     await before(async function () {
       response = await inject(app, { method: `get`, url: `/products/1` });
     });
@@ -120,8 +120,8 @@ describe(`Test API endpoints`, function () {
     it(`should return json object`, function () {
       assert.strictEqual(typeof response.payload, `string`);
       json = JSON.parse(response.payload);
-      console.log(typeof json, json.length);
-      assert.strictEqual(json.id, 1);
+      console.log(typeof json, json.data.length);
+      assert.strictEqual(json.data.id, 1);
     });
   });
   describe(`GET /products/:id 400`, async function () {
@@ -155,6 +155,7 @@ describe(`Test API error endpoint`, function () {
     router.use(`/error`, () => { throw new Error(`Oops!`) })
     router.use(`/categories`, categoriesRouter);
     router.use(`/products`, productsRouter);
+    router.use(validationErrorHandler);
     router.use(errorHandler);
     router.use(default404);
     app.use(router);

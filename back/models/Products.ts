@@ -1,4 +1,4 @@
-import { RowDataPacket } from "mysql2";
+import { ProcedureCallPacket, QueryError, QueryResult, RowDataPacket } from "mysql2";
 import { RichApp } from "../types";
 import AppSymbols from "../AppSymbols";
 import Id from "./Id";
@@ -194,7 +194,7 @@ export class Product {
     // empty id is allowed (new product)
     if(!val) throw new TypeError(`Missing product value in Product constructor.`);
     if (val.id !== undefined)
-    this.id = val.id;
+      this.id = val.id;
     // aggregate validation errors
     const validationErrors: ValidationError[] = [];
     const valErrHandler = (e: any) => {
@@ -220,20 +220,83 @@ export class Product {
   /**
    * Saves a new Product
    * Updates an existing Product
+   * (alias for saveNewToDatabase)
    * @param {RichApp} app express application
    * @returns {Promise<Product>}
    */
   async save(app: RichApp) {
-    if (this.isSaved)
-      return await this.update(app);
-    const pool = app.get(AppSymbols.connectionPool);
-    const [result] = await pool.execute(`CALL product_new( "${this.code}", "${this.name}", "${this.description}", ${this.image ? `, "${this.image}"` : `NULL`}, ${this.category}, ${this.price.toFixed(2)}, ${this.quantity});`);
-    const productId: number = (result as RowDataPacket)[0].id;
-    this.id = productId;
-    this.isSaved = true;
+    const newProduct = await Product.insertNewToDatabase(app, this);
+    this.id = newProduct.id;
+    this.code = newProduct.code;
+    this.name = newProduct.name;
+    this.description = newProduct.description;
+    this.image = newProduct.image;
+    this.quantity = newProduct.quantity;
+    this.price = newProduct.price;
+    this.rating = newProduct.rating;
+    this.inventoryStatus = newProduct.inventoryStatus;
+    this.category = newProduct.category;
+    this.isSaved = newProduct.isSaved;
+    this.isReadOnly = newProduct.isReadOnly;
     return this;
   }
+  /**
+   * Saves a new Product
+   * Updates an existing Product
+   * @param {RichApp} app express application
+   * @param {Product} product Product instance
+   * @returns {Promise<Product>}
+   */
+  static async insertNewToDatabase(app: RichApp, product: Product): Promise<Product> {
+    if (!product || !(product instanceof Product))
+      throw new Error(`Missing product to save.`);
+    if (product.isReadOnly)
+      throw new Error(`Product is read only. Please provide a valid category id.`);
+    if (product.isSaved)
+      return await this.updateInDatabase(app, product);
+    const pool = app.get(AppSymbols.connectionPool);
+    let procedureResult: QueryResult | undefined = undefined;
+    try {
+      const callStatement = `CALL new_product( "${product.code}", "${product.name}", "${product.description}", ${product.image ? `, "${product.image}"` : `NULL`}, ${product.category}, ${product.price.toFixed(2)}, ${product.quantity}, 0, @id);`;
+      logger.log(`debug`, callStatement);
+      // ([result] = await pool.execute(callStatement));
+      ([procedureResult] =
+        await pool.execute<ProcedureCallPacket<{ id: number }[]>>(callStatement));
+    } catch (err) {
+      logger.log(`debug`, `Product InsertNewToDatabase received QueryErr: "${JSON.stringify(err)}"`);
+      if (err instanceof Error) {
+        //TO-DO mock up class for QueryError in order to check with instanceof
+        let _err = err as unknown as QueryError;
+        if (
+          _err.errno === 1216/* mysqlErCodes[`ER_NO_REFERENCED_ROW`] */ || _err.code === `ER_NO_REFERENCED_ROW` ||
+          _err.errno === 1452/* mysqlErCodes[`ER_NO_REFERENCED_ROW_2`] */ || _err.code === `ER_NO_REFERENCED_ROW_2`
+        ) // 1216, 1452
+          throw new ValidationErrorStack(
+            [new ValidationError(`Product Category does not exist.`, `product.category`)],
+            `Conflicting Product`
+          );
+        if (
+          _err.errno === 1062/* mysqlErCodes[`ER_DUP_ENTRY`] */ || _err.code === `ER_DUP_ENTRY` ||
+          _err.errno === 1169/* mysqlErCodes[`ER_DUP_UNIQUE`] */ || _err.code === `ER_DUP_UNIQUE`
+        ) // 1062, 1169
+          throw new ValidationErrorStack(
+            [new ValidationError(`Duplicate value for code.`, `product.code`)],
+            `Conflicting Product`
+          );
+      }
+    }
+
+    logger.log(`debug`, `Product InsertNewToDatabase received QueryResult: (${typeof procedureResult}) "${JSON.stringify(procedureResult)}"`);
+    const productId: number = (procedureResult as RowDataPacket)[0].id;
+
+    const newProduct = await this.getFromDatabaseById(app, productId);
+    if (!newProduct) throw new Error(`Unable to retrieve new product from Database.`);
+    return newProduct;
+  }
   async update(app: RichApp): Promise<Product> {
+    throw new Error(`Not implemented`);
+  }
+  static async updateInDatabase(app: RichApp, product: Product): Promise<Product> {
     throw new Error(`Not implemented`);
   }
   static async list(app: RichApp) {

@@ -42,7 +42,6 @@ describe(`Products get all controller`, function () {
         assert.strictEqual(mockedProductListFromDb.mock.callCount(), 1);
         assert.strictEqual(next.mock.callCount(), 0);
       });
-      // await productsGetAll({} as unknown as Request, response, next);
     });
 
     it(`should call response.status`, async function () {
@@ -50,14 +49,13 @@ describe(`Products get all controller`, function () {
         assert.strictEqual(response.status.mock.callCount(), 1);
         assert.strictEqual(next.mock.callCount(), 0);
       });
-      // await productsGetAll({} as unknown as Request, response, next);
     });
     it(`should call response.send`, async function () {
       await productsGetAll({} as unknown as Request, response, next).finally(() => {
-        assert.strictEqual(response.send.mock.callCount(), 1)
-        assert.strictEqual(next.mock.callCount(), 0)
+        assert.strictEqual(response.send.mock.callCount(), 1);
+        assert.strictEqual(next.mock.callCount(), 0);
+        assert.strictEqual(response.send.mock.calls[0].arguments[0], `{"data":[{"id":1}]}`);
       });
-      // await productsGetAll({} as unknown as Request, response, next)
     });
   });
 
@@ -80,12 +78,11 @@ describe(`Products get all controller`, function () {
     });
     it(`should call next`, async function () {
       await productsGetAll({} as unknown as Request, response, next).finally(() => {
-        assert.strictEqual(mockedProductListFromDb.mock.callCount(), 1)
-        assert.strictEqual(response.status.mock.callCount(), 0)
-        assert.strictEqual(response.send.mock.callCount(), 0)
-        assert.strictEqual(next.mock.callCount(), 1)
+        assert.strictEqual(mockedProductListFromDb.mock.callCount(), 1);
+        assert.strictEqual(response.status.mock.callCount(), 0);
+        assert.strictEqual(response.send.mock.callCount(), 0);
+        assert.strictEqual(next.mock.callCount(), 1);
       });
-      // await productsGetAll({} as unknown as Request, response, next)
     });
   });
 

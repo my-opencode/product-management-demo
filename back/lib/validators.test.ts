@@ -57,6 +57,68 @@ describe(`ValidationErrorStack class`, function () {
   });
 });
 
+describe(`validateString`, function () {
+  it(`should throw too long`, function () {
+    assert.throws(
+      () => validateString(`   `, 2),
+      new ValidationError(`Too long. Max length: 2.`, `string`)
+    );
+  });
+  it(`should throw too short`, function () {
+    assert.throws(
+      () => validateString(`  `, undefined, 4),
+      new ValidationError(`Too short. Min length: 4.`, `string`)
+    );
+  });
+  it(`should return a string`, function () {
+    const result = validateString(`hello`);
+    assert.strictEqual(result, `hello`);
+  });
+  it(`should accept empty string`, function () {
+    const result = validateString(``);
+    assert.strictEqual(result, ``);
+  });
+});
+
+describe(`validateFloat`, function () {
+  it(`should throw NaN`, function () {
+    assert.throws(
+      () => validateFloat(`not a number`),
+      new ValidationError(`Not an finite float.`, `float`)
+    );
+  });
+  it(`should throw infinite`, function () {
+    assert.throws(
+      () => validateFloat(Number.POSITIVE_INFINITY),
+      new ValidationError(`Not an finite float.`, `float`)
+    );
+  });
+  it(`should throw too high`, function () {
+    assert.throws(
+      () => validateFloat(100000.1),
+      new ValidationError(`Too high. Max value: 99999.99.`, `float`)
+    );
+  });
+  it(`should throw too low`, function () {
+    assert.throws(
+      () => validateFloat(2, undefined, 2.1),
+      new ValidationError(`Too low. Min value: 2.1.`, `float`)
+    );
+  });
+  it(`should return a float`, function () {
+    const result = validateFloat(`1.5`);
+    assert.strictEqual(result, 1.5);
+  });
+  it(`should accept 0`, function () {
+    const result = validateFloat(0);
+    assert.strictEqual(result, 0);
+  });
+  it(`should accept negative`, function () {
+    const result = validateFloat(`-0.5`);
+    assert.strictEqual(result, -0.5);
+  });
+});
+
 describe(`validateInt`, function () {
   it(`should throw NaN`, function () {
     assert.throws(
@@ -93,5 +155,32 @@ describe(`validateInt`, function () {
   it(`should accept negative`, function () {
     const result = validateInt(`-5`);
     assert.strictEqual(result, -5);
+  });
+});
+
+describe(`validateMediumInt`, function () {
+  it(`should throw too high`, function () {
+    assert.throws(
+      () => validateMediumInt(16777216),
+      new ValidationError(`Too high. Max value: 16777215.`, `int`)
+    );
+  });
+});
+
+describe(`validateMediumInt`, function () {
+  it(`should throw too high`, function () {
+    assert.throws(
+      () => validateSmallInt(65536),
+      new ValidationError(`Too high. Max value: 65535.`, `int`)
+    );
+  });
+});
+
+describe(`validateTinyInt`, function () {
+  it(`should throw too high`, function () {
+    assert.throws(
+      () => validateTinyInt(256),
+      new ValidationError(`Too high. Max value: 255.`, `int`)
+    );
   });
 });

@@ -27,7 +27,7 @@ describe(`Router`, function () {
   });
   it(`products layer`, function(){
     assert.ok(router.stack[1].regexp.toString().includes(`products`));
-    assert.strictEqual((router.stack[1].handle as Router).stack.length, 2);
+    assert.strictEqual((router.stack[1].handle as Router).stack.length, 3);
   });
   it(`with id parameters`, function(){
     //@ts-ignore

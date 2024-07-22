@@ -1,6 +1,6 @@
 {
   "name": "product-management-demo-backend",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Back End for a product management demo",
   "main": "server.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "mysql2": "^3.10.2",

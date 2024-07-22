@@ -545,47 +545,61 @@ In the real world, a customer rating table would make more sense, linking a user
   - back/server.test.ts
     - [x] test GET /products/{id}
 - [ ] create new product
-  - [ ] Model
+  - [x] Common validators
+    - back/lib/validators.ts
+    - back/lib/validators.test.ts
+  - [x] Model
     - back/Models/Products.ts
-      - [ ] static method ensureUniqueActiveCode
-        - stored procedure in mysql
-      - [ ] static method createNew
-        - validates post form fields
-        - ensure code is unique among active products
-        - initialises instance without id
-      - [ ] static method insertNewToDatabase
+      - [x] category exists
+      - [x] return product
+      - [x] Unique code
+        - ~~static method ensureUniqueActiveCode~~
+        - ~~stored procedure in mysql~~
+        - MYSQL doesn't have filtered indexes
+        - Function indexes exists but cannot be stored with the table in mysql workbench
+        - [x] Using aggregation column with index as workaround
+        - [x] Using insert and update triggers to populate the aggregation column
+          - same value as `code` when `deleted` = 0
+          - null when `deleted` = 1
+      - [x] constructor
+        - validates object properties
+        - ~~ensure code is unique among active products~~
+        - initialises isSaved=false instance without id
+        - initialises isSaved=true instance without id
+        - readonly rating
+      - [x] static method insertNewToDatabase
         - pass db error
-      - [ ] static method updateInDatabaseById
+        - calls updateInDatabase when id does not exist
+      - [x] static method updateInDatabase
         - pass db error
-      - [ ] method save (calls to insertNewToDatabase or updateInDatabaseById depending whether id exists or not)
+      - [x] method save (calls to insertNewToDatabase)
     - back/Models/Products.test.ts
-      - [ ] test new Products()
-      - [ ] test Products.createNew
-      - [ ] test Products.insertNewToDatabase
-      - [ ] test Products.updateInDatabaseById
-      - [ ] test save
+      - [x] test new Products()
+      - [x] test Products.insertNewToDatabase
+      - [x] test save
   - [ ] Controller
     - back/controllers/products-create.ts
-      - [ ] import logger
-      - [ ] validate post data with model
-      - [ ] 422 if invalid data
-      - [ ] 409 if code exists among active products
-      - [ ] save product to db with model
-      - [ ] serialize to json with view
-      - [ ] return response
+      - [x] import logger
+      - [x] validate post data with model
+      - [x] 422 if invalid data
+      - [x] 409 if code exists among active products
+      - [x] 409 if category does not exist
+      - [x] save product to db with model
+      - [x] serialize to json with view
+      - [x] return response
     - back/controllers/products-create.test.ts
-      - [ ] test invalid form
-      - [ ] test existing code
-      - [ ] test valid code
-  - [ ] Route
-    - [ ] update back/routes/products.ts
-    - [ ] update test back/routes/products.test.ts
-  - [ ] Test updates
+      - [x] test invalid form
+      - [x] test existing code
+      - [x] test valid code
+  - [x] Route
+    - [x] update back/routes/products.ts
+    - [x] update test back/routes/products.test.ts
+  - [x] Test updates
     - back/router.test.ts
-      - [ ] test export POST /products route
+      - [x] test export POST /products route
     - back/server.test.ts
-      - [ ] test endpoint
-  - [ ] update openapi.yaml
+      - [x] test endpoint
+  - [x] update openapi.yaml
 - [ ] update product
   - [ ] Model
     - back/Models/Products.ts

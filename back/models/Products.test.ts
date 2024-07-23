@@ -4,6 +4,7 @@ import Product, { ProductAsInTheJson, ProductBase } from "./Products";
 import AppSymbols from "../AppSymbols";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 import { QueryError } from "mysql2";
+import { getDummyProduct } from "../lib/test-product-util";
 
 describe(`Product static - list (listFromDatabase alias)`, function () {
   let app: any;
@@ -228,6 +229,8 @@ describe(`Product class - new Product`, function () {
     it(`should throw stack of validation errors`, function () {
       try {
         new Product({
+          // @ts-ignore
+          category: Array(1).fill(`not a number nor a string`),
           image: ``.padEnd(2049, "."),
           rating: 6
         });

@@ -108,7 +108,7 @@ export class Product {
   _description = ``;
   _image: string | undefined = ``;
   _price = -1;
-  _category: number | undefined = -1;
+  _category: number | undefined = undefined;
   _categoryName = ``;
   _quantity = -1;
   _inventoryStatus : InventoryStatus|"" = ``;
@@ -161,7 +161,11 @@ export class Product {
   get category(): number | string {
     return this._category || this._categoryName;
   }
-  set category(val: number | string) {
+  set category(val: number | string | undefined) {
+    if(!this._category && val === undefined)
+      return;
+    if(val === undefined)
+      throw new ValidationError(`Cannot reset existing category value to undefined.`,`product.category`);
     let isSet = false;
     let error: ValidationError | undefined = undefined;
     try {
@@ -180,7 +184,7 @@ export class Product {
   get categoryId(): number | undefined {
     return this._category;
   }
-  set categoryId(val: number | string) {
+  set categoryId(val: number | string ) {
     this._category = Id.validator(val, undefined, `product.category`);
     this.isReadOnly = false;
     this.setUpdated(`category`);
@@ -246,7 +250,7 @@ export class Product {
     try { this.name = val.name || ``; } catch (e) { valErrHandler(e); }
     try { this.description = val.description || ``; } catch (e) { valErrHandler(e); }
     try { this.image = val.image; } catch (e) { valErrHandler(e); }
-    try { this.category = val.category || -1; } catch (e) { valErrHandler(e); }
+    try { this.category = val.category || undefined; } catch (e) { valErrHandler(e); }
     try { this.quantity = val.quantity || -1; } catch (e) { valErrHandler(e); }
     try { this.price = val.price || -1; } catch (e) { valErrHandler(e); }
     try { this.rating = val.rating; } catch (e) { valErrHandler(e); }

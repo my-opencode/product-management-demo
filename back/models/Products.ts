@@ -63,7 +63,8 @@ WHERE deleted = 0;`
  * @returns {String}
  */
 const SQL_SELECT_PRODUCT_BY_ID = (id: number) => SQL_SELECT_ALL_PRODUCTS().slice(0, -1) + ` AND p.id = ${id} LIMIT 1;`;
-
+type UpdatableFieldKey = "category" | "code" | "name" | "description" | "image" | "price" | "quantity";
+const updatableFields: UpdatableFieldKey[] = [`category`, `code`, `name`, `description`, `image`, `price`, `quantity`];
 /**
  * Product Class
  * Note: rating is updated/saved independently to the product.
@@ -71,12 +72,15 @@ const SQL_SELECT_PRODUCT_BY_ID = (id: number) => SQL_SELECT_ALL_PRODUCTS().slice
 export class Product {
   isSaved = false;
   isReadOnly = true;
-  updatedFields: (keyof Product)[] = [];
-  get isUpdated():boolean {
-    return this.updatedFields.length > 0;
+  updatedFields: Set<UpdatableFieldKey> = new Set();
+  get isUpdated(): boolean {
+    return this.updatedFields.size > 0;
   }
-  setUpdated(v:keyof Product){
-    if(this.isSaved) this.updatedFields.push(v);
+  setUpdated(v: UpdatableFieldKey) {
+    if (this.isSaved) this.updatedFields.add(v);
+  }
+  resetUpdated(){
+    this.updatedFields = new Set();
   }
   _id: number | undefined = undefined;
   _code = ``;
@@ -85,9 +89,9 @@ export class Product {
   _image: string | undefined = ``;
   _price = -1;
   _category: number | undefined = -1;
-  _category_name = ``;
+  _categoryName = ``;
   _quantity = -1;
-  _inventoryStatus = ``;
+  _inventoryStatus : InventoryStatus|"" = ``;
   _rating = -1;
   get id(): number | undefined {
     return this._id;
@@ -129,13 +133,13 @@ export class Product {
   set image(val: string | undefined) {
     if (val === undefined)
       this._image = undefined;
-    else{
+    else {
       this._image = validateString(val, 2048, undefined, `product.image`) || undefined;
       this.setUpdated(`image`);
     }
   }
   get category(): number | string {
-    return this._category || this._category_name;
+    return this._category || this._categoryName;
   }
   set category(val: number | string) {
     let isSet = false;
@@ -162,10 +166,10 @@ export class Product {
     this.setUpdated(`category`);
   }
   get categoryName(): string {
-    return this._category_name;
+    return this._categoryName;
   }
   set categoryName(val: string) {
-    this._category_name = validateString(val, 1024, undefined, `product.categoryName`);
+    this._categoryName = validateString(val, 1024, undefined, `product.categoryName`);
     if (!this._category || this._category < 1)
       this.isReadOnly = true;
   }
@@ -227,6 +231,8 @@ export class Product {
     try { this.price = val.price || -1; } catch (e) { valErrHandler(e); }
     try { this.rating = val.rating; } catch (e) { valErrHandler(e); }
     try { this.inventoryStatus = val.inventoryStatus || ``; } catch (e) { valErrHandler(e); }
+    // reset updated (triggered when id is set)
+    this.resetUpdated();
     // throw for invalid fields
     if (validationErrors.length) {
       throw new ValidationErrorStack(validationErrors, `Invalid Product`);
@@ -241,18 +247,22 @@ export class Product {
    */
   async save(app: RichApp) {
     const newProduct = await Product.insertNewToDatabase(app, this);
-    this.id = newProduct.id;
-    this.code = newProduct.code;
-    this.name = newProduct.name;
-    this.description = newProduct.description;
-    this.image = newProduct.image;
-    this.quantity = newProduct.quantity;
-    this.price = newProduct.price;
-    this.rating = newProduct.rating;
-    this.inventoryStatus = newProduct.inventoryStatus;
-    this.category = newProduct.category;
-    this.isSaved = newProduct.isSaved;
-    this.isReadOnly = newProduct.isReadOnly;
+    return this.productFieldUpdateAfterSave(newProduct);
+  }
+  productFieldUpdateAfterSave(updatedProduct:Product){
+    this.id = updatedProduct.id;
+    this.code = updatedProduct.code;
+    this.name = updatedProduct.name;
+    this.description = updatedProduct.description;
+    this.image = updatedProduct.image;
+    this.quantity = updatedProduct.quantity;
+    this.price = updatedProduct.price;
+    this.rating = updatedProduct.rating;
+    this.inventoryStatus = updatedProduct.inventoryStatus;
+    this.category = updatedProduct.category;
+    this.isSaved = updatedProduct.isSaved;
+    this.isReadOnly = updatedProduct.isReadOnly;
+    this.resetUpdated();
     return this;
   }
   /**

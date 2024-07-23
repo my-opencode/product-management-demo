@@ -320,21 +320,21 @@ describe(`Product static - insertNewToDatabase - New not found`, function () {
   let pool: any;
   let p: Product;
   const results: ProductBase[] = [
-      {
-        id: 18,
-        code: `abc`,
-        name: `product abc`,
-        description: `product desc`,
-        image: `abc.png`,
-        category: 1,
-        quantity: 10,
-        price: 100,
-        rating: 3,
-        inventoryStatus: "INSTOCK"
-      }];
-  function* ExecuteResult () {
+    {
+      id: 18,
+      code: `abc`,
+      name: `product abc`,
+      description: `product desc`,
+      image: `abc.png`,
+      category: 1,
+      quantity: 10,
+      price: 100,
+      rating: 3,
+      inventoryStatus: "INSTOCK"
+    }];
+  function* ExecuteResult() {
     let count = 0;
-    if(count === 0){
+    if (count === 0) {
       count++;
       yield results;
     } else
@@ -954,25 +954,25 @@ describe(`Product class - update Product`, function () {
 
 describe(`Product inst - productFieldUpdateAfterSave`, function () {
   let target = {
-      id: 555,
-      code: `abcd`,
-      name: `efgh`,
-      description: `ijkl`,
-      image: `mnop.png`,
-      quantity: 10000,
-      price: 20000,
-      rating: 5,
-      inventoryStatus: `INSTOCK`,
-      category: 4
+    id: 555,
+    code: `abcd`,
+    name: `efgh`,
+    description: `ijkl`,
+    image: `mnop.png`,
+    quantity: 10000,
+    price: 20000,
+    rating: 5,
+    inventoryStatus: `INSTOCK`,
+    category: 4
   } as ProductAsInTheJson;
   let p: Product;
-  before(function(){
+  before(function () {
     p = getDummyProduct();
     const p2 = new Product(target);
     p.productFieldUpdateAfterSave(p2);
   });
-  Object.entries(target).forEach(([k,v])=>
-    it(`should have updated ${k}`, function(){
+  Object.entries(target).forEach(([k, v]) =>
+    it(`should have updated ${k}`, function () {
       //@ts-ignore
       assert.strictEqual(p[k], v);
     })

@@ -114,7 +114,7 @@ export class Product {
   setUpdated(v: UpdatableFieldKey) {
     if (this.isSaved) this.updatedFields.add(v);
   }
-  resetUpdated(){
+  resetUpdated() {
     this.updatedFields = new Set();
   }
   _id: number | undefined = undefined;
@@ -271,7 +271,7 @@ export class Product {
   constructor(val: Partial<ProductBase>) {
     // invalid id is breaking
     // empty id is allowed (new product)
-    if(!val) throw new TypeError(`Missing product value in Product constructor.`);
+    if (!val) throw new TypeError(`Missing product value in Product constructor.`);
     if (val.id !== undefined)
       this.id = val.id;
     // aggregate validation errors
@@ -393,7 +393,7 @@ export class Product {
   static async list(app: RichApp) {
     return await this.listFromDatabase(app);
   }
-  static async listFromDatabase(app:RichApp){
+  static async listFromDatabase(app: RichApp) {
     const pool = app.get(AppSymbols.connectionPool);
     const [rows] = await pool.execute(SQL_SELECT_ALL_PRODUCTS());
     return rows as ProductAsInTheJson[];
@@ -404,7 +404,7 @@ export class Product {
   static async getFromDatabaseById(app: RichApp, id: number): Promise<Product | undefined> {
     const pool = app.get(AppSymbols.connectionPool);
     const response = await pool.execute(SQL_SELECT_PRODUCT_BY_ID(id));
-    const [rows] = response||[];
+    const [rows] = response || [];
     if (!(rows as ProductAsInTheJson[])?.[0]) return undefined;
     logger.log(`debug`, `getFromDatabaseById Database QueryResult is ${JSON.stringify(rows)}`);
     const product = new Product((rows as ProductAsInTheJson[])[0]);

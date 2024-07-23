@@ -309,7 +309,11 @@ export class Product {
     const newProduct = await Product.insertNewToDatabase(app, this);
     return this.productFieldUpdateAfterSave(newProduct);
   }
-  productFieldUpdateAfterSave(updatedProduct:Product){
+  async update(app: RichApp): Promise<Product> {
+    const updatedProduct = await Product.updateInDatabase(app, this);
+    return this.productFieldUpdateAfterSave(updatedProduct);
+  }
+  productFieldUpdateAfterSave(updatedProduct: Product) {
     this.id = updatedProduct.id;
     this.code = updatedProduct.code;
     this.name = updatedProduct.name;

@@ -1,4 +1,4 @@
-import { validateInt } from "../lib/validators";
+import { validateInt, ValidationError } from "../lib/validators";
 
 export default class Id {
   /**
@@ -13,7 +13,7 @@ export default class Id {
     try {
       return validateInt(candidate, undefined, 1, fieldName);
     } catch (err) {
-      if (err instanceof Error)
+      if (err instanceof ValidationError)
         err.message = errMessage;
       throw err;
     }

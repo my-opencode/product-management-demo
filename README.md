@@ -603,18 +603,24 @@ In the real world, a customer rating table would make more sense, linking a user
 - [ ] update product
   - [ ] Model
     - back/Models/Products.ts
-      - [ ] static method databaseResponseToInstance
-        - constructor throws
-      - [ ] updatedFields property
-      - [ ] method updateField
-        - validates one field value
-        - if field is code, ensures code is unique among active products
-        - update instance field value when new
-        - add key to updated fields when new
+      - ~~[ ] static method databaseResponseToInstance~~
+        - ~~constructor throws~~
+      - [x] updatedFields property & tracking
+      - [x] getter isUpdated
+      - [x] method setUpdated ~~updateField~~
+        - integrated with field setters
+        - ~~validates one field value~~
+        - ~~f field is code, ensures code is unique among active products~~
+        - ~~update instance field value when new~~
+        - ~~add key to updated fields when new~~
+      - [x] update method
+      - [x] static updateInDatabase method
+        - call procedure for rollback
     - back/Models/Products.test.ts
-      - [ ] test Products.databaseResponseToInstance
-      - [ ] test Products.updateField
-      - [ ] test save updated
+      - [ ] ~~test Products.databaseResponseToInstance~~
+      - [ ] ~~test Products.updateField~~
+      - [x] test save updated
+      - [x] test updatedInDb
   - [ ] Controller
     - back/controllers/products-update-by-id.ts
       - [ ] import logger

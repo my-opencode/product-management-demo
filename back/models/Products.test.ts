@@ -218,6 +218,238 @@ describe(`Product static - getFromDatabaseById`, function () {
   });
 });
 
+describe(`Product static - insertNewToDatabase - reject conditions`, function () {
+  describe(`Early reject conditions`, function () {
+    it(`should reject without product`, async function () {
+      await assert.rejects(
+        //@ts-ignore
+        () => Product.insertNewToDatabase(),
+        new Error(`Missing product to save.`)
+      )
+    });
+    it(`should reject on isReadOnly product`, async function () {
+      await assert.rejects(
+        //@ts-ignore
+        () => Product.insertNewToDatabase(undefined, getDummyProduct({ isReadOnly: true })),
+        new Error(`Product is read only. Please provide a valid category id.`)
+      )
+    });
+  });
+});
+
+describe(`Product static - insertNewToDatabase - Category not found`, function () {
+  let app: any;
+  let pool: any;
+  before(function () {
+    const noRowError = new Error(`Value not found in ProductCategories.id for foreign key constraint`) as QueryError;
+    noRowError.errno = 1452;
+    noRowError.code = `ER_NO_REFERENCED_ROW_2`;
+    pool = {
+      execute: mock.fn((statement: string) => Promise.reject(noRowError))
+    };
+    app = {
+      get: mock.fn((path: string) => pool)
+    };
+  });
+  beforeEach(function () {
+    app.get.mock.resetCalls();
+    pool.execute.mock.resetCalls();
+  });
+  it(`should call app.get once (save + error)`, async function () {
+    const p = getDummyProduct();
+    await assert.rejects(Product.insertNewToDatabase(app, p));
+    assert.strictEqual(app.get.mock.callCount(), 1);
+    assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+  });
+  it(`should call pool.execute once (save + error)`, async function () {
+    const p = getDummyProduct();
+    await assert.rejects(Product.insertNewToDatabase(app, p));
+    assert.strictEqual(pool.execute.mock.callCount(), 1);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0, 17), `CALL new_product(`);
+  });
+  it(`should throw validation stack`, async function () {
+    const p = getDummyProduct();
+    await assert.rejects(
+      Product.insertNewToDatabase(app, p),
+      ValidationErrorStack
+    );
+  });
+});
+
+describe(`Product static - insertNewToDatabase - Duplicate code`, function () {
+  let app: any;
+  let pool: any;
+  before(function () {
+    const noRowError = new Error(`Duplicate entry 'f230fh0g3' for key 'Products.code_filtered_index_workaround_UNIQUE'`) as QueryError;
+    noRowError.errno = 1062;
+    noRowError.code = `ER_DUP_ENTRY`;
+    pool = {
+      execute: mock.fn((statement: string) => Promise.reject(noRowError))
+    };
+    app = {
+      get: mock.fn((path: string) => pool)
+    };
+  });
+  beforeEach(function () {
+    app.get.mock.resetCalls();
+    pool.execute.mock.resetCalls();
+  });
+  it(`should call app.get once (save + error)`, async function () {
+    const p = getDummyProduct();
+    await assert.rejects(Product.insertNewToDatabase(app, p));
+    assert.strictEqual(app.get.mock.callCount(), 1);
+    assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+  });
+  it(`should call pool.execute once (save + error)`, async function () {
+    const p = getDummyProduct();
+    await assert.rejects(Product.insertNewToDatabase(app, p));
+    assert.strictEqual(pool.execute.mock.callCount(), 1);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0, 17), `CALL new_product(`);
+  });
+  it(`should throw validation stack`, async function () {
+    const p = getDummyProduct()
+    await assert.rejects(
+      Product.insertNewToDatabase(app, p),
+      ValidationErrorStack
+    );
+  });
+});
+
+describe(`Product static - insertNewToDatabase - New not found`, function () {
+  let app: any;
+  let pool: any;
+  let p: Product;
+  const results: ProductBase[] = [
+      {
+        id: 18,
+        code: `abc`,
+        name: `product abc`,
+        description: `product desc`,
+        image: `abc.png`,
+        category: 1,
+        quantity: 10,
+        price: 100,
+        rating: 3,
+        inventoryStatus: "INSTOCK"
+      }];
+  function* ExecuteResult () {
+    let count = 0;
+    if(count === 0){
+      count++;
+      yield results;
+    } else
+      yield [[]];
+  }
+  before(function () {
+    const execRes = ExecuteResult();
+    pool = {
+      execute: mock.fn((statement: string) => Promise.resolve(execRes.next().value))
+    };
+    app = {
+      get: mock.fn((path: string) => pool)
+    };
+  });
+  beforeEach(function () {
+    p = new Product({
+      code: `abc`,
+      name: `product abc`,
+      description: `product desc`,
+      image: `abc.png`,
+      category: 1,
+      quantity: 10,
+      price: 100,
+      rating: 3
+    });
+    app.get.mock.resetCalls();
+    pool.execute.mock.resetCalls();
+  });
+  it(`should call app.get twice (save + getById)`, async function () {
+    await assert.rejects(Product.insertNewToDatabase(app, p));
+    assert.strictEqual(app.get.mock.callCount(), 2);
+    assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+  });
+  it(`should call pool.execute twice (save + getById)`, async function () {
+    await assert.rejects(Product.insertNewToDatabase(app, p));
+    assert.strictEqual(pool.execute.mock.callCount(), 2);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0, 17), `CALL new_product(`);
+    assert.strictEqual(pool.execute.mock.calls[1].arguments[0].slice(0, 19), `SELECT \n      p.id,`);
+  });
+  it(`should return product`, async function () {
+    await assert.rejects(
+      () => Product.insertNewToDatabase(app, p),
+      new Error(`Unable to retrieve new product from Database.`)
+    );
+  });
+});
+
+describe(`Product static - insertNewToDatabase`, function () {
+  let app: any;
+  let pool: any;
+  let p: Product;
+  before(function () {
+    const results: ProductBase[] = [
+      {
+        id: 18,
+        code: `abc`,
+        name: `product abc`,
+        description: `product desc`,
+        image: `abc.png`,
+        category: 1,
+        quantity: 10,
+        price: 100,
+        rating: 3,
+        inventoryStatus: "INSTOCK"
+      }];
+    pool = {
+      execute: mock.fn((statement: string) => Promise.resolve([results]))
+    };
+    app = {
+      get: mock.fn((path: string) => pool)
+    };
+  });
+  beforeEach(function () {
+    p = new Product({
+      code: `abc`,
+      name: `product abc`,
+      description: `product desc`,
+      image: `abc.png`,
+      category: 1,
+      quantity: 10,
+      price: 100,
+      rating: 3
+    });
+    app.get.mock.resetCalls();
+    pool.execute.mock.resetCalls();
+  });
+  it(`should call app.get twice (save + getById)`, async function () {
+    await Product.insertNewToDatabase(app, p);
+    assert.strictEqual(app.get.mock.callCount(), 2);
+    assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+  });
+  it(`should call pool.execute twice (save + getById)`, async function () {
+    await Product.insertNewToDatabase(app, p);
+    assert.strictEqual(pool.execute.mock.callCount(), 2);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0, 17), `CALL new_product(`);
+    assert.strictEqual(pool.execute.mock.calls[1].arguments[0].slice(0, 19), `SELECT 
+      p.id,`);
+  });
+  it(`should return product`, async function () {
+    const result = await Product.insertNewToDatabase(app, p);
+    assert.ok(result instanceof Product);
+  });
+  it(`should not update product`, async function () {
+    assert.deepStrictEqual(
+      p.isSaved,
+      false
+    );
+    await Product.insertNewToDatabase(app, p);
+    assert.deepStrictEqual(
+      p.isSaved,
+      false
+    );
+  });
+});
+
 describe(`Product class - new Product`, function () {
   describe(`invalid id`, function () {
     it(`should throw`, function () {

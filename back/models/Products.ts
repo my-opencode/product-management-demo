@@ -308,7 +308,6 @@ export class Product {
     try {
       const callStatement = `CALL new_product( "${product.code}", "${product.name}", "${product.description}", ${product.image ? `, "${product.image}"` : `NULL`}, ${product.category}, ${product.price.toFixed(2)}, ${product.quantity}, 0, @id);`;
       logger.log(`debug`, callStatement);
-      // ([result] = await pool.execute(callStatement));
       ([procedureResult] =
         await pool.execute<ProcedureCallPacket<{ id: number }[]>>(callStatement));
     } catch (err) {
@@ -318,7 +317,7 @@ export class Product {
     }
 
     logger.log(`debug`, `Product insertNewToDatabase received QueryResult: (${typeof procedureResult}) "${JSON.stringify(procedureResult)}"`);
-    const productId: number = (procedureResult as RowDataPacket)[0].id;
+    const productId: number = (procedureResult as RowDataPacket)?.[0]?.id;
 
     const newProduct = await this.getFromDatabaseById(app, productId);
     if (!newProduct) throw new Error(`Unable to retrieve new product from Database.`);
@@ -343,8 +342,9 @@ export class Product {
   }
   static async getFromDatabaseById(app: RichApp, id: number): Promise<Product | undefined> {
     const pool = app.get(AppSymbols.connectionPool);
-    const [rows] = await pool.execute(SQL_SELECT_PRODUCT_BY_ID(id));
-    if(!(rows as ProductAsInTheJson[])?.[0]) return undefined;
+    const response = await pool.execute(SQL_SELECT_PRODUCT_BY_ID(id));
+    const [rows] = response||[];
+    if (!(rows as ProductAsInTheJson[])?.[0]) return undefined;
     logger.log(`debug`, `getFromDatabaseById Database QueryResult is ${JSON.stringify(rows)}`);
     const product = new Product((rows as ProductAsInTheJson[])[0]);
     return product;

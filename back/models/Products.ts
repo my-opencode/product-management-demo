@@ -65,6 +65,14 @@ WHERE deleted = 0;`
 const SQL_SELECT_PRODUCT_BY_ID = (id: number) => SQL_SELECT_ALL_PRODUCTS().slice(0, -1) + ` AND p.id = ${id} LIMIT 1;`;
 type UpdatableFieldKey = "category" | "code" | "name" | "description" | "image" | "price" | "quantity";
 const updatableFields: UpdatableFieldKey[] = [`category`, `code`, `name`, `description`, `image`, `price`, `quantity`];
+const SQL_CALL_UPDATE_FIELDS_LIST = (p: Product) => `${p.updatedFields.has(`category`) ? p.categoryId : `NULL`
+  }$, ${p.updatedFields.has(`code`) ? p.code : `NULL`
+  }, ${p.updatedFields.has(`name`) ? p.name : `NULL`
+  }, ${p.updatedFields.has(`description`) ? p.description : `NULL`
+  }, ${p.updatedFields.has(`image`) ? p.image : `NULL`
+  }, ${p.updatedFields.has(`price`) ? p.price : `NULL`
+  }, ${p.updatedFields.has(`quantity`) ? p.quantity : `NULL`
+  }`;
 function handleProcedureSqlSignals(err: Error) {
   //TO-DO mock up class for QueryError in order to check with instanceof
   let _err = err as unknown as QueryError;
@@ -351,11 +359,32 @@ export class Product {
     if (!newProduct) throw new Error(`Unable to retrieve new product from Database.`);
     return newProduct;
   }
-  async update(app: RichApp): Promise<Product> {
-    throw new Error(`Not implemented`);
-  }
   static async updateInDatabase(app: RichApp, product: Product): Promise<Product> {
-    throw new Error(`Not implemented`);
+    if (!product || !(product instanceof Product))
+      throw new Error(`Missing product to save.`);
+    else if (product.isReadOnly)
+      throw new Error(`Product is read only. Please provide a valid category id.`);
+    else if (!product.isSaved || !product.id)
+      throw new Error(`Update called on unsaved product.`);
+    else if (!product.isUpdated)
+      throw new Error(`Update called on product without updates.`);
+
+    const pool = app.get(AppSymbols.connectionPool);
+    let procedureResult: QueryResult | undefined = undefined;
+    try {
+      const callStatement = `CALL update_product(${SQL_CALL_UPDATE_FIELDS_LIST(product)});`;
+      logger.log(`debug`, callStatement);
+      ([procedureResult] = await pool.execute(callStatement));
+    } catch (err) {
+      logger.log(`debug`, `Product updateInDatabase received QueryErr: "${JSON.stringify(err)}"`);
+      if (err instanceof Error)
+        handleProcedureSqlSignals(err);
+    }
+    logger.log(`debug`, `Product InsertNewToDatabase received QueryResult: (${typeof procedureResult}) "${JSON.stringify(procedureResult)}"`);
+
+    const updatedProduct = await this.getFromDatabaseById(app, product.id);
+    if (!updatedProduct) throw new Error(`Unable to retrieve updated product from Database.`);
+    return updatedProduct;
   }
   static async list(app: RichApp) {
     return await this.listFromDatabase(app);

@@ -103,20 +103,21 @@ export class Product {
     this.updatedFields = new Set();
   }
   _id: number | undefined = undefined;
-  _code = ``;
-  _name = ``;
-  _description = ``;
-  _image: string | undefined = ``;
-  _price = -1;
-  _category: number | undefined = undefined;
+  _code!:string;
+  _name!:string;
+  _description!:string;
+  _image: string | undefined;
+  _price!:number;
+  _category: number | undefined;
   _categoryName = ``;
-  _quantity = -1;
-  _inventoryStatus : InventoryStatus|"" = ``;
+  _quantity!:number;
+  _inventoryStatus: InventoryStatus | "" = ``;
   _rating = -1;
   get id(): number | undefined {
     return this._id;
   }
   set id(val: number | undefined) {
+    if (val === this._id) return;
     if (val === undefined) {
       this._id = undefined;
       this.isSaved = false;
@@ -130,13 +131,17 @@ export class Product {
     return this._code;
   }
   set code(val: string) {
+    val = val.trim();
     this._code = validateString(val, 255, 1, `product.code`);
+    if (val !== this._code)
     this.setUpdated(`code`);
   }
   get name(): string {
     return this._name;
   }
   set name(val: string) {
+    val = val.trim();
+    if (val === this._name) return;
     this._name = validateString(val, 1024, 1, `product.name`);
     this.setUpdated(`name`);
   }
@@ -144,6 +149,8 @@ export class Product {
     return this._description;
   }
   set description(val: string) {
+    val = val.trim();
+    if (val === this._description) return;
     this._description = validateString(val, 5120, 1, `product.description`);
     this.setUpdated(`description`);
   }
@@ -151,8 +158,14 @@ export class Product {
     return this._image;
   }
   set image(val: string | undefined) {
-    if (val === undefined)
+    if (!this._image && !val) return;
+    else if (val === undefined) {
       this._image = undefined;
+      this.setUpdated(`image`);
+      return;
+    }
+    val = val.trim();
+    if (val === this._description) return;
     else {
       this._image = validateString(val, 2048, undefined, `product.image`) || undefined;
       this.setUpdated(`image`);
@@ -162,10 +175,11 @@ export class Product {
     return this._category || this._categoryName;
   }
   set category(val: number | string | undefined) {
-    if(!this._category && val === undefined)
+    if (val === this._category) return;
+    if (!this._category && val === undefined)
       return;
-    if(val === undefined)
-      throw new ValidationError(`Cannot reset existing category value to undefined.`,`product.category`);
+    if (val === undefined)
+      throw new ValidationError(`Cannot reset existing category value to undefined.`, `product.category`);
     let isSet = false;
     let error: ValidationError | undefined = undefined;
     try {
@@ -184,7 +198,8 @@ export class Product {
   get categoryId(): number | undefined {
     return this._category;
   }
-  set categoryId(val: number | string ) {
+  set categoryId(val: number | string) {
+    if (val === this._category) return;
     this._category = Id.validator(val, undefined, `product.category`);
     this.isReadOnly = false;
     this.setUpdated(`category`);
@@ -193,6 +208,8 @@ export class Product {
     return this._categoryName;
   }
   set categoryName(val: string) {
+    val = val.trim();
+    if (val === this._categoryName) return;
     this._categoryName = validateString(val, 1024, undefined, `product.categoryName`);
     if (!this._category || this._category < 1)
       this.isReadOnly = true;
@@ -201,6 +218,7 @@ export class Product {
     return this._quantity;
   }
   set quantity(val: number) {
+    if (val === this._quantity) return;
     this._quantity = validateInt(val, 16777215, 0, `product.quantity`);
     this.setUpdated(`quantity`);
   }
@@ -208,6 +226,7 @@ export class Product {
     return this._price;
   }
   set price(val: number | string) {
+    if (val === this._price) return;
     this._price = validateFloat(val, undefined, 0.01, `product.price`);
     this.setUpdated(`price`);
   }
@@ -215,15 +234,17 @@ export class Product {
     return this._rating;
   }
   set rating(val: number | undefined) {
+    if (val === this._rating) return;
     if (val === undefined)
       this._rating = 0;
     else
       this._rating = validateTinyInt(val, 5, 0, `product.rating`);
   }
-  get inventoryStatus():InventoryStatus|"" {
+  get inventoryStatus(): InventoryStatus | "" {
     return this._inventoryStatus;
   }
-  set inventoryStatus(val: InventoryStatus|"") {
+  set inventoryStatus(val: InventoryStatus | "") {
+    if (val === this._inventoryStatus) return;
     const inventoryStatusValues: InventoryStatus[] = [
       `OUTOFSTOCK`,
       `LOWSTOCK`,

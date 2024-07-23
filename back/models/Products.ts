@@ -84,6 +84,13 @@ function handleProcedureSqlSignals(err: Error) {
       [new ValidationError(`Duplicate value for code.`, `product.code`)],
       `Conflicting Product`
     );
+  if (
+    _err.errno === 1032/* mysqlErCodes[`ER_DUP_ENTRY`] */ || _err.code === `ER_KEY_NOT_FOUND`
+  ) // 1032
+    throw new ValidationErrorStack(
+      [new ValidationError(`Product not found.`, `product.id`)],
+      `Conflicting Product`
+    );
 }
 /**
  * Product Class

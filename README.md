@@ -601,6 +601,9 @@ In the real world, a customer rating table would make more sense, linking a user
       - [x] test endpoint
   - [x] update openapi.yaml
 - [ ] update product
+  - [x] DB update
+    - [x] indexes
+    - [x] update_product procedure
   - [ ] Model
     - back/Models/Products.ts
       - ~~[ ] static method databaseResponseToInstance~~

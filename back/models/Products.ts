@@ -216,17 +216,17 @@ export class Product {
     else
       this._rating = validateTinyInt(val, 5, 0, `product.rating`);
   }
-  get inventoryStatus() {
+  get inventoryStatus():InventoryStatus|"" {
     return this._inventoryStatus;
   }
-  set inventoryStatus(val: string) {
+  set inventoryStatus(val: InventoryStatus|"") {
     const inventoryStatusValues: InventoryStatus[] = [
       `OUTOFSTOCK`,
       `LOWSTOCK`,
       `INSTOCK`
     ];
     if (val && inventoryStatusValues.includes(val.toUpperCase() as any))
-      this._inventoryStatus = val.toUpperCase();
+      this._inventoryStatus = val.toUpperCase() as InventoryStatus;
   }
   constructor(val: Partial<ProductBase>) {
     // invalid id is breaking

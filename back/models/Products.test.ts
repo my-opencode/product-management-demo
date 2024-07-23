@@ -295,27 +295,27 @@ describe(`Product class - new Product`, function () {
       assert.strictEqual(p.isSaved, true);
     });
     [
-      [`id`,12],
-      [`code`,`abc`],
-      [`name`,`product abc`],
-      [`description`,`product desc`],
-      [`image`,`abc.png`],
-      [`category`,1],
-      [`quantity`,10],
-      [`price`,100],
-      [`rating`,3],
-      [`inventoryStatus`,`INSTOCK`],
+      [`id`, 12],
+      [`code`, `abc`],
+      [`name`, `product abc`],
+      [`description`, `product desc`],
+      [`image`, `abc.png`],
+      [`category`, 1],
+      [`quantity`, 10],
+      [`price`, 100],
+      [`rating`, 3],
+      [`inventoryStatus`, `INSTOCK`],
     ].forEach(
       //@ts-ignore
-      ([k,v]) => it(`should have ${k}`, function () { assert.strictEqual(p[k], v); })
+      ([k, v]) => it(`should have ${k}`, function () { assert.strictEqual(p[k], v); })
     )
   });
 });
 
 describe(`Product class - update Product`, function () {
   describe(`unsaved: not updated`, function () {
-    let p:Product;
-    before(function(){
+    let p: Product;
+    before(function () {
       p = new Product({
         code: `abc`,
         name: `product abc`,
@@ -327,24 +327,24 @@ describe(`Product class - update Product`, function () {
         rating: 3
       });
     });
-    it(`should not be saved`, function(){
-      assert.strictEqual(p.isSaved,false);
+    it(`should not be saved`, function () {
+      assert.strictEqual(p.isSaved, false);
     });
-    it(`should accept value change`, function(){
+    it(`should accept value change`, function () {
       p.name = `Bcd`;
-      assert.strictEqual(p.name,`Bcd`);
-      assert.strictEqual(p._name,`Bcd`);
+      assert.strictEqual(p.name, `Bcd`);
+      assert.strictEqual(p._name, `Bcd`);
     });
-    it(`should not list field updated`, function(){
-      assert.strictEqual(p.updatedFields.has(`name`),false);
+    it(`should not list field updated`, function () {
+      assert.strictEqual(p.updatedFields.has(`name`), false);
     });
-    it(`should not have flag updated`, function(){
-      assert.strictEqual(p.isUpdated,false);
+    it(`should not have flag updated`, function () {
+      assert.strictEqual(p.isUpdated, false);
     });
   });
   describe(`saved: updated`, function () {
-    let p:Product;
-    before(function(){
+    let p: Product;
+    before(function () {
       p = new Product({
         id: 3,
         code: `abc`,
@@ -357,24 +357,24 @@ describe(`Product class - update Product`, function () {
         rating: 3
       });
     });
-    it(`should be saved`, function(){
-      assert.strictEqual(p.isSaved,true);
+    it(`should be saved`, function () {
+      assert.strictEqual(p.isSaved, true);
     });
-    it(`should accept value change`, function(){
+    it(`should accept value change`, function () {
       p.name = `Bcd`;
-      assert.strictEqual(p.name,`Bcd`);
-      assert.strictEqual(p._name,`Bcd`);
+      assert.strictEqual(p.name, `Bcd`);
+      assert.strictEqual(p._name, `Bcd`);
     });
-    it(`should list field updated`, function(){
-      assert.strictEqual(p.updatedFields.has(`name`),true);
+    it(`should list field updated`, function () {
+      assert.strictEqual(p.updatedFields.has(`name`), true);
     });
-    it(`should have flag updated`, function(){
-      assert.strictEqual(p.isUpdated,true);
+    it(`should have flag updated`, function () {
+      assert.strictEqual(p.isUpdated, true);
     });
   });
   describe(`saved: not updatable fields`, function () {
-    let p:Product;
-    before(function(){
+    let p: Product;
+    before(function () {
       p = new Product({
         id: 3,
         code: `abc`,
@@ -387,31 +387,31 @@ describe(`Product class - update Product`, function () {
         rating: 3
       });
     });
-    it(`should not set updated for categoryName`, function(){
+    it(`should not set updated for categoryName`, function () {
       p.category = `Bcd`;
-      assert.strictEqual(p.category,1);
-      assert.strictEqual(p._category,1);
-      assert.strictEqual(p.categoryName,`Bcd`);
-      assert.strictEqual(p._categoryName,`Bcd`);
-      assert.strictEqual(p.categoryId,1);
-      assert.strictEqual(p.updatedFields.has(`category`),false);
-      assert.strictEqual(p.isUpdated,false);
+      assert.strictEqual(p.category, 1);
+      assert.strictEqual(p._category, 1);
+      assert.strictEqual(p.categoryName, `Bcd`);
+      assert.strictEqual(p._categoryName, `Bcd`);
+      assert.strictEqual(p.categoryId, 1);
+      assert.strictEqual(p.updatedFields.has(`category`), false);
+      assert.strictEqual(p.isUpdated, false);
     });
-    it(`should not set updated for rating`, function(){
+    it(`should not set updated for rating`, function () {
       p.rating = 4;
-      assert.strictEqual(p.rating,4);
-      assert.strictEqual(p._rating,4);
+      assert.strictEqual(p.rating, 4);
+      assert.strictEqual(p._rating, 4);
       //@ts-ignore
-      assert.strictEqual(p.updatedFields.has(`rating`),false);
-      assert.strictEqual(p.isUpdated,false);
+      assert.strictEqual(p.updatedFields.has(`rating`), false);
+      assert.strictEqual(p.isUpdated, false);
     });
-    it(`should not set updated for inventoryStatus`, function(){
+    it(`should not set updated for inventoryStatus`, function () {
       p.inventoryStatus = "OUTOFSTOCK";
-      assert.strictEqual(p.inventoryStatus,`OUTOFSTOCK`);
-      assert.strictEqual(p._inventoryStatus,`OUTOFSTOCK`);
+      assert.strictEqual(p.inventoryStatus, `OUTOFSTOCK`);
+      assert.strictEqual(p._inventoryStatus, `OUTOFSTOCK`);
       //@ts-ignore
-      assert.strictEqual(p.updatedFields.has(`inventoryStatus`),false);
-      assert.strictEqual(p.isUpdated,false);
+      assert.strictEqual(p.updatedFields.has(`inventoryStatus`), false);
+      assert.strictEqual(p.isUpdated, false);
     });
   });
 });

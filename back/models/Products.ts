@@ -71,6 +71,13 @@ const SQL_SELECT_PRODUCT_BY_ID = (id: number) => SQL_SELECT_ALL_PRODUCTS().slice
 export class Product {
   isSaved = false;
   isReadOnly = true;
+  updatedFields: (keyof Product)[] = [];
+  get isUpdated():boolean {
+    return this.updatedFields.length > 0;
+  }
+  setUpdated(v:keyof Product){
+    if(this.isSaved) this.updatedFields.push(v);
+  }
   _id: number | undefined = undefined;
   _code = ``;
   _name = ``;
@@ -100,18 +107,21 @@ export class Product {
   }
   set code(val: string) {
     this._code = validateString(val, 255, 1, `product.code`);
+    this.setUpdated(`code`);
   }
   get name(): string {
     return this._name;
   }
   set name(val: string) {
     this._name = validateString(val, 1024, 1, `product.name`);
+    this.setUpdated(`name`);
   }
   get description(): string {
     return this._description;
   }
   set description(val: string) {
     this._description = validateString(val, 5120, 1, `product.description`);
+    this.setUpdated(`description`);
   }
   get image(): string | undefined {
     return this._image;
@@ -119,8 +129,10 @@ export class Product {
   set image(val: string | undefined) {
     if (val === undefined)
       this._image = undefined;
-    else
+    else{
       this._image = validateString(val, 2048, undefined, `product.image`) || undefined;
+      this.setUpdated(`image`);
+    }
   }
   get category(): number | string {
     return this._category || this._category_name;
@@ -147,6 +159,7 @@ export class Product {
   set categoryId(val: number | string) {
     this._category = Id.validator(val, undefined, `product.category`);
     this.isReadOnly = false;
+    this.setUpdated(`category`);
   }
   get categoryName(): string {
     return this._category_name;
@@ -161,12 +174,14 @@ export class Product {
   }
   set quantity(val: number) {
     this._quantity = validateInt(val, 16777215, 0, `product.quantity`);
+    this.setUpdated(`quantity`);
   }
   get price(): number {
     return this._price;
   }
   set price(val: number | string) {
     this._price = validateFloat(val, undefined, 0.01, `product.price`);
+    this.setUpdated(`price`);
   }
   get rating(): number {
     return this._rating;

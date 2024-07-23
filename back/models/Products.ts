@@ -65,6 +65,26 @@ WHERE deleted = 0;`
 const SQL_SELECT_PRODUCT_BY_ID = (id: number) => SQL_SELECT_ALL_PRODUCTS().slice(0, -1) + ` AND p.id = ${id} LIMIT 1;`;
 type UpdatableFieldKey = "category" | "code" | "name" | "description" | "image" | "price" | "quantity";
 const updatableFields: UpdatableFieldKey[] = [`category`, `code`, `name`, `description`, `image`, `price`, `quantity`];
+function handleProcedureSqlSignals(err: Error) {
+  //TO-DO mock up class for QueryError in order to check with instanceof
+  let _err = err as unknown as QueryError;
+  if (
+    _err.errno === 1216/* mysqlErCodes[`ER_NO_REFERENCED_ROW`] */ || _err.code === `ER_NO_REFERENCED_ROW` ||
+    _err.errno === 1452/* mysqlErCodes[`ER_NO_REFERENCED_ROW_2`] */ || _err.code === `ER_NO_REFERENCED_ROW_2`
+  ) // 1216, 1452
+    throw new ValidationErrorStack(
+      [new ValidationError(`Product Category does not exist.`, `product.category`)],
+      `Conflicting Product`
+    );
+  if (
+    _err.errno === 1062/* mysqlErCodes[`ER_DUP_ENTRY`] */ || _err.code === `ER_DUP_ENTRY` ||
+    _err.errno === 1169/* mysqlErCodes[`ER_DUP_UNIQUE`] */ || _err.code === `ER_DUP_UNIQUE`
+  ) // 1062, 1169
+    throw new ValidationErrorStack(
+      [new ValidationError(`Duplicate value for code.`, `product.code`)],
+      `Conflicting Product`
+    );
+}
 /**
  * Product Class
  * Note: rating is updated/saved independently to the product.
@@ -289,29 +309,11 @@ export class Product {
         await pool.execute<ProcedureCallPacket<{ id: number }[]>>(callStatement));
     } catch (err) {
       logger.log(`debug`, `Product InsertNewToDatabase received QueryErr: "${JSON.stringify(err)}"`);
-      if (err instanceof Error) {
-        //TO-DO mock up class for QueryError in order to check with instanceof
-        let _err = err as unknown as QueryError;
-        if (
-          _err.errno === 1216/* mysqlErCodes[`ER_NO_REFERENCED_ROW`] */ || _err.code === `ER_NO_REFERENCED_ROW` ||
-          _err.errno === 1452/* mysqlErCodes[`ER_NO_REFERENCED_ROW_2`] */ || _err.code === `ER_NO_REFERENCED_ROW_2`
-        ) // 1216, 1452
-          throw new ValidationErrorStack(
-            [new ValidationError(`Product Category does not exist.`, `product.category`)],
-            `Conflicting Product`
-          );
-        if (
-          _err.errno === 1062/* mysqlErCodes[`ER_DUP_ENTRY`] */ || _err.code === `ER_DUP_ENTRY` ||
-          _err.errno === 1169/* mysqlErCodes[`ER_DUP_UNIQUE`] */ || _err.code === `ER_DUP_UNIQUE`
-        ) // 1062, 1169
-          throw new ValidationErrorStack(
-            [new ValidationError(`Duplicate value for code.`, `product.code`)],
-            `Conflicting Product`
-          );
-      }
+      if (err instanceof Error)
+        handleProcedureSqlSignals(err);
     }
 
-    logger.log(`debug`, `Product InsertNewToDatabase received QueryResult: (${typeof procedureResult}) "${JSON.stringify(procedureResult)}"`);
+    logger.log(`debug`, `Product insertNewToDatabase received QueryResult: (${typeof procedureResult}) "${JSON.stringify(procedureResult)}"`);
     const productId: number = (procedureResult as RowDataPacket)[0].id;
 
     const newProduct = await this.getFromDatabaseById(app, productId);

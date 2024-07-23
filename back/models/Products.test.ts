@@ -5,7 +5,7 @@ import AppSymbols from "../AppSymbols";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 import { QueryError } from "mysql2";
 
-describe(`Product class - list (listFromDatabase alias)`, function () {
+describe(`Product static - list (listFromDatabase alias)`, function () {
   let app: any;
   let pool: any;
   before(function () {
@@ -65,7 +65,7 @@ describe(`Product class - list (listFromDatabase alias)`, function () {
   });
 });
 
-describe(`Product class - listFromDatabase`, function () {
+describe(`Product static - listFromDatabase`, function () {
   let app: any;
   let pool: any;
   before(function () {
@@ -125,7 +125,7 @@ describe(`Product class - listFromDatabase`, function () {
   });
 });
 
-describe(`Product class - getById (getFromDatabaseById alias)`, function () {
+describe(`Product static - getById (getFromDatabaseById alias)`, function () {
   let app: any;
   let pool: any;
   before(function () {
@@ -173,7 +173,7 @@ describe(`Product class - getById (getFromDatabaseById alias)`, function () {
   });
 });
 
-describe(`Product class - getFromDatabaseById`, function () {
+describe(`Product static - getFromDatabaseById`, function () {
   let app: any;
   let pool: any;
   before(function () {
@@ -309,7 +309,7 @@ describe(`Product class - new Product`, function () {
   });
 });
 
-describe(`Product class - Product.save - Referenced row not found`, function () {
+describe(`Product class - update Product`, function () {
   let app: any;
   let pool: any;
   before(function () {
@@ -342,7 +342,6 @@ describe(`Product class - Product.save - Referenced row not found`, function () 
     assert.strictEqual(app.get.mock.callCount(), 1);
     assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
   });
-
   it(`should call pool.execute once (save + error)`, async function () {
     const p = new Product({
       code: `abc`,
@@ -376,7 +375,7 @@ describe(`Product class - Product.save - Referenced row not found`, function () 
   });
 });
 
-describe(`Product class - Product.save - Duplicate code`, function () {
+describe(`Product inst - Product.save - Duplicate code`, function () {
   let app: any;
   let pool: any;
   before(function () {
@@ -442,7 +441,7 @@ describe(`Product class - Product.save - Duplicate code`, function () {
   });
 });
 
-describe(`Product class - Product.save`, function () {
+describe(`Product inst - Product.save`, function () {
   let app: any;
   let pool: any;
   before(function () {

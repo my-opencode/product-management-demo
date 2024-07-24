@@ -425,6 +425,22 @@ export class Product {
     const product = new Product((rows as ProductAsInTheJson[])[0]);
     return product;
   }
+  static async setDeletedInDatabase(app:RichApp, id: number){
+    const pool = app.get(AppSymbols.connectionPool);
+    const query = `UPDATE Products SET deleted = 1 WHERE id = ${id};`;
+    logger.log(`debug`, query);
+    try {
+    await pool.execute(query);
+    } catch(err){
+      logger.log(`debug`, `Product setDeletedInDatabase received QueryErr: "${JSON.stringify(err)}"`);
+      if (err instanceof Error)
+        handleProcedureSqlSignals(err);
+    }
+    logger.log(`debug`, `Product id = ${id} — set to deleted.`);
+  }
+  static async deleteById(app:RichApp, id: number){
+    return await this.setDeletedInDatabase(app, id);
+  }
 }
 
 export default Product;

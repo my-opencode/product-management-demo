@@ -357,7 +357,7 @@ export class Product {
     const pool = app.get(AppSymbols.connectionPool);
     let procedureResult: QueryResult | undefined = undefined;
     try {
-      const callStatement = `CALL new_product( "${product.code}", "${product.name}", "${product.description}", ${product.image ? `, "${product.image}"` : `NULL`}, ${product.category}, ${product.price.toFixed(2)}, ${product.quantity}, 0, @id);`;
+      const callStatement = `CALL new_product( ${ds(product.code)}, ${ds(product.name)}, ${ds(product.description)}, ${product.image ? `, ${ds(product.image)}` : `NULL`}, ${product.categoryId}, ${product.price.toFixed(2)}, ${product.quantity}, 0, @id);`;
       logger.log(`debug`, callStatement);
       ([procedureResult] =
         await pool.execute<ProcedureCallPacket<{ id: number }[]>>(callStatement));

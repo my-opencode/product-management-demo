@@ -7,5 +7,9 @@ export default function errorHandler(err: Error, req: Request, res: Response, ne
     return next(err);
   }
   logger.log(`error`, `Caught error for ${req.method} "${req.url}" — ${err.message} — Trace: ${err.stack}`);
-  res.status(500).send(`Unexpected error. Please contact our support if the error persists.`);
+  // todo move to view
+  if(req.headers?.accept === `application/json`)
+    res.status(500).set(`Accept`,`application/json`).send(`{"description":"Unexpected error. Please contact our support if the error persists.",errors:[]}`);
+  else
+    res.status(500).send(`Unexpected error. Please contact our support if the error persists.`);
 }

@@ -383,6 +383,31 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(json.data.inventoryStatus, `LOWSTOCK`);
     });
   });
+  describe(`DELETE /products/:id 404`, async function () {
+    let response: Response;
+    await before(async function () {
+      response = await inject(app, { method: `delete`, url: `/products/999999` });
+    });
+    it(`should return status code 404`, function () {
+      assert.strictEqual(response.statusCode, 404);
+    });
+  });
+  describe(`DELETE /products/:id 204`, async function () {
+    let response: Response;
+    await before(async function () {
+      response = await inject(app, {
+        method: `delete`,
+        url: `/products/${REAL_PRODUCT_ID}`
+      });
+    });
+    it(`should return status code 204`, function () {
+      assert.strictEqual(response.statusCode, 204);
+    });
+    it(`should not return response body`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      assert.strictEqual(response.payload, ``);
+    });
+  });
 });
 
 describe(`Test API error endpoint`, function () {

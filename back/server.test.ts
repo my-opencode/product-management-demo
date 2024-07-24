@@ -14,6 +14,8 @@ import default404 from "./controllers/default.404";
 import validationErrorHandler from "./controllers/validation-error-handler";
 import { ValidationErrorResponseJson } from "./views/422-validation";
 
+const REAL_PRODUCT_ID = 1000;
+
 async function sleep() {
   await new Promise(r => setTimeout(r, 200));
 }
@@ -205,7 +207,7 @@ describe(`Test API endpoints`, function () {
     let response: Response;
     let json: { data: ProductAsInTheJson };
     await before(async function () {
-      response = await inject(app, { method: `get`, url: `/products/1` });
+      response = await inject(app, { method: `get`, url: `/products/${REAL_PRODUCT_ID}` });
     });
     it(`should return status code 200`, function () {
       assert.strictEqual(response.statusCode, 200);
@@ -214,7 +216,7 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(typeof response.payload, `string`);
       json = JSON.parse(response.payload);
       console.log(typeof json, json.data.length);
-      assert.strictEqual(json.data.id, 1);
+      assert.strictEqual(json.data.id, REAL_PRODUCT_ID);
     });
   });
   describe(`GET /products/:id 400`, async function () {

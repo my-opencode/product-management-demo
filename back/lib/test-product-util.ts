@@ -27,7 +27,7 @@ export function getDummyProduct(options?:DummyProductOptions){
     name,
     description: `Description of ${name}`,
     image: `img/${name}.png`,
-    category,
+    categoryId: category,
     quantity,
     price: parseFloat((Math.random()*9999).toFixed(2)),
     rating,

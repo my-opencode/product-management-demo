@@ -13,7 +13,7 @@ describe(`Products create controller`, function () {
       name: `product abc`,
       description: `product desc`,
       image: `abc.png`,
-      category: 1,
+      categoryId: 1,
       quantity: 10,
       price: 100,
       rating: 3
@@ -59,7 +59,7 @@ describe(`Products create controller`, function () {
         name: `product abc`,
         description: `product desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
         quantity: 10,
         price: 100,
         rating: 3
@@ -79,7 +79,7 @@ describe(`Products create controller`, function () {
     before(async function () {
       Product.insertNewToDatabase = mock.fn(() => Promise.resolve(new Product({
         id: 20,
-        category: 2,
+        categoryId: 2,
         code: `a`,
         name: `a`,
         description: `a`,
@@ -108,7 +108,7 @@ describe(`Products create controller`, function () {
     });
     it(`should call response.send with payload`, function () {
       assert.strictEqual(response.send.mock.callCount(), 1);
-      assert.strictEqual(response.send.mock.calls[0]?.arguments?.[0], `{"data":{"id":20,"code":"a","name":"a","category":2,"description":"a","quantity":10,"inventoryStatus":"INSTOCK","price":10.1}}`);
+      assert.strictEqual(response.send.mock.calls[0]?.arguments?.[0], `{"data":{"id":20,"code":"a","name":"a","category":2,"categoryId":2,"description":"a","quantity":10,"inventoryStatus":"INSTOCK","price":10.1}}`);
     });
   });
 });

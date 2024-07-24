@@ -122,7 +122,7 @@ describe(`Products update one by id controller`, function () {
       request.product = getDummyProduct({isSaved:true});
       Product.updateInDatabase = mock.fn(() => Promise.resolve(new Product({
         id: request.product!.id,
-        category: 4,
+        categoryId: 4,
         code: `a`,
         name: `a`,
         description: `a`,
@@ -134,7 +134,7 @@ describe(`Products update one by id controller`, function () {
       // 
       // update request
       request.body = {
-        category: 4,
+        categoryId: 4,
         code: `a`,
         name: `a`,
         description: `a`,
@@ -156,7 +156,7 @@ describe(`Products update one by id controller`, function () {
       assert.strictEqual(response.send.mock.callCount(), 1);
       assert.strictEqual(
         response.send.mock.calls[0]?.arguments?.[0], 
-        `{"data":{"id":${request.product!.id},"code":"a","name":"a","category":4,"description":"a","image":"a.png","quantity":10000,"inventoryStatus":"INSTOCK","price":10000.1}}`
+        `{"data":{"id":${request.product!.id},"code":"a","name":"a","category":4,"categoryId":4,"description":"a","image":"a.png","quantity":10000,"inventoryStatus":"INSTOCK","price":10000.1}}`
       );
     });
   });

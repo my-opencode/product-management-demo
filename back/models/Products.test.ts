@@ -75,7 +75,8 @@ describe(`Product static - list (listFromDatabase alias)`, function () {
     const results: ProductBase[] = [
       {
         id: 1,
-        category: 2,
+        categoryId: 2,
+        category: ``,
         name: `product 1`,
         code: `abcd0001`,
         description: `this is product 1`,
@@ -86,7 +87,8 @@ describe(`Product static - list (listFromDatabase alias)`, function () {
       },
       {
         id: 2,
-        category: 3,
+        categoryId: 3,
+        category: ``,
         name: `product 2`,
         code: `abcd0002`,
         description: `this is product 2`,
@@ -135,7 +137,8 @@ describe(`Product static - listFromDatabase`, function () {
     const results: ProductBase[] = [
       {
         id: 1,
-        category: 2,
+        categoryId: 2,
+        category: ``,
         name: `product 1`,
         code: `abcd0001`,
         description: `this is product 1`,
@@ -146,7 +149,8 @@ describe(`Product static - listFromDatabase`, function () {
       },
       {
         id: 2,
-        category: 3,
+        categoryId: 3,
+        category: ``,
         name: `product 2`,
         code: `abcd0002`,
         description: `this is product 2`,
@@ -195,7 +199,8 @@ describe(`Product static - getById (getFromDatabaseById alias)`, function () {
     const results: ProductBase[] = [
       {
         id: 2,
-        category: 3,
+        categoryId: 3,
+        category: ``,
         name: `product 2`,
         code: `abcd0002`,
         description: `this is product 2`,
@@ -243,7 +248,8 @@ describe(`Product static - getFromDatabaseById`, function () {
     const results: ProductBase[] = [
       {
         id: 2,
-        category: 3,
+        categoryId: 3,
+        category: ``,
         name: `product 2`,
         code: `abcd0002`,
         description: `this is product 2`,
@@ -388,7 +394,8 @@ describe(`Product static - insertNewToDatabase - New not found`, function () {
       name: `product abc`,
       description: `product desc`,
       image: `abc.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3,
@@ -417,7 +424,8 @@ describe(`Product static - insertNewToDatabase - New not found`, function () {
       name: `product abc`,
       description: `product desc`,
       image: `abc.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3
@@ -456,7 +464,8 @@ describe(`Product static - insertNewToDatabase`, function () {
         name: `product abc`,
         description: `product desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
+        category: ``,
         quantity: 10,
         price: 100,
         rating: 3,
@@ -475,7 +484,8 @@ describe(`Product static - insertNewToDatabase`, function () {
       name: `product abc`,
       description: `product desc`,
       image: `abc.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3
@@ -673,7 +683,8 @@ describe(`Product static - updateInDatabase - Updated not found`, function () {
       name: `product abc`,
       description: `product abc desc`,
       image: `abc.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3,
@@ -703,7 +714,8 @@ describe(`Product static - updateInDatabase - Updated not found`, function () {
       name: `product a`,
       description: `product a desc`,
       image: `a.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3
@@ -746,7 +758,8 @@ describe(`Product static - updateInDatabase`, function () {
         name: `product abc`,
         description: `product abc desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
+        category: ``,
         quantity: 10,
         price: 100,
         rating: 3,
@@ -766,7 +779,8 @@ describe(`Product static - updateInDatabase`, function () {
       name: `product a`,
       description: `product a desc`,
       image: `a.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3
@@ -841,7 +855,7 @@ describe(`Product class - new Product`, function () {
           new ValidationError(`Too short. Min length: 1.`, `product.name`),
           new ValidationError(`Too short. Min length: 1.`, `product.description`),
           new ValidationError(`Too long. Max length: 2048.`, `product.image`),
-          new ValidationError(`Invalid 'id' value.`, `product.category`),
+          new ValidationError(`Invalid 'id' value.`, `product.categoryId`),
           new ValidationError(`Too low. Min value: 0.`, `product.quantity`),
           new ValidationError(`Too low. Min value: 0.01.`, `product.price`),
           new ValidationError(`Too high. Max value: 5.`, `product.rating`),
@@ -861,7 +875,8 @@ describe(`Product class - new Product`, function () {
         name: `product abc`,
         description: `product desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
+        category: ``,
         quantity: 10,
         price: 100,
         rating: 3
@@ -881,7 +896,8 @@ describe(`Product class - new Product`, function () {
         name: `product abc`,
         description: `product desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
+        category: ``,
         quantity: 10,
         price: 100,
         rating: 3,
@@ -898,7 +914,7 @@ describe(`Product class - new Product`, function () {
       [`name`, `product abc`],
       [`description`, `product desc`],
       [`image`, `abc.png`],
-      [`category`, 1],
+      [`categoryId`, 1],
       [`quantity`, 10],
       [`price`, 100],
       [`rating`, 3],
@@ -919,7 +935,8 @@ describe(`Product class - update Product`, function () {
         name: `product abc`,
         description: `product desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
+        category: ``,
         quantity: 10,
         price: 100,
         rating: 3
@@ -949,7 +966,8 @@ describe(`Product class - update Product`, function () {
         name: `product abc`,
         description: `product desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
+        category: ``,
         quantity: 10,
         price: 100,
         rating: 3
@@ -979,7 +997,8 @@ describe(`Product class - update Product`, function () {
         name: `product abc`,
         description: `product desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
+        category: ``,
         quantity: 10,
         price: 100,
         rating: 3
@@ -1025,7 +1044,8 @@ describe(`Product inst - productFieldUpdateAfterSave`, function () {
     price: 20000,
     rating: 5,
     inventoryStatus: `INSTOCK`,
-    category: 4
+    categoryId: 4,
+    category: "four"
   } as ProductAsInTheJson;
   let p: Product;
   before(function () {
@@ -1035,6 +1055,7 @@ describe(`Product inst - productFieldUpdateAfterSave`, function () {
   });
   Object.entries(target).forEach(([k, v]) =>
     it(`should have updated ${k}`, function () {
+      if(k==="category") k = "categoryName";
       //@ts-ignore
       assert.strictEqual(p[k], v);
     })
@@ -1052,7 +1073,8 @@ describe(`Product inst - Product.save`, function () {
         name: `product abc`,
         description: `product desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
+        category: ``,
         quantity: 10,
         price: 100,
         rating: 3,
@@ -1075,7 +1097,8 @@ describe(`Product inst - Product.save`, function () {
       name: `product abc`,
       description: `product desc`,
       image: `abc.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3
@@ -1090,7 +1113,8 @@ describe(`Product inst - Product.save`, function () {
       name: `product abc`,
       description: `product desc`,
       image: `abc.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3
@@ -1107,7 +1131,8 @@ describe(`Product inst - Product.save`, function () {
       name: `product abc`,
       description: `product desc`,
       image: `abc.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3
@@ -1123,7 +1148,8 @@ describe(`Product inst - Product.save`, function () {
       name: `product abc`,
       description: `product desc`,
       image: `abc.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3
@@ -1153,7 +1179,8 @@ describe(`Product inst - Product.update`, function () {
         name: `product abc`,
         description: `product abc desc`,
         image: `abc.png`,
-        category: 1,
+        categoryId: 1,
+        category: ``,
         quantity: 10,
         price: 100,
         rating: 3,
@@ -1173,7 +1200,8 @@ describe(`Product inst - Product.update`, function () {
       name: `product a`,
       description: `product a desc`,
       image: `a.png`,
-      category: 1,
+      categoryId: 1,
+      category: ``,
       quantity: 10,
       price: 100,
       rating: 3

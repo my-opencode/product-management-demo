@@ -7,6 +7,7 @@ export default function renderer(product: (Product | ProductAsInTheJson)): strin
       code: product.code,
       name: product.name,
       category: product.categoryName || product.category,
+      categoryId: product.categoryId,
       description: product.description,
       image: product.image || undefined,
       quantity: product.quantity,

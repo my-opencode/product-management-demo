@@ -18,7 +18,8 @@ export interface ProductBase {
   description: string;
   image?: string;
   price: number;
-  category: number;
+  categoryId: number;
+  category: string;
   quantity: number;
   inventoryStatus: InventoryStatus;
   rating?: number;
@@ -34,6 +35,7 @@ const SQL_SELECT_ALL_PRODUCTS = () => `SELECT
       p.name, 
       p.description, 
       p.image, 
+      p.Category_id as categoryId,
       ProductCategories.name as category, 
       prices.price, 
       ratings.rating, 
@@ -89,7 +91,7 @@ function handleProcedureSqlSignals(err: Error) {
     _err.errno === 1452/* mysqlErCodes[`ER_NO_REFERENCED_ROW_2`] */ || _err.code === `ER_NO_REFERENCED_ROW_2`
   ) // 1216, 1452
     throw new ValidationErrorStack(
-      [new ValidationError(`Product Category does not exist.`, `product.category`)],
+      [new ValidationError(`Product Category does not exist.`, `product.categoryId`)],
       `Conflicting Product`
     );
   if (
@@ -202,7 +204,7 @@ export class Product {
     if (!this._category && val === undefined)
       return;
     if (val === undefined)
-      throw new ValidationError(`Cannot reset existing category value to undefined.`, `product.category`);
+      throw new ValidationError(`Cannot reset existing category value to undefined.`, `product.categoryId`);
     let isSet = false;
     let error: ValidationError | undefined = undefined;
     try {
@@ -223,7 +225,7 @@ export class Product {
   }
   set categoryId(val: number | string) {
     if (val === this._category) return;
-    this._category = Id.validator(val, undefined, `product.category`);
+    this._category = Id.validator(val, undefined, `product.categoryId`);
     this.isReadOnly = false;
     this.setUpdated(`category`);
   }
@@ -294,7 +296,8 @@ export class Product {
     try { this.name = val.name || ``; } catch (e) { valErrHandler(e); }
     try { this.description = val.description || ``; } catch (e) { valErrHandler(e); }
     try { this.image = val.image; } catch (e) { valErrHandler(e); }
-    try { this.category = val.category || undefined; } catch (e) { valErrHandler(e); }
+    try { this.category = val.categoryId || undefined; } catch (e) { valErrHandler(e); }
+    try { this.category = val.category || ``; } catch (e) { valErrHandler(e); }
     try { this.quantity = val.quantity || -1; } catch (e) { valErrHandler(e); }
     try { this.price = val.price || -1; } catch (e) { valErrHandler(e); }
     try { this.rating = val.rating; } catch (e) { valErrHandler(e); }

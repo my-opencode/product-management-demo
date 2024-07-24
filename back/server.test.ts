@@ -166,7 +166,7 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(json.description, `Conflicting Product`);
     });
     it(`should list errors`, function () {
-      assert.strictEqual(json.errors[`product.category`], `Product Category does not exist.`);
+      assert.strictEqual(json.errors[`product.categoryId`], `Product Category does not exist.`);
     });
   });
   describe(`POST /products 409 code`, async function () {

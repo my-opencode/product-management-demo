@@ -649,34 +649,35 @@ In the real world, a customer rating table would make more sense, linking a user
       - [x] test endpoint
   - ~~[ ] update openapi.yaml~~
 - [ ] delete product
-  - [ ] Model
-  - back/Models/Products.ts
-    - [ ] static method updateAsDeletedInDatabaseById
-    - [ ] static method deleteById calls updateAsDeletedInDatabaseById
-      - pass db error
-  - back/Models/Products.test.ts
-    - [ ] test Products.updateAsDeletedInDatabaseById
-    - [ ] test Products.deleteById
-  - [ ] Controller
+  - [x] Model
+    - back/Models/Products.ts
+      - [x] static method setDeletedInDatabase
+      - [x] static method deleteById calls updateAsDeletedInDatabaseById
+        - pass db error
+      - [x] method delete
+    - back/Models/Products.test.ts
+      - [x] test Products.updateAsDeletedInDatabaseById
+      - [x] test Products.deleteById
+  - [x] Controller
     - back/controllers/products-delete-by-id.ts
-      - [ ] import logger
-      - [ ] call delete by id with model
-      - [ ] 404 if not found
-      - [ ] 500 if error
-      - [ ] return 204 response
+      - [x] import logger
+      - [x] call delete by id with model
+      - [x] 404 if not found
+      - [x] 500 if error
+      - [x] return 204 response
     - back/controllers/products-delete-by-id.test.ts
-      - [ ] test missing id
-      - [ ] test valid id
-  - [ ] Routes
+      - [x] test missing id
+      - [x] test valid id
+  - [x] Routes
     - back/routes/products.ts
-      - [ ] Add DELETE /products/{id} route
+      - [x] Add DELETE /products/{id} route
     - back/routes/products.test.ts
-  - [ ] Test updates
+  - [x] Test updates
     - back/router.test.ts
-      - [ ] test export DELETE /products/{id} route
+      - [x] test export DELETE /products/{id} route
     - back/server.test.ts
-      - [ ] test endpoint
-  - [ ] update openapi.yaml
+      - [x] test endpoint
+  - ~~[ ] update openapi.yaml~~
 - merge main branch
 
 - beta roles branch

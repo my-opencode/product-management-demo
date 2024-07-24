@@ -23,13 +23,13 @@ export default async function productsUpdateOneByID(request: RequestWithProduct,
       else throw e;
     };
     // validate & set fields
-    try { if(request.body?.code !== undefined) product.code = request.body.code; } catch (e) { valErrHandler(e); }
-    try { if(request.body?.name !== undefined) product.name = request.body.name; } catch (e) { valErrHandler(e); }
-    try { if(request.body?.description !== undefined) product.description = request.body.description; } catch (e) { valErrHandler(e); }
-    try { if(request.body?.image !== undefined) product.image = request.body.image; } catch (e) { valErrHandler(e); }
-    try { if(request.body?.category !== undefined) product.category = request.body.category; } catch (e) { valErrHandler(e); }
-    try { if(request.body?.quantity !== undefined) product.quantity = request.body.quantity; } catch (e) { valErrHandler(e); }
-    try { if(request.body?.price !== undefined) product.price = request.body.price; } catch (e) { valErrHandler(e); }
+    try { if (request.body?.code !== undefined) product.code = request.body.code; } catch (e) { valErrHandler(e); }
+    try { if (request.body?.name !== undefined) product.name = request.body.name; } catch (e) { valErrHandler(e); }
+    try { if (request.body?.description !== undefined) product.description = request.body.description; } catch (e) { valErrHandler(e); }
+    try { if (request.body?.image !== undefined) product.image = request.body.image; } catch (e) { valErrHandler(e); }
+    try { if (request.body?.categoryId !== undefined) product.category = request.body.categoryId; } catch (e) { valErrHandler(e); }
+    try { if (request.body?.quantity !== undefined) product.quantity = request.body.quantity; } catch (e) { valErrHandler(e); }
+    try { if (request.body?.price !== undefined) product.price = request.body.price; } catch (e) { valErrHandler(e); }
     // act on validation errors
     if (validationErrors.length) {
       logger.log(`debug`, `Update has invalid values.`);

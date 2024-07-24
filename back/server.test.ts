@@ -14,6 +14,8 @@ import default404 from "./controllers/default.404";
 import validationErrorHandler from "./controllers/validation-error-handler";
 import { ValidationErrorResponseJson } from "./views/422-validation";
 
+const REAL_PRODUCT_ID = 1000;
+
 async function sleep() {
   await new Promise(r => setTimeout(r, 200));
 }
@@ -164,7 +166,7 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(json.description, `Conflicting Product`);
     });
     it(`should list errors`, function () {
-      assert.strictEqual(json.errors[`product.category`], `Product Category does not exist.`);
+      assert.strictEqual(json.errors[`product.categoryId`], `Product Category does not exist.`);
     });
   });
   describe(`POST /products 409 code`, async function () {
@@ -205,7 +207,7 @@ describe(`Test API endpoints`, function () {
     let response: Response;
     let json: { data: ProductAsInTheJson };
     await before(async function () {
-      response = await inject(app, { method: `get`, url: `/products/1` });
+      response = await inject(app, { method: `get`, url: `/products/${REAL_PRODUCT_ID}` });
     });
     it(`should return status code 200`, function () {
       assert.strictEqual(response.statusCode, 200);
@@ -214,12 +216,11 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(typeof response.payload, `string`);
       json = JSON.parse(response.payload);
       console.log(typeof json, json.data.length);
-      assert.strictEqual(json.data.id, 1);
+      assert.strictEqual(json.data.id, REAL_PRODUCT_ID);
     });
   });
   describe(`GET /products/:id 400`, async function () {
     let response: Response;
-    let json: ProductAsInTheJson;
     await before(async function () {
       response = await inject(app, { method: `get`, url: `/products/0` });
     });
@@ -229,12 +230,157 @@ describe(`Test API endpoints`, function () {
   });
   describe(`GET /products/:id 404`, async function () {
     let response: Response;
-    let json: ProductAsInTheJson;
     await before(async function () {
       response = await inject(app, { method: `get`, url: `/products/999999` });
     });
     it(`should return status code 404`, function () {
       assert.strictEqual(response.statusCode, 404);
+    });
+  });
+  describe(`PATCH /products/:id 404`, async function () {
+    let response: Response;
+    await before(async function () {
+      response = await inject(app, { method: `patch`, url: `/products/999999`, headers: { "content-type": `application/json` } });
+    });
+    it(`should return status code 404`, function () {
+      assert.strictEqual(response.statusCode, 404);
+    });
+  });
+  describe(`PATCH /products/:id 422 - validation`, async function () {
+    let response: Response;
+    let json: ValidationErrorResponseJson;
+    await before(async function () {
+      response = await inject(app, {
+        method: `patch`,
+        url: `/products/${REAL_PRODUCT_ID}`,
+        body: `{"code":"${``.padEnd(256,`a`)}","image":"${``.padEnd(2049,`a`)}"}`,
+        headers: {
+          "content-type": `application/json`
+        }
+      });
+    });
+    it(`should return status code 422`, function () {
+      assert.strictEqual(response.statusCode, 422);
+    });
+    it(`should return error json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      assert.strictEqual(json.description, `Invalid Changes`);
+    });
+    it(`should list errors`, function () {
+      assert.strictEqual(json.errors[`product.code`], `Too long. Max length: 255.`);
+      assert.strictEqual(json.errors[`product.image`], `Too long. Max length: 2048.`);
+    });
+  });
+  describe(`PATCH /products/:id 422 - no change`, async function () {
+    let response: Response;
+    let json: ValidationErrorResponseJson;
+    await before(async function () {
+      response = await inject(app, {
+        method: `patch`,
+        url: `/products/${REAL_PRODUCT_ID}`,
+        body: `{"code":"${``.padEnd(256,`a`)}","image":"${``.padEnd(2049,`a`)}"}`,
+        headers: {
+          "content-type": `application/json`
+        }
+      });
+    });
+    it(`should return status code 422`, function () {
+      assert.strictEqual(response.statusCode, 422);
+    });
+    it(`should return error json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      assert.strictEqual(json.description, `Invalid Changes`);
+    });
+    it(`should list errors`, function () {
+      assert.strictEqual(json.errors[`product.code`], `Too long. Max length: 255.`);
+      assert.strictEqual(json.errors[`product.image`], `Too long. Max length: 2048.`);
+    });
+  });
+  describe(`PATCH /products/:id 409 - code exists`, async function () {
+    let response: Response;
+    let json: ValidationErrorResponseJson;
+    await before(async function () {
+      response = await inject(app, {
+        method: `patch`,
+        url: `/products/${REAL_PRODUCT_ID}`,
+        body: `{"code":"nvklal433"}`, // code of 1001
+        headers: {
+          "content-type": `application/json`
+        }
+      });
+    });
+    it(`should return status code 409`, function () {
+      assert.strictEqual(response.statusCode, 409);
+    });
+    it(`should return error json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      assert.strictEqual(json.description, `Conflicting Product`);
+    });
+    it(`should list errors`, function () {
+      assert.strictEqual(json.errors[`product.code`], `Duplicate value for code.`);
+    });
+  });
+  describe(`PATCH /products/:id 409 - category does not exist`, async function () {
+    let response: Response;
+    let json: ValidationErrorResponseJson;
+    await before(async function () {
+      response = await inject(app, {
+        method: `patch`,
+        url: `/products/${REAL_PRODUCT_ID}`,
+        body: `{"categoryId":9999}`, // code of 1001
+        headers: {
+          "content-type": `application/json`
+        }
+      });
+    });
+    it(`should return status code 409`, function () {
+      assert.strictEqual(response.statusCode, 409);
+    });
+    it(`should return error json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      assert.strictEqual(json.description, `Conflicting Product`);
+    });
+    it(`should list errors`, function () {
+      assert.strictEqual(json.errors[`product.categoryId`], `Product Category does not exist.`);
+    });
+  });
+  describe(`PATCH /products/:id 200`, async function () {
+    let response: Response;
+    let json: { data: ProductAsInTheJson };
+    await before(async function () {
+      response = await inject(app, {
+        method: `patch`,
+        url: `/products/${REAL_PRODUCT_ID}`,
+        body: `{"code":"abcd","name":"product abcd","description":"product abcd desc","image":"abcd.png","category":"my category","categoryId":2,"price":125.25,"quantity":"5"}`,
+        headers: {
+          "content-type": `application/json`
+        }
+      });
+    });
+    it(`should return status code 200`, function () {
+      assert.strictEqual(response.statusCode, 200);
+    });
+    it(`should return json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      console.log(typeof json, json.data.length);
+      assert.strictEqual(json.data.id, REAL_PRODUCT_ID);
+    });
+    it(`should reflect all changes`, function () {
+      json = JSON.parse(response.payload);
+      assert.strictEqual(json.data.code, `abcd`);
+      assert.strictEqual(json.data.name, `product abcd`);
+      assert.strictEqual(json.data.description, `product abcd desc`);
+      assert.strictEqual(json.data.image, `abcd.png`);
+      assert.strictEqual(json.data.categoryId, 2);
+      assert.strictEqual(json.data.category, "Fitness");
+      assert.strictEqual(json.data.price, 125.25);
+      assert.strictEqual(json.data.quantity, 5);
+      assert.strictEqual(json.data.inventoryStatus, `LOWSTOCK`);
     });
   });
 });

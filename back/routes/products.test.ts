@@ -6,6 +6,7 @@ import productsGetOneById from "../controllers/products-get-one-by-id";
 import { RequestHandler } from "express";
 import productsCreate from "../controllers/products-post-create";
 import jsonBodyParser from "../lib/jsonBodyParser";
+import productsUpdateOneByID from "../controllers/products-patch-update-one-by-id";
 
 describe(`Products router`, function () {
   it(`should return a router function`, function () {
@@ -17,6 +18,9 @@ describe(`Products router`, function () {
   const stack: [string, ["get" | "post" | "patch" | "delete" | "put" | "all", RequestHandler[]][]][] = [
     [`/:id`, [
       [`get`, [productsGetOneById]],
+    ]],
+    [`/:id`, [
+      [`patch`, [jsonBodyParser, productsUpdateOneByID]],
     ]],
     [`/`, [
       [`get`, [productsGetAll]],

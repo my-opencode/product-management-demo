@@ -2,6 +2,8 @@ import { NextFunction, Response, Request } from "express";
 import { RequestWithId } from "../types";
 import Id from "../models/Id";
 import { ValidationError } from "../lib/validators";
+import Logger from "../lib/winston";
+const logger = Logger(`middleware/param-id`, `debug`);
 
 /**
  * Express Application.param middleware.
@@ -14,8 +16,9 @@ import { ValidationError } from "../lib/validators";
  * @param {String} val value of the id parameter
  * @param {String} param name of the id paramater
  */
-export function paramValidatorMwId (req:RequestWithId, res:Response, next:NextFunction, val:string|number, param:string) {
+export function paramValidatorMwId(req: RequestWithId, res: Response, next: NextFunction, val: string | number, param: string) {
   try {
+    logger.log(`debug`, `Route "${req.url}" with parameter :id = ${val}.`);
     req.id = Id.validator(val, `Invalid URL parameter 'id'. Expected integer.`);
     /**
      * Express Doc recommends using app.param to alter route param values:
@@ -29,13 +32,17 @@ export function paramValidatorMwId (req:RequestWithId, res:Response, next:NextFu
      * line 371
      * paramVal = req.params[name]
      */
+    logger.log(`debug`, `Setting req.id = ${req.id} on Route "${req.url}"`);
     req.params[param] = String(req.id);
     next();
-  } catch(err){
-    if (err instanceof ValidationError)
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      logger.log(`debug`, `Invalid :id parameter on route "${req.url}".`);
       res.status(400).send(err.message);
-    else
+    } else {
+      logger.log(`debug`, `Unexpected error validating :id parameter on route "${req.url}".`);
       next(err);
+    }
   }
 }
 

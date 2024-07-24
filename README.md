@@ -600,46 +600,54 @@ In the real world, a customer rating table would make more sense, linking a user
     - back/server.test.ts
       - [x] test endpoint
   - [x] update openapi.yaml
-- [ ] update product
-  - [ ] Model
+- [x] update product
+  - [x] DB update
+    - [x] indexes
+    - [x] update_product procedure
+  - [x] Model
     - back/Models/Products.ts
-      - [ ] static method databaseResponseToInstance
-        - constructor throws
-      - [ ] updatedFields property
-      - [ ] method updateField
-        - validates one field value
-        - if field is code, ensures code is unique among active products
-        - update instance field value when new
-        - add key to updated fields when new
+      - ~~[ ] static method databaseResponseToInstance~~
+        - ~~constructor throws~~
+      - [x] updatedFields property & tracking
+      - [x] getter isUpdated
+      - [x] method setUpdated ~~updateField~~
+        - integrated with field setters
+        - ~~validates one field value~~
+        - ~~f field is code, ensures code is unique among active products~~
+        - ~~update instance field value when new~~
+        - ~~add key to updated fields when new~~
+      - [x] update method
+      - [x] static updateInDatabase method
+        - call procedure for rollback
     - back/Models/Products.test.ts
-      - [ ] test Products.databaseResponseToInstance
-      - [ ] test Products.updateField
-      - [ ] test save updated
-  - [ ] Controller
+      - [ ] ~~test Products.databaseResponseToInstance~~
+      - [ ] ~~test Products.updateField~~
+      - [x] test save updated
+      - [x] test updatedInDb
+  - [x] Controller
     - back/controllers/products-update-by-id.ts
-      - [ ] import logger
-      - [ ] get product with model
-      - [ ] 404 if not found
-      - [ ] update fields with model
-      - [ ] 422 if invalid data
-      - [ ] 409 if code exists among active products
-      - [ ] save product to db with model
-      - [ ] serialize to json with view
-      - [ ] return response
+      - [x] import logger
+      - [x] get product ~~with model~~ from mw
+      - [x] 404 if not found
+      - [x] update fields with model
+      - [x] 422 if invalid data
+      - [x] 409 if code exists among active products
+      - [x] save product to db with model
+      - [x] serialize to json with view
+      - [x] return response
     - back/controllers/products-update-by-id.test.ts
-      - [ ] test invalid form
-      - [ ] test existing code
-      - [ ] test valid data
-  - [ ] Routes
+      - [x] test invalid form
+      - [x] test valid data
+  - [x] Routes
     - back/routes/products.ts
-      - [ ] Add PATCH /products/{id} route
+      - [x] Add PATCH /products/{id} route
     - back/routes/products.test.ts
-  - [ ] Test updates
+  - [x] Test updates
     - back/router.test.ts
-      - [ ] test export PATCH /products/{id} route
+      - [x] test export PATCH /products/{id} route
     - back/server.test.ts
-      - [ ] test endpoint
-  - [ ] update openapi.yaml
+      - [x] test endpoint
+  - ~~[ ] update openapi.yaml~~
 - [ ] delete product
   - [ ] Model
   - back/Models/Products.ts

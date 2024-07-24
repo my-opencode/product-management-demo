@@ -9,7 +9,7 @@ const path = require(`node:path`);
  */
 const sourcePath = path.resolve(__dirname, `../../front/src/assets/products.json`);
 const destPath = path.resolve(__dirname,`../../docker-entrypoint-initdb.d/002-database-state-insert.sql`);
-const NOW = formatDate(new Date());
+const NOW = `NOW()`;
 
 /**
  * @typedef ProductInJson Product in products.json
@@ -117,7 +117,7 @@ async function extractState() {
   for (const p of json.data) {
     /** @type {Product} */
     const product = {
-      id: products.length+1,
+      id: p.id,
       code: p.code,
       name: p.name,
       description: p.description,
@@ -179,7 +179,7 @@ function writeProductsInsert(){
 
 function writeProductsPricesInsert(){
   let statement = `INSERT INTO ProductsPrices (Product_id, date_start, date_end, price ) VALUES `;
-  statement += `\n` + prices.map(p => `(${p.Product_id},"${NOW}",NULL, "${p.price}")`).join(`,\n`);
+  statement += `\n` + prices.map(p => `(${p.Product_id},${NOW},NULL, "${p.price}")`).join(`,\n`);
   statement += `;`;
   return statement;
 }
@@ -195,14 +195,14 @@ const ratingCounts = [
 
 function writeProductsRatingsInsert(){
   let statement = `INSERT INTO ProductsRatings (Product_id, date, rating, ${ratingCounts.join(`, `)} ) VALUES `;
-  statement += `\n` + ratings.map(p => `(${p.Product_id},"${NOW}",${p.rating}, ${ratingCounts.map(k => p[k]).join(`, `)})`).join(`,\n`);
+  statement += `\n` + ratings.map(p => `(${p.Product_id},${NOW},${p.rating}, ${ratingCounts.map(k => p[k]).join(`, `)})`).join(`,\n`);
   statement += `;`;
   return statement;
 }
 
 function writeProductsInventoryInsert(){
   let statement = `INSERT INTO ProductsInventory (Product_id, date, quantity) VALUES `;
-  statement += `\n` + inventory.map(p => `(${p.Product_id},"${NOW}",${p.quantity})`).join(`,\n`);
+  statement += `\n` + inventory.map(p => `(${p.Product_id},${NOW},${p.quantity})`).join(`,\n`);
   statement += `;`;
   return statement;
 }

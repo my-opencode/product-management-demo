@@ -1314,3 +1314,43 @@ describe(`Product inst - Product.update`, function () {
     );
   });
 });
+
+describe(`Product inst - Product.delete`, function () {
+  let app: any;
+  let pool: any;
+  let p: Product;
+  before(function () {
+    const results: any[] = [];
+    pool = {
+      execute: mock.fn((statement: string) => Promise.resolve([results]))
+    };
+    app = {
+      get: mock.fn((path: string) => pool)
+    };
+  });
+  beforeEach(function () {
+    p = getDummyProduct({isSaved:true});
+    app.get.mock.resetCalls();
+    pool.execute.mock.resetCalls();
+  });
+  it(`should call app.get once`, async function () {
+    await p.delete(app);
+    assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+  });
+  it(`should call pool.execute once`, async function () {
+    await p.delete(app);
+    assert.strictEqual(pool.execute.mock.callCount(), 1);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0,31), `UPDATE Products SET deleted = 1`);
+  });
+  it(`should not update product`, async function () {
+    assert.deepStrictEqual(
+      p.isSaved,
+      true
+    );
+    await p.delete(app);
+    assert.deepStrictEqual(
+      p.isSaved,
+      false
+    );
+  });
+});

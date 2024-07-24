@@ -324,6 +324,13 @@ export class Product {
     const updatedProduct = await Product.updateInDatabase(app, this);
     return this.productFieldUpdateAfterSave(updatedProduct);
   }
+  async delete(app: RichApp){
+    if (!this.isSaved || !this.id)
+      throw new Error(`Delete called on unsaved product.`);
+    await Product.deleteById(app, this.id);
+    this._id = undefined;
+    this.isSaved = false;
+  }
   productFieldUpdateAfterSave(updatedProduct: Product) {
     this._id = updatedProduct._id;
     this._code = updatedProduct._code;

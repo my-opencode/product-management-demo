@@ -325,16 +325,17 @@ export class Product {
     return this.productFieldUpdateAfterSave(updatedProduct);
   }
   productFieldUpdateAfterSave(updatedProduct: Product) {
-    this.id = updatedProduct.id;
-    this.code = updatedProduct.code;
-    this.name = updatedProduct.name;
-    this.description = updatedProduct.description;
-    this.image = updatedProduct.image;
-    this.quantity = updatedProduct.quantity;
-    this.price = updatedProduct.price;
-    this.rating = updatedProduct.rating;
-    this.inventoryStatus = updatedProduct.inventoryStatus;
-    this.category = updatedProduct.category;
+    this._id = updatedProduct._id;
+    this._code = updatedProduct._code;
+    this._name = updatedProduct._name;
+    this._description = updatedProduct._description;
+    this._image = updatedProduct._image;
+    this._quantity = updatedProduct._quantity;
+    this._price = updatedProduct._price;
+    this._rating = updatedProduct._rating;
+    this._inventoryStatus = updatedProduct._inventoryStatus;
+    this._category = updatedProduct._category;
+    this._categoryName = updatedProduct._categoryName;
     this.isSaved = updatedProduct.isSaved;
     this.isReadOnly = updatedProduct.isReadOnly;
     this.resetUpdated();

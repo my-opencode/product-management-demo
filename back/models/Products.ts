@@ -65,14 +65,22 @@ WHERE deleted = 0;`
 const SQL_SELECT_PRODUCT_BY_ID = (id: number) => SQL_SELECT_ALL_PRODUCTS().slice(0, -1) + ` AND p.id = ${id} LIMIT 1;`;
 type UpdatableFieldKey = "category" | "code" | "name" | "description" | "image" | "price" | "quantity";
 const updatableFields: UpdatableFieldKey[] = [`category`, `code`, `name`, `description`, `image`, `price`, `quantity`];
-const SQL_CALL_UPDATE_FIELDS_LIST = (p: Product) => `${p.updatedFields.has(`category`) ? p.categoryId : `NULL`
-  }$, ${p.updatedFields.has(`code`) ? p.code : `NULL`
-  }, ${p.updatedFields.has(`name`) ? p.name : `NULL`
-  }, ${p.updatedFields.has(`description`) ? p.description : `NULL`
-  }, ${p.updatedFields.has(`image`) ? p.image : `NULL`
+/**
+ * Datbase String. Wraps a string value inside quotation marks
+ * @param {any} s string value
+ * @returns {String}
+ */
+const ds = (s:any) => `"${s}"`;
+export const SQL_CALL_UPDATE_FIELDS_LIST = (p: Product) => 
+  `CALL update_product(${p.id
+  }, ${p.updatedFields.has(`code`) ? ds(p.code) : `NULL`
+  }, ${p.updatedFields.has(`name`) ? ds(p.name) : `NULL`
+  }, ${p.updatedFields.has(`description`) ? ds(p.description) : `NULL`
+  }, ${p.updatedFields.has(`image`) ? ds(p.image) : `NULL`
+  }, ${p.updatedFields.has(`category`) ? p.categoryId : `NULL`
   }, ${p.updatedFields.has(`price`) ? p.price : `NULL`
   }, ${p.updatedFields.has(`quantity`) ? p.quantity : `NULL`
-  }`;
+  });`;
 function handleProcedureSqlSignals(err: Error) {
   //TO-DO mock up class for QueryError in order to check with instanceof
   let _err = err as unknown as QueryError;
@@ -376,7 +384,7 @@ export class Product {
     const pool = app.get(AppSymbols.connectionPool);
     let procedureResult: QueryResult | undefined = undefined;
     try {
-      const callStatement = `CALL update_product(${SQL_CALL_UPDATE_FIELDS_LIST(product)});`;
+      const callStatement = SQL_CALL_UPDATE_FIELDS_LIST(product);
       logger.log(`debug`, callStatement);
       ([procedureResult] = await pool.execute(callStatement));
     } catch (err) {

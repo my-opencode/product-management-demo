@@ -1,10 +1,72 @@
 import { before, beforeEach, describe, it, mock } from "node:test";
 import * as assert from "assert";
-import Product, { ProductAsInTheJson, ProductBase } from "./Products";
+import Product, { ProductAsInTheJson, ProductBase, SQL_CALL_UPDATE_FIELDS_LIST } from "./Products";
 import AppSymbols from "../AppSymbols";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 import { QueryError } from "mysql2";
 import { getDummyProduct } from "../lib/test-product-util";
+
+describe(`SQL update call statement maker`, function(){
+  let p : Product;
+  beforeEach(function(){
+    p = getDummyProduct({isSaved:true});
+  });
+  it(`Product is not updated`,function(){
+    assert.strictEqual(
+      SQL_CALL_UPDATE_FIELDS_LIST(p),
+      `CALL update_product(${p.id}, NULL, NULL, NULL, NULL, NULL, NULL, NULL);`
+    );
+  });
+  it(`code to update`,function(){
+    p.code = `abcd`;
+    assert.strictEqual(
+      SQL_CALL_UPDATE_FIELDS_LIST(p),
+      `CALL update_product(${p.id}, "abcd", NULL, NULL, NULL, NULL, NULL, NULL);`
+    );
+  });
+  it(`name to update`,function(){
+    p.name = `abcd`;
+    assert.strictEqual(
+      SQL_CALL_UPDATE_FIELDS_LIST(p),
+      `CALL update_product(${p.id}, NULL, "abcd", NULL, NULL, NULL, NULL, NULL);`
+    );
+  });
+  it(`desc to update`,function(){
+    p.description = `abcd`;
+    assert.strictEqual(
+      SQL_CALL_UPDATE_FIELDS_LIST(p),
+      `CALL update_product(${p.id}, NULL, NULL, "abcd", NULL, NULL, NULL, NULL);`
+    );
+  });
+  it(`image to update`,function(){
+    p.image = `abcd`;
+    assert.strictEqual(
+      SQL_CALL_UPDATE_FIELDS_LIST(p),
+      `CALL update_product(${p.id}, NULL, NULL, NULL, "abcd", NULL, NULL, NULL);`
+    );
+  });
+  it(`category to update`,function(){
+    p.category = 12;
+    assert.strictEqual(
+      SQL_CALL_UPDATE_FIELDS_LIST(p),
+      `CALL update_product(${p.id}, NULL, NULL, NULL, NULL, 12, NULL, NULL);`
+    );
+  });
+  it(`price to update`,function(){
+    p.price = 12.12;
+    assert.strictEqual(
+      SQL_CALL_UPDATE_FIELDS_LIST(p),
+      `CALL update_product(${p.id}, NULL, NULL, NULL, NULL, NULL, 12.12, NULL);`
+    );
+  });
+  it(`quantity to update`,function(){
+    p.quantity = 12;
+    assert.strictEqual(
+      SQL_CALL_UPDATE_FIELDS_LIST(p),
+      `CALL update_product(${p.id}, NULL, NULL, NULL, NULL, NULL, NULL, 12);`
+    );
+  });
+});
 
 describe(`Product static - list (listFromDatabase alias)`, function () {
   let app: any;

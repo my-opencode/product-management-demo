@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Logger from "../lib/winston";
-const logger = Logger(`controllers/ErrorHandler`);
+const logger = Logger(`controllers/error-handler`);
 export default function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
   if(!err) return next();
   if (res.headersSent) {

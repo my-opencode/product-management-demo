@@ -414,7 +414,10 @@ export class Product {
   }
   static async getFromDatabaseById(app: RichApp, id: number): Promise<Product | undefined> {
     const pool = app.get(AppSymbols.connectionPool);
-    const response = await pool.execute(SQL_SELECT_PRODUCT_BY_ID(id));
+    logger.log(`debug`, `Querying DB for Product with id = ${id}.`);
+    const query = SQL_SELECT_PRODUCT_BY_ID(id);
+    logger.log(`debug`, query);
+    const response = await pool.execute(query);
     const [rows] = response || [];
     if (!(rows as ProductAsInTheJson[])?.[0]) return undefined;
     logger.log(`debug`, `getFromDatabaseById Database QueryResult is ${JSON.stringify(rows)}`);

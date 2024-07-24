@@ -3,13 +3,14 @@ import { Response, NextFunction } from "express";
 import Logger from "../lib/winston";
 import renderer from "../views/product-details";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
-const logger = Logger(`controllers/products-get-one-by-id`);
+const logger = Logger(`controllers/products-get-one-by-id`, `debug`);
 
 export default async function productsUpdateOneByID(request: RequestWithProduct, response: Response, next: NextFunction) {
-  logger.log(`debug`, `Entering productsUpdateOneByID`);
+  logger.log(`debug`, `Entering`);
   try {
     if (!request.product) {
       response.status(404);
+      logger.log(`debug`, `No product found.`);
       return;
     }
     const product = request.product;
@@ -31,18 +32,22 @@ export default async function productsUpdateOneByID(request: RequestWithProduct,
     try { if(request.body?.price !== undefined) product.price = request.body.price; } catch (e) { valErrHandler(e); }
     // act on validation errors
     if (validationErrors.length) {
+      logger.log(`debug`, `Update has invalid values.`);
       throw new ValidationErrorStack(validationErrors, `Invalid Changes`);
     }
     // exit if no change
-    if(!product.isUpdated)
+    if (!product.isUpdated) {
+      logger.log(`debug`, `Update yields no change.`);
       throw new ValidationError(`Expected changes.`);
-
+    }
     await product.update(request.app);
 
     const payload = renderer(product);
-    logger.log(`debug`, `Exiting productsUpdateOneByID`);
+    logger.log(`debug`, `Returning ${payload}`);
     response.status(200).set('Content-Type', 'application/json').send(payload);
   } catch (err) {
+    if(err instanceof ValidationErrorStack && err.message === `Conflicting Product`)
+        err.statusCode = 409;
     logger.log(`warn`, `Error in productsUpdateOneByID: ${err instanceof Error ? err.message : String(err)}`);
     next(err);
   }

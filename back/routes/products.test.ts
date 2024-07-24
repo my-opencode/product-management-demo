@@ -7,6 +7,7 @@ import { RequestHandler } from "express";
 import productsCreate from "../controllers/products-post-create";
 import jsonBodyParser from "../lib/jsonBodyParser";
 import productsUpdateOneByID from "../controllers/products-patch-update-one-by-id";
+import productsDeleteOneById from "../controllers/products-delete-delete-one-by-id";
 
 describe(`Products router`, function () {
   it(`should return a router function`, function () {
@@ -16,6 +17,9 @@ describe(`Products router`, function () {
     assert.strictEqual(Array.isArray(productsRouter.stack), true);
   });
   const stack: [string, ["get" | "post" | "patch" | "delete" | "put" | "all", RequestHandler[]][]][] = [
+    [`/:id`, [
+      [`delete`, [productsDeleteOneById]],
+    ]],
     [`/:id`, [
       [`get`, [productsGetOneById]],
     ]],

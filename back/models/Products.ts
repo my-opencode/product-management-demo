@@ -324,6 +324,13 @@ export class Product {
     const updatedProduct = await Product.updateInDatabase(app, this);
     return this.productFieldUpdateAfterSave(updatedProduct);
   }
+  async delete(app: RichApp){
+    if (!this.isSaved || !this.id)
+      throw new Error(`Delete called on unsaved product.`);
+    await Product.deleteById(app, this.id);
+    this._id = undefined;
+    this.isSaved = false;
+  }
   productFieldUpdateAfterSave(updatedProduct: Product) {
     this._id = updatedProduct._id;
     this._code = updatedProduct._code;
@@ -424,6 +431,22 @@ export class Product {
     logger.log(`debug`, `getFromDatabaseById Database QueryResult is ${JSON.stringify(rows)}`);
     const product = new Product((rows as ProductAsInTheJson[])[0]);
     return product;
+  }
+  static async setDeletedInDatabase(app:RichApp, id: number){
+    const pool = app.get(AppSymbols.connectionPool);
+    const query = `UPDATE Products SET deleted = 1 WHERE id = ${id};`;
+    logger.log(`debug`, query);
+    try {
+    await pool.execute(query);
+    } catch(err){
+      logger.log(`debug`, `Product setDeletedInDatabase received QueryErr: "${JSON.stringify(err)}"`);
+      if (err instanceof Error)
+        handleProcedureSqlSignals(err);
+    }
+    logger.log(`debug`, `Product id = ${id} — set to deleted.`);
+  }
+  static async deleteById(app:RichApp, id: number){
+    return await this.setDeletedInDatabase(app, id);
   }
 }
 

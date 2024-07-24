@@ -830,6 +830,70 @@ describe(`Product static - updateInDatabase`, function () {
   });
 });
 
+describe(`Product static - setDeletedInDatabase - Product not found`, function () {
+  let app: any;
+  let pool: any;
+  before(function () {
+    const noRowError = new Error(`Could not execute Update event on Table 'Products'; Can't find record in 'Products; Error_code: 1032;'`) as QueryError;
+    noRowError.errno = 1032;
+    noRowError.code = `ER_KEY_NOT_FOUND`;
+    pool = {
+      execute: mock.fn((statement: string) => Promise.reject(noRowError))
+    };
+    app = {
+      get: mock.fn((path: string) => pool)
+    };
+  });
+  beforeEach(function () {
+    app.get.mock.resetCalls();
+    pool.execute.mock.resetCalls();
+  });
+  it(`should call app.get once`, async function () {
+    await assert.rejects(Product.setDeletedInDatabase(app, 999));
+    assert.strictEqual(app.get.mock.callCount(), 1);
+    assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+  });
+  it(`should call pool.execute once`, async function () {
+    await assert.rejects(Product.setDeletedInDatabase(app, 999));
+    assert.strictEqual(pool.execute.mock.callCount(), 1);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0,31), `UPDATE Products SET deleted = 1`);
+  });
+  it(`should throw validation stack`, async function () {
+    await assert.rejects(
+      Product.setDeletedInDatabase(app, 999),
+      ValidationErrorStack
+    );
+  });
+});
+
+describe(`Product static - setDeletedInDatabase`, function () {
+  let app: any;
+  let pool: any;
+  let p: Product;
+  before(function () {
+    const results: any[] = [];
+    pool = {
+      execute: mock.fn((statement: string) => Promise.resolve([results]))
+    };
+    app = {
+      get: mock.fn((path: string) => pool)
+    };
+  });
+  beforeEach(function () {
+    app.get.mock.resetCalls();
+    pool.execute.mock.resetCalls();
+  });
+  it(`should call app.get once`, async function () {
+    await Product.setDeletedInDatabase(app, 1);
+    assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+  });
+  it(`should call pool.execute once`, async function () {
+    await Product.setDeletedInDatabase(app, 1);
+    assert.strictEqual(pool.execute.mock.callCount(), 1);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0,31), `UPDATE Products SET deleted = 1`);
+  });
+});
+
 describe(`Product class - new Product`, function () {
   describe(`invalid id`, function () {
     it(`should throw`, function () {
@@ -1246,6 +1310,46 @@ describe(`Product inst - Product.update`, function () {
     await p.update(app);
     assert.deepStrictEqual(
       p.isUpdated,
+      false
+    );
+  });
+});
+
+describe(`Product inst - Product.delete`, function () {
+  let app: any;
+  let pool: any;
+  let p: Product;
+  before(function () {
+    const results: any[] = [];
+    pool = {
+      execute: mock.fn((statement: string) => Promise.resolve([results]))
+    };
+    app = {
+      get: mock.fn((path: string) => pool)
+    };
+  });
+  beforeEach(function () {
+    p = getDummyProduct({isSaved:true});
+    app.get.mock.resetCalls();
+    pool.execute.mock.resetCalls();
+  });
+  it(`should call app.get once`, async function () {
+    await p.delete(app);
+    assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+  });
+  it(`should call pool.execute once`, async function () {
+    await p.delete(app);
+    assert.strictEqual(pool.execute.mock.callCount(), 1);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0,31), `UPDATE Products SET deleted = 1`);
+  });
+  it(`should not update product`, async function () {
+    assert.deepStrictEqual(
+      p.isSaved,
+      true
+    );
+    await p.delete(app);
+    assert.deepStrictEqual(
+      p.isSaved,
       false
     );
   });

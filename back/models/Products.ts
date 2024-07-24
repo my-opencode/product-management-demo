@@ -147,8 +147,8 @@ export class Product {
   }
   set code(val: string) {
     val = val.trim();
+    if (val === this._code) return;
     this._code = validateString(val, 255, 1, `product.code`);
-    if (val !== this._code)
     this.setUpdated(`code`);
   }
   get name(): string {

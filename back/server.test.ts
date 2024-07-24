@@ -221,7 +221,6 @@ describe(`Test API endpoints`, function () {
   });
   describe(`GET /products/:id 400`, async function () {
     let response: Response;
-    let json: ProductAsInTheJson;
     await before(async function () {
       response = await inject(app, { method: `get`, url: `/products/0` });
     });
@@ -231,7 +230,6 @@ describe(`Test API endpoints`, function () {
   });
   describe(`GET /products/:id 404`, async function () {
     let response: Response;
-    let json: ProductAsInTheJson;
     await before(async function () {
       response = await inject(app, { method: `get`, url: `/products/999999` });
     });

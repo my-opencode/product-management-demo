@@ -97,44 +97,28 @@ paths:
           $ref: "#/components/responses/Unexpected"
   /products/{productId}:
     get:
-      summary: Detailed information of a product
+      summary: Lists all information of a product.
       operationId: productsGetOneById
       tags:
         - products
       parameters:
-        - name: productId
-          in: path
-          required: true
-          description: The id of the product to retrieve
-          schema:
-            type: integer
-            format: int32
+        - $ref: "#/components/parameters/ProductId"
       responses:
         '200':
-          description: Product details
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ProductDetails"
+          $ref: "#/components/responses/ProductDetails"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '4XX':
+          $ref: "#/components/responses/ValidationError"
         default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/Unexpected"
     patch:
-      summary: Update information of a product
-      operationId: productsUpdateById
+      summary: Updates information of a product.
+      operationId: productsUpdateOneById
       tags:
         - products
       parameters:
-        - name: productId
-          in: path
-          required: true
-          description: The id of the product to update
-          schema:
-            type: integer
-            format: int32
+        - $ref: "#/components/parameters/ProductId"
       requestBody:
         content:
           application/json:
@@ -143,32 +127,27 @@ paths:
         required: true
       responses:
         '200':
-          description: Product details
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ProductDetails"
+          $ref: "#/components/responses/ProductDetails"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '4XX':
+          $ref: "#/components/responses/ValidationError"
         default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/Unexpected"
     delete:
-      summary: Delete a product
-      operationId: productsDeleteById
+      summary: Deletes a product.
+      operationId: productsDeleteOneById
       tags:
         - products
       parameters:
-        - name: productId
-          in: path
-          required: true
-          description: The id of the product to delete
-          schema:
-            type: integer
-            format: int32
+        - $ref: "#/components/parameters/ProductId"
       responses:
         '204':
+          description: Empty delete response.
+        '404':
+          $ref: "#/components/responses/NotFound"
+        default:
+          $ref: "#/components/responses/Unexpected"
 components:
   parameters:
     ProductId:

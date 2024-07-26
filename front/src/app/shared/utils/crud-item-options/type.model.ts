@@ -1,4 +1,5 @@
 export enum TypeInput {
   TEXT = 'text',
-  NUMBER = 'number'
+  NUMBER = 'number',
+  DECIMAL = 'decimal'
 }

@@ -74,7 +74,7 @@ export const PRODUCT_TABLE_CONF: CrudItemOptions[] = [
   {
     key: 'price',
     controlType: ControlType.INPUT,
-    type: TypeInput.NUMBER,
+    type: TypeInput.DECIMAL,
     label: 'Price',
     columnOptions: {
       minScreenSize: ScreenWidth.small,

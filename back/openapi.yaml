@@ -164,6 +164,15 @@ paths:
             format: int32
       responses:
         '204':
+components:
+  parameters:
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      description: The id of the target product.
+      schema:
+        $ref: "#/components/schemas/IdValue"
   responses:
     ProductDetails:
       description: A product object.

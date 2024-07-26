@@ -4,14 +4,10 @@
 [(visible)]="isVisible" 
 [style]="{ width: '50rem' }" 
 [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
-<template *ngIf="isVisible">
-  
   <h3 *ngIf="message">{{message}}</h3>
   <ul>
     <li *ngFor="let error of errors | keyvalue">
       <b>{{error.key}}</b>: {{error.value}}
     </li>
   </ul>
-  
-</template>
 </p-dialog>

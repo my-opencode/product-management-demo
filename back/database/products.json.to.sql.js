@@ -138,12 +138,13 @@ async function extractState() {
       price: p.price
     };
     prices.push(price);
+    const ratingValue = Math.min(p.rating, 5);
     /** @type {Omit<Rating,"id"|"date">} */
     const rating = {
       ...zeroRating,
       Product_id: product.id,
-      rating: Math.min(p.rating, 5),
-      [`rating_count_${p.rating}`]: 1
+      rating: ratingValue,
+      [`rating_count_${ratingValue}`]: 1
     };
     ratings.push(rating);
   }

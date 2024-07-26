@@ -98,7 +98,7 @@ INSERT INTO ProductsRatings (Product_id, date, rating, rating_count_0, rating_co
 (1026,NOW(),3, 0, 0, 0, 1, 0, 0),
 (1027,NOW(),3, 0, 0, 0, 1, 0, 0),
 (1028,NOW(),5, 0, 0, 0, 0, 0, 1),
-(1029,NOW(),5, 0, 0, 0, 0, 0, 0);
+(1029,NOW(),5, 0, 0, 0, 0, 0, 1);
 
 INSERT INTO ProductsInventory (Product_id, date, quantity) VALUES 
 (1000,NOW(),24),

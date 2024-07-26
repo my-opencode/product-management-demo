@@ -25,8 +25,8 @@ paths:
           $ref: "#/components/responses/Unexpected"
   /products:
     get:
-      summary: List all products
-      operationId: productsListAll
+      summary: Lists all products.
+      operationId: productsGetAll
       tags:
         - products
       # parameters:
@@ -61,7 +61,7 @@ paths:
       #       type: string
       responses:
         '200':
-          description: An array of products # A paged array of products
+          description: An array of products. # A paged array of products
           # headers:
           #   x-next:
           #     description: A link to the next page of responses
@@ -76,13 +76,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProductList"
         default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/Unexpected"
     post:
-      summary: Create a product
+      summary: Creates a new product.
       operationId: productsCreate
       tags:
         - products
@@ -94,17 +90,11 @@ paths:
         required: true
       responses:
         '201':
-          description: Product details
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ProductDetails"
+          $ref: "#/components/responses/ProductDetails"
+        '4XX':
+          $ref: "#/components/responses/ValidationError"
         default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/Unexpected"
   /products/{productId}:
     get:
       summary: Detailed information of a product

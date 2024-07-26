@@ -190,7 +190,7 @@ export class Product {
       return;
     }
     val = val.trim();
-    if (val === this._description) return;
+    if (val === this._image) return;
     else {
       this._image = validateString(val, 2048, undefined, `product.image`) || undefined;
       this.setUpdated(`image`);

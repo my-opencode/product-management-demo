@@ -1,9 +1,10 @@
-import { ProcedureCallPacket, QueryError, QueryResult, RowDataPacket } from "mysql2";
+import { QueryError, RowDataPacket } from "mysql2";
 import { RichApp } from "../types";
 import AppSymbols from "../AppSymbols";
 import Id from "./Id";
 import { validateFloat, validateInt, validateString, validateTinyInt, ValidationError, ValidationErrorStack } from "../lib/validators";
 import Logger from "../lib/winston";
+import { DirectInsertUpdateDeleteExecuteResponse, DirectProductSelectExecuteResponse, NewProductStoredProcedureExecuteResponse, UpdateProductStoredProcedureExecuteResponse } from "../database/adapter-response-format";
 const logger = Logger(`models/Product`, `debug`);
 
 type InventoryStatus = "OUTOFSTOCK" | "LOWSTOCK" | "INSTOCK";
@@ -367,12 +368,12 @@ export class Product {
     if (product.isSaved)
       return await this.updateInDatabase(app, product);
     const pool = app.get(AppSymbols.connectionPool);
-    let procedureResult: QueryResult | undefined = undefined;
+    let procedureResult: NewProductStoredProcedureExecuteResponse | undefined = undefined;
     try {
       const callStatement = `CALL new_product( ${ds(product.code)}, ${ds(product.name)}, ${ds(product.description)}, ${product.image ? `, ${ds(product.image)}` : `NULL`}, ${product.categoryId}, ${product.price.toFixed(2)}, ${product.quantity}, 0, @id);`;
       logger.log(`debug`, callStatement);
       ([procedureResult] =
-        await pool.execute<ProcedureCallPacket<{ id: number }[]>>(callStatement));
+        (await pool.execute<NewProductStoredProcedureExecuteResponse>(callStatement))||[]);
     } catch (err) {
       logger.log(`debug`, `Product InsertNewToDatabase received QueryErr: "${JSON.stringify(err)}"`);
       if (err instanceof Error)
@@ -380,10 +381,15 @@ export class Product {
       throw err;
     }
 
-    logger.log(`debug`, `Product insertNewToDatabase received QueryResult: (${typeof procedureResult}) "${JSON.stringify(procedureResult)}"`);
-    const productId: number = (procedureResult as RowDataPacket)?.[0]?.id;
+    const productId: number = procedureResult?.[0]?.[0]?.id;
+    if(!productId) throw new Error(`New product id undefined. Check SP execution logs.`);
 
-    const newProduct = await this.getFromDatabaseById(app, productId);
+    let newProduct:Product|undefined = undefined;
+    try {
+      newProduct = await this.getFromDatabaseById(app, productId);
+    } catch (err){
+      logger.log(`debug`, `Error in getFromDatabaseById.`);
+    }
     if (!newProduct) throw new Error(`Unable to retrieve new product from Database.`);
     return newProduct;
   }
@@ -398,20 +404,23 @@ export class Product {
       throw new Error(`Update called on product without updates.`);
 
     const pool = app.get(AppSymbols.connectionPool);
-    let procedureResult: QueryResult | undefined = undefined;
     try {
       const callStatement = SQL_CALL_UPDATE_FIELDS_LIST(product);
       logger.log(`debug`, callStatement);
-      ([procedureResult] = await pool.execute(callStatement));
+      await pool.execute<UpdateProductStoredProcedureExecuteResponse>(callStatement);
     } catch (err) {
       logger.log(`debug`, `Product updateInDatabase received QueryErr: "${JSON.stringify(err)}"`);
       if (err instanceof Error)
         handleProcedureSqlSignals(err);
       throw err;
     }
-    logger.log(`debug`, `Product InsertNewToDatabase received QueryResult: (${typeof procedureResult}) "${JSON.stringify(procedureResult)}"`);
 
-    const updatedProduct = await this.getFromDatabaseById(app, product.id);
+    let updatedProduct:Product|undefined = undefined;
+    try {
+      updatedProduct = await this.getFromDatabaseById(app, product.id);
+    } catch (err){
+      logger.log(`debug`, `Error in getFromDatabaseById.`);
+    }
     if (!updatedProduct) throw new Error(`Unable to retrieve updated product from Database.`);
     return updatedProduct;
   }
@@ -420,8 +429,8 @@ export class Product {
   }
   static async listFromDatabase(app: RichApp) {
     const pool = app.get(AppSymbols.connectionPool);
-    const [rows] = await pool.execute(SQL_SELECT_ALL_PRODUCTS());
-    return rows as ProductAsInTheJson[];
+    const [rows] = await pool.execute<DirectProductSelectExecuteResponse>(SQL_SELECT_ALL_PRODUCTS());
+    return rows;
   }
   static async getById(app: RichApp, id: number) {
     return await this.getFromDatabaseById(app, id);
@@ -431,11 +440,16 @@ export class Product {
     logger.log(`debug`, `Querying DB for Product with id = ${id}.`);
     const query = SQL_SELECT_PRODUCT_BY_ID(id);
     logger.log(`debug`, query);
-    const response = await pool.execute(query);
-    const [rows] = response || [];
-    if (!(rows as ProductAsInTheJson[])?.[0]) return undefined;
-    logger.log(`debug`, `getFromDatabaseById Database QueryResult is ${JSON.stringify(rows)}`);
-    const product = new Product((rows as ProductAsInTheJson[])[0]);
+    const response = await pool.execute<DirectProductSelectExecuteResponse>(query);
+    logger.log(`debug`, `getFromDatabaseById Database QueryResult is ${JSON.stringify(response)}`);
+    if(!response || !Array.isArray(response) || !response[0])
+        throw new Error(`Received malformed response from db server. ${JSON.stringify(response)}`);
+    const value = response[0][0];
+    if (!value) {
+      logger.log(`debug`, `Querying DB for Product with id = ${id} got no result.`);
+      return undefined;
+    }
+    const product = new Product(value);
     return product;
   }
   static async setDeletedInDatabase(app:RichApp, id: number){
@@ -443,7 +457,7 @@ export class Product {
     const query = `UPDATE Products SET deleted = 1 WHERE id = ${id};`;
     logger.log(`debug`, query);
     try {
-    await pool.execute(query);
+      await pool.execute<DirectInsertUpdateDeleteExecuteResponse>(query);
     } catch(err){
       logger.log(`debug`, `Product setDeletedInDatabase received QueryErr: "${JSON.stringify(err)}"`);
       if (err instanceof Error)

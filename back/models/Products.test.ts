@@ -3,8 +3,9 @@ import * as assert from "assert";
 import Product, { ProductAsInTheJson, ProductBase, SQL_CALL_UPDATE_FIELDS_LIST } from "./Products";
 import AppSymbols from "../AppSymbols";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
-import { QueryError } from "mysql2";
+import { QueryError, ResultSetHeader } from "mysql2";
 import { getDummyProduct } from "../lib/test-product-util";
+import { DirectProductSelectExecuteResponse, NewProductStoredProcedureExecuteResponse, SpNewProductResult } from "../database/adapter-response-format";
 
 describe(`SQL update call statement maker`, function(){
   let p : Product;
@@ -387,38 +388,27 @@ describe(`Product static - insertNewToDatabase - New not found`, function () {
   let app: any;
   let pool: any;
   let p: Product;
-  const results: ProductBase[] = [
-    {
-      id: 18,
-      code: `abc`,
-      name: `product abc`,
-      description: `product desc`,
-      image: `abc.png`,
-      categoryId: 1,
-      category: ``,
-      quantity: 10,
-      price: 100,
-      rating: 3,
-      inventoryStatus: "INSTOCK"
-    }];
-  function* ExecuteResult() {
-    let count = 0;
-    if (count === 0) {
-      count++;
-      yield results;
-    } else
-      yield [[]];
-  }
-  before(function () {
+    const createResult: NewProductStoredProcedureExecuteResponse = [
+      [{id:18} as SpNewProductResult],
+      {} as unknown as ResultSetHeader
+    ];
+    const getByIdResult : DirectProductSelectExecuteResponse = [];
+    function* ExecuteResult() {
+      yield [createResult];
+      yield [getByIdResult];
+    }
+
+  beforeEach(function () {    
     const execRes = ExecuteResult();
     pool = {
       execute: mock.fn((statement: string) => Promise.resolve(execRes.next().value))
     };
     app = {
-      get: mock.fn((path: string) => pool)
+      get: mock.fn((path: string) => {
+        console.log(`insertNewToDatabase - New not found - app.get - ${path}`);
+        return pool;
+      })
     };
-  });
-  beforeEach(function () {
     p = new Product({
       code: `abc`,
       name: `product abc`,
@@ -437,12 +427,13 @@ describe(`Product static - insertNewToDatabase - New not found`, function () {
     await assert.rejects(Product.insertNewToDatabase(app, p));
     assert.strictEqual(app.get.mock.callCount(), 2);
     assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
+    assert.strictEqual(app.get.mock.calls[1].arguments[0], AppSymbols.connectionPool);
   });
   it(`should call pool.execute twice (save + getById)`, async function () {
     await assert.rejects(Product.insertNewToDatabase(app, p));
     assert.strictEqual(pool.execute.mock.callCount(), 2);
     assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0, 17), `CALL new_product(`);
-    assert.strictEqual(pool.execute.mock.calls[1].arguments[0].slice(0, 19), `SELECT \n      p.id,`);
+    assert.strictEqual(pool.execute.mock.calls[1].arguments[0].slice(0, 6), `SELECT`);
   });
   it(`should return product`, async function () {
     await assert.rejects(
@@ -456,29 +447,36 @@ describe(`Product static - insertNewToDatabase`, function () {
   let app: any;
   let pool: any;
   let p: Product;
-  before(function () {
-    const results: ProductBase[] = [
-      {
-        id: 18,
-        code: `abc`,
-        name: `product abc`,
-        description: `product desc`,
-        image: `abc.png`,
-        categoryId: 1,
-        category: ``,
-        quantity: 10,
-        price: 100,
-        rating: 3,
-        inventoryStatus: "INSTOCK"
-      }];
+  const createResult: NewProductStoredProcedureExecuteResponse = [
+    [{id:18} as SpNewProductResult],
+    {} as unknown as ResultSetHeader
+  ];
+  const getByIdResult : DirectProductSelectExecuteResponse = [
+    {
+      id: 18,
+      code: `abc`,
+      name: `product abc`,
+      description: `product desc`,
+      image: `abc.png`,
+      categoryId: 1,
+      category: ``,
+      quantity: 10,
+      price: 100,
+      rating: 3,
+      inventoryStatus: "INSTOCK"
+    } as ProductAsInTheJson ];
+  beforeEach(function () {
+    function* ExecuteResult() {
+      yield [createResult];
+      yield [getByIdResult];
+    }
+      const execRes = ExecuteResult();
     pool = {
-      execute: mock.fn((statement: string) => Promise.resolve([results]))
+      execute: mock.fn((statement: string) => Promise.resolve(execRes.next().value))
     };
     app = {
       get: mock.fn((path: string) => pool)
     };
-  });
-  beforeEach(function () {
     p = new Product({
       code: `abc`,
       name: `product abc`,
@@ -691,14 +689,10 @@ describe(`Product static - updateInDatabase - Updated not found`, function () {
       inventoryStatus: "INSTOCK"
     }];
   function* ExecuteResult() {
-    let count = 0;
-    if (count === 0) {
-      count++;
-      yield results;
-    } else
-      yield [[]];
+    yield [results];
+    yield [];
   }
-  before(function () {
+  beforeEach(function () {
     const execRes = ExecuteResult();
     pool = {
       execute: mock.fn((statement: string) => Promise.resolve(execRes.next().value))
@@ -706,8 +700,6 @@ describe(`Product static - updateInDatabase - Updated not found`, function () {
     app = {
       get: mock.fn((path: string) => pool)
     };
-  });
-  beforeEach(function () {
     p = new Product({
       id: 18,
       code: `a`,
@@ -1263,34 +1255,38 @@ describe(`Product inst - productFieldUpdateAfterSave`, function () {
 describe(`Product inst - Product.save`, function () {
   let app: any;
   let pool: any;
-  before(function () {
-    const results: ProductBase[] = [
-      {
-        id: 18,
-        code: `abc`,
-        name: `product abc`,
-        description: `product desc`,
-        image: `abc.png`,
-        categoryId: 1,
-        category: ``,
-        quantity: 10,
-        price: 100,
-        rating: 3,
-        inventoryStatus: "INSTOCK"
-      }];
+  let p: Product;
+  const createResult: NewProductStoredProcedureExecuteResponse = [
+    [{id:18} as SpNewProductResult],
+    {} as unknown as ResultSetHeader
+  ];
+  const getByIdResult : DirectProductSelectExecuteResponse = [
+    {
+      id: 18,
+      code: `abc`,
+      name: `product abc`,
+      description: `product desc`,
+      image: `abc.png`,
+      categoryId: 1,
+      category: ``,
+      quantity: 10,
+      price: 100,
+      rating: 3,
+      inventoryStatus: "INSTOCK"
+    } as ProductAsInTheJson ];
+  beforeEach(function () {
+    function* ExecuteResult() {
+      yield [createResult];
+      yield [getByIdResult];
+    }
+      const execRes = ExecuteResult();
     pool = {
-      execute: mock.fn((statement: string) => Promise.resolve([results]))
+      execute: mock.fn((statement: string) => Promise.resolve(execRes.next().value))
     };
     app = {
       get: mock.fn((path: string) => pool)
     };
-  });
-  beforeEach(function () {
-    app.get.mock.resetCalls();
-    pool.execute.mock.resetCalls();
-  });
-  it(`should call app.get twice (save + getById)`, async function () {
-    const p = new Product({
+    p = new Product({
       code: `abc`,
       name: `product abc`,
       description: `product desc`,
@@ -1301,22 +1297,15 @@ describe(`Product inst - Product.save`, function () {
       price: 100,
       rating: 3
     });
+    app.get.mock.resetCalls();
+    pool.execute.mock.resetCalls();
+  });
+  it(`should call app.get twice (save + getById)`, async function () {
     await p.save(app);
     assert.strictEqual(app.get.mock.callCount(), 2);
     assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
   });
   it(`should call pool.execute twice (save + getById)`, async function () {
-    const p = new Product({
-      code: `abc`,
-      name: `product abc`,
-      description: `product desc`,
-      image: `abc.png`,
-      categoryId: 1,
-      category: ``,
-      quantity: 10,
-      price: 100,
-      rating: 3
-    });
     await p.save(app);
     assert.strictEqual(pool.execute.mock.callCount(), 2);
     assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0, 17), `CALL new_product(`);
@@ -1324,34 +1313,12 @@ describe(`Product inst - Product.save`, function () {
       p.id,`);
   });
   it(`should return product`, async function () {
-    const p = new Product({
-      code: `abc`,
-      name: `product abc`,
-      description: `product desc`,
-      image: `abc.png`,
-      categoryId: 1,
-      category: ``,
-      quantity: 10,
-      price: 100,
-      rating: 3
-    });
     const result = await p.save(app);
     assert.ok(
       result instanceof Product
     );
   });
   it(`should update product`, async function () {
-    const p = new Product({
-      code: `abc`,
-      name: `product abc`,
-      description: `product desc`,
-      image: `abc.png`,
-      categoryId: 1,
-      category: ``,
-      quantity: 10,
-      price: 100,
-      rating: 3
-    });
     assert.deepStrictEqual(
       p.isSaved,
       false

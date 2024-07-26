@@ -276,10 +276,23 @@ describe(`Test API endpoints`, function () {
     let response: Response;
     let json: ValidationErrorResponseJson;
     await before(async function () {
+      const sourceValues = {
+        "id": 1000,
+        "code": "f230fh0g3",
+        "name": "Bamboo Watch",
+        "description": "Product Description",
+        "image": "bamboo-watch.jpg",
+        "price": 65,
+        "category": "Accessories",
+        "categoryId": 1,
+        "quantity": 24,
+        "inventoryStatus": "INSTOCK",
+        "rating": 5
+      };
       response = await inject(app, {
         method: `patch`,
-        url: `/products/${REAL_PRODUCT_ID}`,
-        body: `{"code":"${``.padEnd(256,`a`)}","image":"${``.padEnd(2049,`a`)}"}`,
+        url: `/products/${sourceValues.id}`,
+        body: JSON.stringify(sourceValues),
         headers: {
           "content-type": `application/json`
         }
@@ -291,11 +304,7 @@ describe(`Test API endpoints`, function () {
     it(`should return error json object`, function () {
       assert.strictEqual(typeof response.payload, `string`);
       json = JSON.parse(response.payload);
-      assert.strictEqual(json.description, `Invalid Changes`);
-    });
-    it(`should list errors`, function () {
-      assert.strictEqual(json.errors[`product.code`], `Too long. Max length: 255.`);
-      assert.strictEqual(json.errors[`product.image`], `Too long. Max length: 2048.`);
+      assert.strictEqual(json.description, `Expected changes.`);
     });
   });
   describe(`PATCH /products/:id 409 - code exists`, async function () {

@@ -1095,6 +1095,140 @@ describe(`Product class - update Product`, function () {
       assert.strictEqual(p.isUpdated, false);
     });
   });
+  describe(`update status - no update conditions`, function(){
+    let p:Product;
+    before(function(){
+      p = new Product({
+        id: 1050,
+        code: `aaaa`,
+        name: `aaaa product`,
+        description: `aaaa desc`,
+        image: `aaaa.png`,
+        categoryId: 1,
+        category: "category a",
+        quantity: 12,
+        price: 12.00,
+      });
+    });
+    it(`should be saved`, function(){
+      assert.strictEqual(
+        p.isSaved,
+        true
+      );
+    });
+    it(`should not update given the same code`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.code = `aaaa`;
+      assert.strictEqual(p.isUpdated, false);
+      p.code = `  aaaa   `;
+      assert.strictEqual(p.isUpdated, false);
+    });
+    it(`should not update given the same name`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.name = `aaaa product`;
+      assert.strictEqual(p.isUpdated, false);
+      p.name = `  aaaa product  `;
+      assert.strictEqual(p.isUpdated, false);
+    });
+    it(`should not update given the same description`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.description = `aaaa desc`;
+      assert.strictEqual(p.isUpdated, false);
+      p.description = `  aaaa desc  `;
+      assert.strictEqual(p.isUpdated, false);
+    });
+    it(`should not update given the same image`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.image = `aaaa.png`;
+      assert.strictEqual(p.isUpdated, false);
+      p.image = `  aaaa.png  `;
+      assert.strictEqual(p.isUpdated, false);
+    });
+    it(`should not update given the same categoryId`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.categoryId = 1;
+      assert.strictEqual(p.isUpdated, false);
+    });
+    it(`should not update given the same quantity`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.quantity = 12;
+      assert.strictEqual(p.isUpdated, false);
+    });
+    it(`should not update given the same price`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.price = 12.00;
+      assert.strictEqual(p.isUpdated, false);
+      p.price = 12;
+      assert.strictEqual(p.isUpdated, false);
+      p.price = "12";
+      assert.strictEqual(p.isUpdated, false);
+    });
+  });
+  describe(`update status - update conditions`, function(){
+    let p:Product;
+    beforeEach(function(){
+      p = new Product({
+        id: 1050,
+        code: `aaaa`,
+        name: `aaaa product`,
+        description: `aaaa desc`,
+        image: `aaaa.png`,
+        categoryId: 1,
+        category: "category a",
+        quantity: 12,
+        price: 12.12,
+      });
+    });
+    it(`should update given new code`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.code = `bbbb`;
+      assert.strictEqual(p.isUpdated, true);
+      assert.strictEqual(p.updatedFields.size, 1);
+      assert.strictEqual(p.updatedFields.has(`code`), true);
+    });
+    it(`should update given new name`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.name = `bbbb product`;
+      assert.strictEqual(p.isUpdated, true);
+      assert.strictEqual(p.updatedFields.size, 1);
+      assert.strictEqual(p.updatedFields.has(`name`), true);
+    });
+    it(`should update given new description`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.description = `bbbb desc`;
+      assert.strictEqual(p.isUpdated, true);
+      assert.strictEqual(p.updatedFields.size, 1);
+      assert.strictEqual(p.updatedFields.has(`description`), true);
+    });
+    it(`should update given new image`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.image = `bbbb.png`;
+      assert.strictEqual(p.isUpdated, true);
+      assert.strictEqual(p.updatedFields.size, 1);
+      assert.strictEqual(p.updatedFields.has(`image`), true);
+    });
+    it(`should update given new categoryId`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.categoryId = 2;
+      assert.strictEqual(p.isUpdated, true);
+      assert.strictEqual(p.updatedFields.size, 1);
+      assert.strictEqual(p.updatedFields.has(`category`), true);
+    });
+    it(`should update given new quantity`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.quantity = 5;
+      assert.strictEqual(p.isUpdated, true);
+      assert.strictEqual(p.updatedFields.size, 1);
+      assert.strictEqual(p.updatedFields.has(`quantity`), true);
+    });
+    it(`should update given new price`, function(){
+      assert.strictEqual(p.isUpdated, false);
+      p.price = 8.95;
+      assert.strictEqual(p.isUpdated, true);
+      assert.strictEqual(p.updatedFields.size, 1);
+      assert.strictEqual(p.updatedFields.has(`price`), true);
+    });
+  });
 });
 
 describe(`Product inst - productFieldUpdateAfterSave`, function () {

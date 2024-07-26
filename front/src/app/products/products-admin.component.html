@@ -1,7 +1,7 @@
 <div class="app-frame" *ngIf="payload$ | async as pl">
   <app-table 
     class="table"
-    [data]="pl.products"
+    [data]="pl.data"
     [totalRecords]="pl.total"
     [config]="conf"
     [entity]="entity"

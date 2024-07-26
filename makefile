@@ -47,6 +47,16 @@ build-back:
 	cd back && npm i;
 	cd back && npm run build;
 
+# clear-logs
+clear-logs:
+	mkdir -p ./docker-logs/controllers;
+	mkdir -p ./docker-logs/middleware;
+	mkdir -p ./docker-logs/models;
+	rm -rf ./docker-logs/controllers/*;
+	rm -rf ./docker-logs/middleware/*;
+	rm -rf ./docker-logs/models/*;
+	rm -rf ./docker-logs/*.log;
+	
 # docker-nuke-image
 # - removes all traces of the docker image of the app
 docker-nuke-image:

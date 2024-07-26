@@ -173,6 +173,12 @@ paths:
                 $ref: "#/components/schemas/Error"
 components:
   schemas:
+    IdValue:
+      type: integer
+      format: int64
+      minimum: 1000
+      maximum: 4294967295
+      maxLength: 2048
     Category:
       type: object
       required:
@@ -180,11 +186,8 @@ components:
         - name
       properties:
         id:
-          type: integer
-          format: int64
-          minimum: 1000
-          maximum: 4294967295
-          maxLength: 2048
+          schema:
+            $ref: "#/components/schemas/IdValue"
         name:
           type: string
           minLength: 1
@@ -241,11 +244,8 @@ components:
             - inventoryStatus
       properties:
         id:
-          type: integer
-          format: int64
-          minimum: 1000
-          maximum: 4294967295
-          maxLength: 2048
+          schema:
+            $ref: "#/components/schemas/IdValue"
         inventoryStatus:
           type: string
           enum: ["INSTOCK", "LOWSTOCK", "OUTOFSTOCK"]
@@ -262,11 +262,8 @@ components:
         - id
       properties:
         id:
-          type: integer
-          format: int64
-          minimum: 1000
-          maximum: 4294967295
-          maxLength: 2048
+          schema:
+            $ref: "#/components/schemas/IdValue"
         code:
           type: string
           minLength: 1

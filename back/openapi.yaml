@@ -1,34 +1,34 @@
-openapi: "3.1.0"
-info:
-  version: alpha1.0.0
-  title: Product Management Demo
-  license:
-    name: Internet Software Consortium Permissive Free Software License
-    identifier: ISC
-servers:
-  - url: http://localhost:8080
-paths:
-  /categories:
-    get:
-      summary: Lists all categories.
-      operationId: categoriesGetAll
-      tags:
-        - categories
-      responses:
-        '200':
-          description: An array of categories.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CategoryListPayload"
-        default:
-          $ref: "#/components/responses/Unexpected"
-  /products:
-    get:
-      summary: Lists all products.
-      operationId: productsGetAll
-      tags:
-        - products
+  openapi: "3.1.0"
+  info:
+    version: alpha1.0.0
+    title: Product Management Demo
+    license:
+      name: Internet Software Consortium Permissive Free Software License
+      identifier: ISC
+  servers:
+    - url: http://localhost:8080
+  paths:
+    /categories:
+      get:
+        summary: Lists all categories.
+        operationId: categoriesGetAll
+        tags:
+          - categories
+        responses:
+          '200':
+            description: An array of categories.
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/CategoryListPayload"
+          default:
+            $ref: "#/components/responses/UnexpectedError"
+    /products:
+      get:
+        summary: Lists all products.
+        operationId: productsGetAll
+        tags:
+          - products
       # parameters:
       #   - name: limit
       #     in: query
@@ -59,9 +59,9 @@ paths:
       #     example: "desc"
       #     schema:
       #       type: string
-      responses:
-        '200':
-          description: An array of products. # A paged array of products
+        responses:
+          '200':
+            description: An array of products. # A paged array of products
           # headers:
           #   x-next:
           #     description: A link to the next page of responses
@@ -71,273 +71,274 @@ paths:
           #     description: A link to the next page of responses
           #     schema:
           #       type: string
+            content:
+              application/json:    
+                schema:
+                  $ref: "#/components/schemas/ProductListPayload"
+          default:
+            $ref: "#/components/responses/UnexpectedError"
+      post:
+        summary: Creates a new product.
+        operationId: productsCreate
+        tags:
+          - products
+        requestBody:
           content:
-            application/json:    
+            application/json:
               schema:
-                $ref: "#/components/schemas/ProductList"
-        default:
-          $ref: "#/components/responses/Unexpected"
-    post:
-      summary: Creates a new product.
-      operationId: productsCreate
-      tags:
-        - products
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProductToCreate'
+                $ref: '#/components/schemas/ProductToCreate'
+          required: true
+        responses:
+          '201':
+            $ref: "#/components/responses/ProductDetails"
+          '4XX':
+            $ref: "#/components/responses/ValidationError"
+          default:
+            $ref: "#/components/responses/UnexpectedError"
+    /products/{productId}:
+      get:
+        summary: Lists all information of a product.
+        operationId: productsGetOneById
+        tags:
+          - products
+        parameters:
+          - $ref: "#/components/parameters/ProductId"
+        responses:
+          '200':
+            $ref: "#/components/responses/ProductDetails"
+          '404':
+            $ref: "#/components/responses/NotFound"
+          '4XX':
+            $ref: "#/components/responses/ValidationError"
+          default:
+            $ref: "#/components/responses/UnexpectedError"
+      patch:
+        summary: Updates information of a product.
+        operationId: productsUpdateOneById
+        tags:
+          - products
+        parameters:
+          - $ref: "#/components/parameters/ProductId"
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetailsToUpdate'
+          required: true
+        responses:
+          '200':
+            $ref: "#/components/responses/ProductDetails"
+          '404':
+            $ref: "#/components/responses/NotFound"
+          '4XX':
+            $ref: "#/components/responses/ValidationError"
+          default:
+            $ref: "#/components/responses/UnexpectedError"
+      delete:
+        summary: Deletes a product.
+        operationId: productsDeleteOneById
+        tags:
+          - products
+        parameters:
+          - $ref: "#/components/parameters/ProductId"
+        responses:
+          '204':
+            description: Empty delete response.
+          '404':
+            $ref: "#/components/responses/NotFound"
+          default:
+            $ref: "#/components/responses/UnexpectedError"
+  components:
+    parameters:
+      ProductId:
+        name: productId
+        in: path
         required: true
-      responses:
-        '201':
-          $ref: "#/components/responses/ProductDetails"
-        '4XX':
-          $ref: "#/components/responses/ValidationError"
-        default:
-          $ref: "#/components/responses/Unexpected"
-  /products/{productId}:
-    get:
-      summary: Lists all information of a product.
-      operationId: productsGetOneById
-      tags:
-        - products
-      parameters:
-        - $ref: "#/components/parameters/ProductId"
-      responses:
-        '200':
-          $ref: "#/components/responses/ProductDetails"
-        '404':
-          $ref: "#/components/responses/NotFound"
-        '4XX':
-          $ref: "#/components/responses/ValidationError"
-        default:
-          $ref: "#/components/responses/Unexpected"
-    patch:
-      summary: Updates information of a product.
-      operationId: productsUpdateOneById
-      tags:
-        - products
-      parameters:
-        - $ref: "#/components/parameters/ProductId"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProductDetailsToUpdate'
-        required: true
-      responses:
-        '200':
-          $ref: "#/components/responses/ProductDetails"
-        '404':
-          $ref: "#/components/responses/NotFound"
-        '4XX':
-          $ref: "#/components/responses/ValidationError"
-        default:
-          $ref: "#/components/responses/Unexpected"
-    delete:
-      summary: Deletes a product.
-      operationId: productsDeleteOneById
-      tags:
-        - products
-      parameters:
-        - $ref: "#/components/parameters/ProductId"
-      responses:
-        '204':
-          description: Empty delete response.
-        '404':
-          $ref: "#/components/responses/NotFound"
-        default:
-          $ref: "#/components/responses/Unexpected"
-components:
-  parameters:
-    ProductId:
-      name: productId
-      in: path
-      required: true
-      description: The id of the target product.
-      schema:
-        $ref: "#/components/schemas/IdValue"
-  responses:
-    ProductDetails:
-      description: A product object.
-      content:
-        application/json:    
-          schema:
-            $ref: "#/components/schemas/ProductDetails"
-    NotFound:
-      description: Resource not found.
-      content:
+        description: The id of the target product.
         schema:
-          $ref: "#/components/schemas/Error404Payload"
-    UnexpectedError:
-      description: Unexpected server side error.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorJsonPayload"
-        default:
-          schema:
-            $ref: "#/components/schemas/ErrorStringPayload"
-    ValidationError:
-      description: Error validating user submitted data.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorJsonPayload"
-  schemas:
-    IdValue:
-      type: integer
-      format: int64
-      minimum: 1000
-      maximum: 4294967295
-      maxLength: 2048
-    Category:
-      type: object
-      required:
-        - id
-        - name
-      properties:
-        id:
-          schema:
-            $ref: "#/components/schemas/IdValue"
-        name:
-          type: string
-          minLength: 1
-          maxLength: 1024
-    ProductToCreate:
-      type: object
-      required:
-        - code
-        - name
-        - description
-        - categoryId
-        - price
-        - quantity
-        - rating
-      properties:
-        code:
-          type: string
-          minLength: 1
-          maxLength: 255
-        name:
-          type: string
-          minLength: 1
-          maxLength: 1024
-        description:
-          type: string
-          minLength: 1
-          maxLength: 5120
-        image:
-          type: string
-          minLength: 0
-          maxLength: 2048
-        categoryId:
-          type: integer
-          format: int64
-          minimum: 1
-          maximum: 4294967295
-        price:
-          type: number
-          minimum: 0.01
-          maximum: 999999.99
-        quantity:
-          type: integer
-          format: int64
-          minimum: 0
-          maximum: 16777215
-    Product:
-      allOf:
-        - $ref: #/components/schemas/ProductToCreate"
-        - type: object
-          required:
-            - id
-            - category
-            - rating
-            - inventoryStatus
-      properties:
-        id:
-          schema:
-            $ref: "#/components/schemas/IdValue"
-        inventoryStatus:
-          type: string
-          enum: ["INSTOCK", "LOWSTOCK", "OUTOFSTOCK"]
-        category:
-          type: string
-          minLength: 1
-          maxLength: 1024
-        rating:
-          type: integer
-          enum: [0, 1, 2, 3, 4, 5]
-    ProductDetailsToUpdate:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          schema:
-            $ref: "#/components/schemas/IdValue"
-        code:
-          type: string
-          minLength: 1
-          maxLength: 255
-        name:
-          type: string
-          minLength: 1
-          maxLength: 1024
-        description:
-          type: string
-          minLength: 1
-          maxLength: 5120
-        image:
-          type: string
-          minLength: 0
-          maxLength: 2048
-        categoryId:
-          type: integer
-          format: int64
-          minimum: 1
-          maximum: 4294967295
-        price:
-          type: number
-          minimum: 0.01
-          maximum: 999999.99
-        quantity:
-          type: integer
-          format: int64
-          minimum: 0
-          maximum: 16777215
-    CategoryListPayload:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            - $ref "#/components/schemas/Category"
-    ProductPayload:
-      type: object
-      properties:
-        data:
-          $ref: "#/components/schemas/Product"
-    ProductListPayload:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
+          $ref: "#/components/schemas/IdValue"
+    responses:
+      ProductDetails:
+        description: A product object.
+        content:
+          application/json:    
+            schema:
+              $ref: "#/components/schemas/ProductPayload"
+      NotFound:
+        description: Resource not found.
+        content:
+          default:
+            schema:
+              $ref: "#/components/schemas/Error404Payload"
+      UnexpectedError:
+        description: Unexpected server side error.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorJsonPayload"
+          default:
+            schema:
+              $ref: "#/components/schemas/ErrorStringPayload"
+      ValidationError:
+        description: Error validating user submitted data.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorJsonPayload"
+    schemas:
+      IdValue:
+        type: integer
+        format: int64
+        minimum: 1000
+        maximum: 4294967295
+        maxLength: 2048
+      Category:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            schema:
+              $ref: "#/components/schemas/IdValue"
+          name:
+            type: string
+            minLength: 1
+            maxLength: 1024
+      ProductToCreate:
+        type: object
+        required:
+          - code
+          - name
+          - description
+          - categoryId
+          - price
+          - quantity
+          - rating
+        properties:
+          code:
+            type: string
+            minLength: 1
+            maxLength: 255
+          name:
+            type: string
+            minLength: 1
+            maxLength: 1024
+          description:
+            type: string
+            minLength: 1
+            maxLength: 5120
+          image:
+            type: string
+            minLength: 0
+            maxLength: 2048
+          categoryId:
+            type: integer
+            format: int64
+            minimum: 1
+            maximum: 4294967295
+          price:
+            type: number
+            minimum: 0.01
+            maximum: 999999.99
+          quantity:
+            type: integer
+            format: int64
+            minimum: 0
+            maximum: 16777215
+      Product:
+        allOf:
+          - $ref: #/components/schemas/ProductToCreate"
+          - type: object
+            required:
+              - id
+              - category
+              - rating
+              - inventoryStatus
+        properties:
+          id:
+            schema:
+              $ref: "#/components/schemas/IdValue"
+          inventoryStatus:
+            type: string
+            enum: ["INSTOCK", "LOWSTOCK", "OUTOFSTOCK"]
+          category:
+            type: string
+            minLength: 1
+            maxLength: 1024
+          rating:
+            type: integer
+            enum: [0, 1, 2, 3, 4, 5]
+      ProductDetailsToUpdate:
+        type: object
+        required:
+          - id
+        properties:
+          id:
+            schema:
+              $ref: "#/components/schemas/IdValue"
+          code:
+            type: string
+            minLength: 1
+            maxLength: 255
+          name:
+            type: string
+            minLength: 1
+            maxLength: 1024
+          description:
+            type: string
+            minLength: 1
+            maxLength: 5120
+          image:
+            type: string
+            minLength: 0
+            maxLength: 2048
+          categoryId:
+            type: integer
+            format: int64
+            minimum: 1
+            maximum: 4294967295
+          price:
+            type: number
+            minimum: 0.01
+            maximum: 999999.99
+          quantity:
+            type: integer
+            format: int64
+            minimum: 0
+            maximum: 16777215
+      CategoryListPayload:
+        type: object
+        properties:
+          data:
+            type: array
+            items:
+              - $ref "#/components/schemas/Category"
+      ProductPayload:
+        type: object
+        properties:
+          data:
             $ref: "#/components/schemas/Product"
-    ErrorJsonPayload:
-      type: object
-      required:
-        - description
-        - errors
-      properties:
-        description:
-          type: string
-        errors:
-          type: array
-          items:
-            type: object
-    ErrorStringPayload:
-      type: string
-    Error404Payload:
-      type: string
+      ProductListPayload:
+        type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: "#/components/schemas/Product"
+      ErrorJsonPayload:
+        type: object
+        required:
+          - description
+          - errors
+        properties:
+          description:
+            type: string
+          errors:
+            type: array
+            items:
+              type: object
+      ErrorStringPayload:
+        type: string
+      Error404Payload:
+        type: string

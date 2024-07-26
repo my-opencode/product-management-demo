@@ -60,9 +60,18 @@ clear-logs:
 # docker-nuke-image
 # - removes all traces of the docker image of the app
 docker-nuke-image:
-	sudo docker-compose down -v;
-	sudo docker image rm product-management-demo:alpha1.0;
-	sudo docker image prune -f;
+
+###########################################################################
+#####                           CONSTANTS                             #####
+###########################################################################
+
+_green :=\033[32m
+_red :=\033[31m
+_underlined :=\033[4m
+_cleardecorations :=\033[0m
+_newline :=\n
+_SAFE := "$(_green)%s$(_cleardecorations)"
+_DANGER := "$(_red)%s$(_cleardecorations)"
 	
 ###########################################################################
 #####                           DEPRECATED                            #####

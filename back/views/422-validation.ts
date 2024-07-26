@@ -10,7 +10,7 @@ export default function renderer(errorData: ValidationErrorStack | ValidationErr
     return renderOneError(errorData);
 }
 export function renderOneError(err: ValidationError): string {
-  return JSON.stringify({ errors: { [err.fieldName]: err.message } });
+  return JSON.stringify({ errors: { [err.fieldName]: err.message }, description: err.message });
 }
 export function renderErrorStack(errors: ValidationErrorStack): string {
   const payload: { errors: any, description?: string } = {

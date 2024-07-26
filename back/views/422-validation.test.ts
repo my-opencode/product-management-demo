@@ -6,7 +6,7 @@ import { ValidationError, ValidationErrorStack } from "../lib/validators";
 describe(`one validation error render`, function () {
   it(`should return json string`, function () {
     assert.strictEqual(typeof renderOneError(new ValidationError(`something`, `field`)), `string`);
-    assert.strictEqual(renderOneError(new ValidationError(`something`, `field`)), `{"errors":{"field":"something"}}`);
+    assert.strictEqual(renderOneError(new ValidationError(`something`, `field`)), `{"errors":{"field":"something"},"description":"something"}`);
   });
 });
 
@@ -20,7 +20,7 @@ describe(`validation error stack render`, function () {
 describe(`422 validation error stack renderer`, function () {
   it(`should return json string`, function () {
     assert.strictEqual(typeof renderer(new ValidationError(`something`, `field`)), `string`);
-    assert.strictEqual(renderer(new ValidationError(`something`, `field`)), `{"errors":{"field":"something"}}`);
+    assert.strictEqual(renderer(new ValidationError(`something`, `field`)), `{"errors":{"field":"something"},"description":"something"}`);
   });
   it(`should return json string`, function () {
     assert.strictEqual(typeof renderer(new ValidationErrorStack([new ValidationError(`something`, `field`)], `failed validation`)), `string`);

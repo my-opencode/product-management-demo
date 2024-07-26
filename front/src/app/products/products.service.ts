@@ -1,8 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Product } from './product.class';
-
+export interface ApiErrorPayloadError {
+    [fieldName: string]: string;
+}
+export interface ApiErrorPayload {
+    id?: number; // used for inter-component communication as a meaningless identifier
+    description?: string;
+    errors: ApiErrorPayloadError[];
+}
 @Injectable({
   providedIn: 'root'
 })

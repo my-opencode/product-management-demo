@@ -1,19 +1,31 @@
+# pre-start
+# Performs common operations for a start sequence
+# - Stops back end if running
+# - Rebuilds back end
+# - Resets logs
+# - Clears back end Docker image
+# - Clears Docker build cache to force rebuilding back end image
+pre-start:
+	make stop;
+	make build-back;
+	make clear-logs;
+	make docker-nuke-image;
+	make docker-nuke-builder;
+
 # start
-# - calls back end build
+# Starts the back end stack detached.
+# Switch between "serve" and "servedebug" profiles to
+# toggle phpmyadmin (servedebug) or not (serve)
 # - call docker compose to build and run
 start:
-	make build-back;
-	mkdir -p ./docker-logs/controllers;
-	sudo docker builder prune -f;
-	sudo docker-compose --profile serve up -V --force-recreate -d;
+	make pre-start;
+	sudo docker-compose --profile servedebug up -V --force-recreate -d;
 
 # start-attached
-# - calls back end build
+# Starts the back end stack attached to the terminal
 # - call docker compose to build and run
 start-attached:
-	make build-back;
-	mkdir -p ./docker-logs/controllers;
-	sudo docker builder prune -f;
+	make pre-start;
 	sudo docker-compose --profile serve up -V --force-recreate;
 
 # stop

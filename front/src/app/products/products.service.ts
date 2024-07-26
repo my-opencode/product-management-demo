@@ -1,3 +1,11 @@
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+import {
+    Product,
+    ProductDetailsPayload,
+    ProductPayload,
+} from "./product.class";
 export interface ApiErrorPayloadError {
     [fieldName: string]: string;
 }
@@ -7,12 +15,13 @@ export interface ApiErrorPayload {
     errors: ApiErrorPayloadError[];
 }
 @Injectable({
-  providedIn: 'root'
+    providedIn: "root",
 })
 export class ProductsService {
-
-    private static productslist: Product[] = null;
-    private products$: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
+    private static productList: Product[] = null;
+    private products$: BehaviorSubject<Product[]> = new BehaviorSubject<
+        Product[]
+    >([]);
 
     constructor(private http: HttpClient) { }
 

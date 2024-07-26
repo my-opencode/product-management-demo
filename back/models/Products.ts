@@ -377,6 +377,7 @@ export class Product {
       logger.log(`debug`, `Product InsertNewToDatabase received QueryErr: "${JSON.stringify(err)}"`);
       if (err instanceof Error)
         handleProcedureSqlSignals(err);
+      throw err;
     }
 
     logger.log(`debug`, `Product insertNewToDatabase received QueryResult: (${typeof procedureResult}) "${JSON.stringify(procedureResult)}"`);
@@ -406,6 +407,7 @@ export class Product {
       logger.log(`debug`, `Product updateInDatabase received QueryErr: "${JSON.stringify(err)}"`);
       if (err instanceof Error)
         handleProcedureSqlSignals(err);
+      throw err;
     }
     logger.log(`debug`, `Product InsertNewToDatabase received QueryResult: (${typeof procedureResult}) "${JSON.stringify(procedureResult)}"`);
 
@@ -446,6 +448,7 @@ export class Product {
       logger.log(`debug`, `Product setDeletedInDatabase received QueryErr: "${JSON.stringify(err)}"`);
       if (err instanceof Error)
         handleProcedureSqlSignals(err);
+      throw err;
     }
     logger.log(`debug`, `Product id = ${id} — set to deleted.`);
   }

@@ -203,6 +203,38 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(json.errors[`product.code`], `Duplicate value for code.`);
     });
   });
+  describe(`POST /products 201`, async function () {
+    let response: Response;
+    let json: ProductAsInTheJson;
+    await before(async function () {
+      response = await inject(app, {
+        method: `post`,
+        url: `/products`,
+        headers: {
+          "content-type": `application/json`
+        },
+        body: JSON.stringify(
+          {
+            category: 2,
+            code: `abcdef`,
+            name: `a`,
+            description: `a`,
+            quantity: 10,
+            price: 10.1,
+          }
+        )
+      });
+    });
+    it(`should return status code 201`, function () {
+      assert.strictEqual(response.statusCode, 201);
+    });
+    it(`should return json object`, function () {
+      assert.strictEqual(typeof response.payload, `string`);
+      json = JSON.parse(response.payload);
+      assert.ok(json.data.id > 1000);
+      assert.strictEqual(json.data.code, `abcdef`);
+    });
+  });
   describe(`GET /products/:id`, async function () {
     let response: Response;
     let json: { data: ProductAsInTheJson };

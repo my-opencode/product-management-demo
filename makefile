@@ -1,3 +1,12 @@
+
+# start-all
+# Starts back and front ends
+# Back end stack starts detached
+# Front end is served as dev server in terminal
+start-all:
+	make start;
+	make serve-front;
+
 # pre-start
 # Performs common operations for a start sequence
 # - Stops back end if running

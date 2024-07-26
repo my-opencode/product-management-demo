@@ -8,6 +8,21 @@ info:
 servers:
   - url: http://localhost:8080
 paths:
+  /categories:
+    get:
+      summary: Lists all categories.
+      operationId: categoriesGetAll
+      tags:
+        - categories
+      responses:
+        '200':
+          description: An array of categories.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryListPayload"
+        default:
+          $ref: "#/components/responses/Unexpected"
   /products:
     get:
       summary: List all products

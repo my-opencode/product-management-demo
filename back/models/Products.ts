@@ -448,16 +448,23 @@ export class Product {
     const query = SQL_SELECT_PRODUCT_BY_ID(id);
     logger.log(`debug`, query);
     const response = await pool.execute<DirectProductSelectExecuteResponse>(query);
-    logger.log(`debug`, `getFromDatabaseById Database QueryResult is ${JSON.stringify(response)}`);
+    logger.log(`debug`, `getFromDatabaseById Database QueryResult is [${JSON.stringify(response?.[0])}]`);
     if(!response || !Array.isArray(response) || !response[0])
-        throw new Error(`Received malformed response from db server. ${JSON.stringify(response)}`);
+        throw new Error(`Received malformed response from db server. [${JSON.stringify(response?.[0])}]`);
     const value = response[0][0];
     if (!value) {
       logger.log(`debug`, `Querying DB for Product with id = ${id} got no result.`);
       return undefined;
     }
+    try {
     const product = new Product(value);
     return product;
+    } catch(err){
+      logger.log(`error`,`Unable to instantiate product with value form db.`);
+      logger.log(`error`,`Value from db: >>> ${JSON.stringify(value)}`);
+      logger.log(`error`,`${JSON.stringify(err)}`);
+      throw new Error(`Unable to parse product from database in getFromDatabaseById.`);
+    }
   }
   static async setDeletedInDatabase(app:RichApp, id: number){
     const pool = app.get(AppSymbols.connectionPool);

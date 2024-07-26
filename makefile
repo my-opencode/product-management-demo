@@ -48,10 +48,12 @@ start:
 
 # start-attached
 # Starts the back end stack attached to the terminal
+# Switch between "serve" and "servedebug" profiles to
+# toggle phpmyadmin (servedebug) or not (serve)
 # - call docker compose to build and run
 start-attached:
 	make pre-start;
-	sudo docker-compose --profile serve up -V --force-recreate;
+	sudo docker-compose --profile servedebug up -V --force-recreate;
 
 # stop
 # Stops back end stack containers

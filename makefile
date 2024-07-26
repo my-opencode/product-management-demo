@@ -57,9 +57,49 @@ clear-logs:
 	rm -rf ./docker-logs/models/*;
 	rm -rf ./docker-logs/*.log;
 	
+###########################################################################
+#####                           DANGER ZONE                           #####
+###########################################################################
+	
 # docker-nuke-image
 # - removes all traces of the docker image of the app
 docker-nuke-image:
+	make stop;
+	sudo docker image rm product-management-demo:alpha1.0 || true;
+	@printf $(_DANGER) "Next operation will prune Docker's images.";
+	@printf "$(_newline)" "";
+	@printf $(_DANGER) "Are you sure to proceed? [y/";
+	@printf $(_SAFE) "N";
+	@printf $(_DANGER) "] ";
+	@read ans && ans=$${ans:-N} ; \
+	if [ $${ans} = y ] || [ $${ans} = Y ]; then \
+	printf $(_DANGER) "Yes, proceed."; \
+	printf "$(_newline)" ""; \
+	sudo docker image prune -f; \
+	else \
+	printf $(_SAFE) "No, skip."; \
+	printf "$(_newline)" ""; \
+	fi;
+
+
+# docker-nuke-builder
+# - removes build cache
+docker-nuke-builder:
+	make stop;
+	@printf $(_DANGER) "Next operation will prune Docker's build cache.";
+	@printf "$(_newline)" "";
+	@printf $(_DANGER) "Are you sure to proceed? [y/";
+	@printf $(_SAFE) "N";
+	@printf $(_DANGER) "] ";
+	@read ans && ans=$${ans:-N} ; \
+	if [ $${ans} = y ] || [ $${ans} = Y ]; then \
+	printf $(_DANGER) "Yes, proceed."; \
+	printf "$(_newline)" ""; \
+	sudo docker builder prune -f; \
+	else \
+	printf $(_SAFE) "No, skip."; \
+	printf "$(_newline)" ""; \
+	fi;
 
 ###########################################################################
 #####                           CONSTANTS                             #####

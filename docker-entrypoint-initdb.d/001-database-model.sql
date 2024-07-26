@@ -110,7 +110,6 @@ CREATE TABLE IF NOT EXISTS `demodb`.`ProductsRatings` (
   `Product_id` INT NOT NULL,
   `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rating` TINYINT NULL,
-  `rating_count_0` MEDIUMINT NOT NULL DEFAULT 0,
   `rating_count_1` MEDIUMINT NOT NULL DEFAULT 0,
   `rating_count_2` MEDIUMINT NOT NULL DEFAULT 0,
   `rating_count_3` MEDIUMINT NOT NULL DEFAULT 0,
@@ -252,10 +251,10 @@ START TRANSACTION;
 	SET @newid = LAST_INSERT_ID();
 	INSERT INTO ProductsPrices (Product_id, price) 
 		VALUES(@newid, _price);
-	INSERT INTO ProductsInventory (Product_id, _quantity) 
+	INSERT INTO ProductsInventory (Product_id, quantity) 
 		VALUES (@newid, _quantity);
-	INSERT INTO ProductsRatings (Product_id, rating_count_0, rating_count_1, rating_count_2, rating_count_3, rating_count_4, rating_count_5 ) 
-		VALUES (@newid, 0, 0, 0, 0, 0, 0);
+	INSERT INTO ProductsRatings (Product_id, rating_count_1, rating_count_2, rating_count_3, rating_count_4, rating_count_5 ) 
+		VALUES (@newid, 0, 0, 0, 0, 0);
 	SELECT @newid as id;
 COMMIT;
 END$$
@@ -335,22 +334,26 @@ DROP TRIGGER IF EXISTS `demodb`.`ProductsRatings_set_avg_rating_on_insert` $$
 USE `demodb`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `demodb`.`ProductsRatings_set_avg_rating_on_insert` BEFORE INSERT ON `ProductsRatings` FOR EACH ROW
 BEGIN
-	SET NEW.rating = ROUND(
-		(
-        NEW.rating_count_1 +
-        (2 * NEW.rating_count_2) +
-        (3 * NEW.rating_count_3) +
-        (4 * NEW.rating_count_4) +
-        (5 * NEW.rating_count_5)
-        ) / (
-        NEW.rating_count_0 +
+    SET @DENUM = 
         NEW.rating_count_1 +
         NEW.rating_count_2 +
         NEW.rating_count_3 +
         NEW.rating_count_4 +
-        NEW.rating_count_5
-        )
-    );
+        NEW.rating_count_5;
+	SET NEW.rating = CASE 
+			WHEN @DENUM = 0
+			THEN 0
+			ELSE ROUND(
+				(
+					NEW.rating_count_1 +
+					(2 * NEW.rating_count_2) +
+					(3 * NEW.rating_count_3) +
+					(4 * NEW.rating_count_4) +
+					(5 * NEW.rating_count_5)
+				) 
+                / @DENUM
+			)
+    END;
 END$$
 
 

@@ -84,7 +84,6 @@ const prices = [];
  * @property {Number} Product_id
  * @property {Date} date
  * @property {Number} rating
- * @property {Number} rating_count_0
  * @property {Number} rating_count_1
  * @property {Number} rating_count_2
  * @property {Number} rating_count_3
@@ -95,7 +94,6 @@ const prices = [];
 const ratings = [];
 /** @type {Omit<Rating,"id"|"Product_id"|"date"|"rating">} */
 const zeroRating = {
-  rating_count_0: 0,
   rating_count_1: 0,
   rating_count_2: 0,
   rating_count_3: 0,
@@ -144,7 +142,7 @@ async function extractState() {
       ...zeroRating,
       Product_id: product.id,
       rating: ratingValue,
-      [`rating_count_${ratingValue}`]: 1
+      ...(ratingValue > 0 ? {[`rating_count_${ratingValue}`]: 1} : {})
     };
     ratings.push(rating);
   }
@@ -186,7 +184,6 @@ function writeProductsPricesInsert(){
 }
 
 const ratingCounts = [
-"rating_count_0",
 "rating_count_1",
 "rating_count_2",
 "rating_count_3",

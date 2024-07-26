@@ -310,8 +310,8 @@ export class Product {
     try { this.image = val.image; } catch (e) { valErrHandler(e); }
     try { this.category = val.categoryId || undefined; } catch (e) { valErrHandler(e); }
     try { this.category = val.category || ``; } catch (e) { valErrHandler(e); }
-    try { this.quantity = val.quantity || -1; } catch (e) { valErrHandler(e); }
-    try { this.price = val.price || -1; } catch (e) { valErrHandler(e); }
+    try { this.quantity = val.quantity ?? -1; } catch (e) { valErrHandler(e); }
+    try { this.price = val.price ?? -1; } catch (e) { valErrHandler(e); }
     try { this.rating = val.rating; } catch (e) { valErrHandler(e); }
     try { this.inventoryStatus = val.inventoryStatus || ``; } catch (e) { valErrHandler(e); }
     // reset updated (triggered when id is set)
@@ -457,8 +457,8 @@ export class Product {
       return undefined;
     }
     try {
-    const product = new Product(value);
-    return product;
+      const product = new Product(value);
+      return product;
     } catch(err){
       logger.log(`error`,`Unable to instantiate product with value form db.`);
       logger.log(`error`,`Value from db: >>> ${JSON.stringify(value)}`);

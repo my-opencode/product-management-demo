@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { BaseTableLoader } from 'app/shared/ui/table/base-table-loader.class';
 
 import { CrudItemOptions } from 'app/shared/utils/crud-item-options/crud-item-options.model';
+import { ProductCategoriesService } from 'app/productcategories/productcategories.service';
 
 @Component({
   selector: 'app-products-admin',
@@ -21,16 +22,29 @@ export class ProductsAdminComponent extends BaseTableLoader implements OnInit {
   public entity = Product;
 
   constructor(
-    private readonly productsService: ProductsService
+    private readonly productsService: ProductsService,
+    private readonly productCategoriesService: ProductCategoriesService
   ) {
     super();
   }
+  message: string = ``;
 
   ngOnInit(): void {
-
+    // Fetch categories
+    this.productCategoriesService.getCategories().subscribe(
+      categories => {
+        console.log(`Received categories from server`);
+        const newConf = JSON.parse(JSON.stringify(PRODUCT_TABLE_CONF));
+        const target = newConf.find(c => c.key === `categoryId`);
+        if (!target) return;
+        target.options = categories.map(c => ({ value: c.id, label: c.name }));
+        console.log(`Setting new config value with altered category: "${JSON.stringify(target)}".`);
+        this.conf = newConf;
+      }
+    );
     // Display data table
-    this.productsService.getProducts().subscribe(products => 
-    {
+    this.productsService.getProducts().subscribe(products =>
+      {
       this.payload$.next({data: products, total: products.length})
     });
 

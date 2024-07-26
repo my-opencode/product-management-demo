@@ -294,8 +294,9 @@ START TRANSACTION;
     END;
     END IF;
     IF (_price is not NULL) THEN BEGIN 
-	UPDATE ProductsPrices SET date_end = NOW() WHERE date_start < NOW() and date_end is NULL and Product_id = _id;
-    INSERT INTO ProductsPrices (Product_id, price) VALUES (_id, _price); 
+    SET @now = NOW();
+	UPDATE ProductsPrices SET date_end = @now WHERE date_start <= @now and date_end IS NULL and Product_id = _id;
+    INSERT INTO ProductsPrices (Product_id, date_start, price) VALUES (_id, @now, _price); 
     END; END IF;
     IF (_quantity is not NULL) THEN BEGIN INSERT INTO ProductsInventory (Product_id, quantity) VALUES (_id, _quantity); END; END IF;
 COMMIT;

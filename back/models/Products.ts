@@ -46,7 +46,7 @@ LEFT JOIN ProductCategories ON p.Category_id = ProductCategories.id
 RIGHT JOIN (
 	SELECT Product_id, price ,
     RANK() OVER (PARTITION BY Product_id ORDER BY date_start DESC) date_rank
-    FROM ProductsPrices WHERE date_start <= NOW()
+    FROM ProductsPrices WHERE date_start <= NOW() AND (date_end IS NULL OR date_end > NOW())
 ) AS prices ON p.id = prices.Product_id 
 RIGHT JOIN (
 	SELECT Product_id, rating,
@@ -251,9 +251,13 @@ export class Product {
     return this._price;
   }
   set price(val: number | string) {
-    if (val === this._price) return;
+    const prevPrice = this._price;
     this._price = validateFloat(val, undefined, 0.01, `product.price`);
-    this.setUpdated(`price`);
+    // prevPrice is undefined when constructor is called
+    if (prevPrice !== undefined && this._price.toFixed(2) !== (prevPrice?.toFixed?.(2)||``)){
+      logger.log(`debug`, `Price is updated: previous value was: "${prevPrice}"; val is "${val}"; new value is "${this._price}".`);
+      this.setUpdated(`price`);
+    }
   }
   get rating(): number {
     return this._rating;

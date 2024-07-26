@@ -8,6 +8,7 @@ export default function renderer(products:(Product|ProductAsInTheJson)[]):string
         code: p.code,
         name: p.name,
         category: p.categoryName || p.category,
+        categoryId: p.categoryId,
         description: p.description,
         image: p.image || undefined,
         quantity: p.quantity,

@@ -3,7 +3,7 @@ import { Response, NextFunction } from "express";
 import Logger from "../lib/winston";
 import renderer from "../views/product-details";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
-const logger = Logger(`controllers/products-get-one-by-id`, `debug`);
+const logger = Logger(`controllers/products-patch-update-one-by-id`, `debug`);
 
 export default async function productsUpdateOneByID(request: RequestWithProduct, response: Response, next: NextFunction) {
   logger.log(`debug`, `Entering`);
@@ -40,6 +40,7 @@ export default async function productsUpdateOneByID(request: RequestWithProduct,
       logger.log(`debug`, `Update yields no change.`);
       throw new ValidationError(`Expected changes.`);
     }
+    logger.log(`debug`,`Ready to update fields: ${[...product.updatedFields].join(`, `)}`);
     await product.update(request.app);
 
     const payload = renderer(product);

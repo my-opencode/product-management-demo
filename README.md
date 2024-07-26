@@ -292,7 +292,6 @@ In the real world, a customer rating table would make more sense, linking a user
   - rating_count_3 — mediumint —
   - rating_count_2 — mediumint —
   - rating_count_1 — mediumint —
-  - rating_count_0 — mediumint —
   - rating — tinyint –
 
 

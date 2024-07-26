@@ -1455,3 +1455,12 @@ describe(`Product inst - Product.delete`, function () {
     );
   });
 });
+
+describe(`#62 should accept Quantity 0`, function(){
+  it(`should accept a product from db with quantity = 0`, function(){
+    const value = JSON.parse("{\"id\":1035,\"code\":\"set-quantity-to-zero\",\"name\":\"set-quantity-to-zero\",\"description\":\"tests set-quantity-to-zero\",\"image\":null,\"categoryId\":3,\"category\":\"Clothing\",\"price\":\"10.10\",\"rating\":0,\"quantity\":0,\"inventoryStatus\":\"OUTOFSTOCK\"}");
+    assert.strictEqual(value.quantity, 0);
+    const p = new Product(value);
+    assert.strictEqual(p.quantity, 0);
+  });
+});

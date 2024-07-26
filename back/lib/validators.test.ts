@@ -152,6 +152,10 @@ describe(`validateInt`, function () {
     const result = validateInt(0);
     assert.strictEqual(result, 0);
   });
+  it(`should accept 0 with minValue = 0`, function () {
+    const result = validateInt(0, undefined, 0);
+    assert.strictEqual(result, 0);
+  });
   it(`should accept negative`, function () {
     const result = validateInt(`-5`);
     assert.strictEqual(result, -5);

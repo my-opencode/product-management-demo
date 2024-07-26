@@ -511,6 +511,68 @@ describe(`Test API endpoints`, function () {
       });
     });
   });
+  describe(`#62 Cannot set quantity to 0`, async function(){
+    describe(`Create product`, async function () {
+      let response: Response;
+      let prod : ProductAsInTheJson;
+      await before(async function () {
+        response = await inject(app, {
+          method: `post`,
+          url: `/products`,
+          headers: {
+            "content-type": `application/json`
+          },
+          body: JSON.stringify(
+            {
+              category: 3,
+              code: `set-quantity-to-zero`,
+              name: `set-quantity-to-zero`,
+              description: `tests set-quantity-to-zero`,
+              quantity: 10,
+              price: 10.1,
+            }
+          )
+        });
+        prod = JSON.parse(response.payload).data;
+      });
+      it(`should return status code 201`, function () {
+        assert.strictEqual(response.statusCode, 201);
+      });
+        describe(`Update product`, async function(){
+          let response: Response;
+          await before(async function () {
+            // ensure different values for NOW()
+            await new Promise(r => setTimeout(r,1000));
+            response = await inject(app, {
+              method: `patch`,
+              url: `/products/${prod.id}`,
+              body: `{"quantity":"0"}`,
+              headers: {
+                "content-type": `application/json`
+              }
+            });
+          });
+          it(`should return status code 200`, function () {
+            assert.strictEqual(response.statusCode, 200);
+          });
+          describe(`Get product`,async function(){
+            let response: Response;
+            let json: { data: ProductAsInTheJson };
+            await before(async function () {
+              await new Promise(r => setTimeout(r,1000));
+              response = await inject(app, { method: `get`, url: `/products/${prod.id}` });
+              json = JSON.parse(response.payload);
+            });
+            it(`should return status code 200`, function () {
+              assert.strictEqual(response.statusCode, 200);
+            });
+            it(`should return product with qty = 0`, function () {
+              assert.strictEqual(json.data.quantity, 0);
+            });
+          });
+      });
+    });
+  });
 });
 
 describe(`Test API error endpoint`, function () {

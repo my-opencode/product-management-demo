@@ -164,14 +164,33 @@ paths:
             format: int32
       responses:
         '204':
-          description: Empty response
+  responses:
+    ProductDetails:
+      description: A product object.
+      content:
+        application/json:    
+          schema:
+            $ref: "#/components/schemas/ProductDetails"
+    NotFound:
+      description: Resource not found.
+      content:
+        schema:
+          $ref: "#/components/schemas/Error404Payload"
+    UnexpectedError:
+      description: Unexpected server side error.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorJsonPayload"
         default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-components:
+          schema:
+            $ref: "#/components/schemas/ErrorStringPayload"
+    ValidationError:
+      description: Error validating user submitted data.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorJsonPayload"
   schemas:
     IdValue:
       type: integer

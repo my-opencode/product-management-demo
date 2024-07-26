@@ -252,7 +252,7 @@ export class Product {
   }
   set price(val: number | string) {
     const prevPrice = this._price;
-    this._price = validateFloat(val, undefined, 0.01, `product.price`);
+    this._price = validateFloat(val, 999999.99, 0.01, `product.price`);
     // prevPrice is undefined when constructor is called
     if (prevPrice !== undefined && this._price.toFixed(2) !== (prevPrice?.toFixed?.(2)||``)){
       logger.log(`debug`, `Price is updated: previous value was: "${prevPrice}"; val is "${val}"; new value is "${this._price}".`);

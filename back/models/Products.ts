@@ -43,22 +43,29 @@ const SQL_SELECT_ALL_PRODUCTS = () => `SELECT
       inventory.quantity, 
       inventory.inventory_status AS inventoryStatus 
 FROM \`Products\`  AS p
-LEFT JOIN ProductCategories ON p.Category_id = ProductCategories.id
+LEFT JOIN ProductCategories 
+ON p.Category_id = ProductCategories.id
 RIGHT JOIN (
-	SELECT Product_id, price ,
-    RANK() OVER (PARTITION BY Product_id ORDER BY date_start DESC) date_rank
-    FROM ProductsPrices WHERE date_start <= NOW() AND (date_end IS NULL OR date_end > NOW())
-) AS prices ON p.id = prices.Product_id 
+	SELECT * FROM (
+        SELECT Product_id, price,
+    	RANK() OVER (PARTITION BY Product_id ORDER BY date_start DESC) date_rank
+    	FROM ProductsPrices WHERE date_start <= NOW() AND (date_end IS NULL OR date_end > NOW())
+    ) AS sp WHERE sp.date_rank = 1) AS prices 
+ON p.id = prices.Product_id 
 RIGHT JOIN (
-	SELECT Product_id, rating,
-    RANK() OVER (PARTITION BY Product_id ORDER BY date DESC) rating_rank
-    FROM ProductsRatings
-) AS ratings ON p.id = ratings.Product_id 
+	SELECT * FROM (
+        SELECT Product_id, rating,
+    	RANK() OVER (PARTITION BY Product_id ORDER BY date DESC) rating_rank
+    	FROM ProductsRatings
+    ) AS sr WHERE sr.rating_rank = 1) AS ratings 
+ON p.id = ratings.Product_id 
 RIGHT JOIN (
-	SELECT Product_id, quantity, inventory_status,
-    RANK() OVER (PARTITION BY Product_id ORDER BY date DESC) inv_rank
-    FROM ProductsInventory
-) AS inventory ON p.id = inventory.Product_id 
+	SELECT * FROM (
+        SELECT Product_id, quantity, inventory_status,
+    	RANK() OVER (PARTITION BY Product_id ORDER BY date DESC) inv_rank
+    	FROM ProductsInventory
+    ) AS si WHERE si.inv_rank = 1) AS inventory 
+ON p.id = inventory.Product_id 
 WHERE deleted = 0;`
 /**
  * Returns the select one product by id sql statement

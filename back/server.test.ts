@@ -449,6 +449,68 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(response.payload, ``);
     });
   });
+  describe(`Create -> Update -> List of unique products`, async function(){
+    describe(`Create product`, async function () {
+      let response: Response;
+      let prod : ProductAsInTheJson;
+      await before(async function () {
+        response = await inject(app, {
+          method: `post`,
+          url: `/products`,
+          headers: {
+            "content-type": `application/json`
+          },
+          body: JSON.stringify(
+            {
+              category: 3,
+              code: `create-update-list`,
+              name: `create-update-list`,
+              description: `tests create update list`,
+              quantity: 10,
+              price: 10.1,
+            }
+          )
+        });
+        prod = JSON.parse(response.payload).data;
+      });
+      it(`should return status code 201`, function () {
+        assert.strictEqual(response.statusCode, 201);
+      });
+        describe(`Update product`, async function(){
+          let response: Response;
+          await before(async function () {
+            // ensure different values for NOW()
+            await new Promise(r => setTimeout(r,1000));
+            response = await inject(app, {
+              method: `patch`,
+              url: `/products/${prod.id}`,
+              body: `{"price":20.2,"quantity":"20"}`,
+              headers: {
+                "content-type": `application/json`
+              }
+            });
+          });
+          it(`should return status code 200`, function () {
+            assert.strictEqual(response.statusCode, 200);
+          });
+          describe(`List products`,async function(){
+            let response: Response;
+            let json: { data: Array<ProductAsInTheJson> };
+            await before(async function () {
+              await new Promise(r => setTimeout(r,1000));
+              response = await inject(app, { method: `get`, url: `/products` });
+              json = JSON.parse(response.payload);
+            });
+            it(`should return status code 200`, function () {
+              assert.strictEqual(response.statusCode, 200);
+            });
+            it(`should not return duplicated products`, function () {
+              assert.strictEqual(json.data.filter(p => p.id === prod.id).length, 1);
+            });
+          });
+      });
+    });
+  });
 });
 
 describe(`Test API error endpoint`, function () {

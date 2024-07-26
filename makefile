@@ -1,3 +1,19 @@
+help:
+	@echo -n "$(_underlined)=== Supported commands: ===$(_cleardecorations)$(_newline)";
+	@echo -n "$(_underlined)> GLOBAL$(_cleardecorations)$(_newline)";
+	@echo -n "\033[32mstart-all\033[0m (\033[32myou should start here\033[0m - Interactive)$(_newline)";
+	@echo -n "$(_underlined)> BACK$(_cleardecorations)$(_newline)";
+	@echo -n "start (Interactive)\n";
+	@echo -n "start-attached (Interactive)$(_newline)";
+	@echo -n "pre-start (Interactive)$(_newline)";
+	@echo -n "stop$(_newline)";
+	@echo -n "test-back$(_newline)";
+	@echo -n "build-back$(_newline)";
+	@echo -n "clear-logs$(_newline)";
+	@echo -n "docker-nuke-image (Interactive)$(_newline)";
+	@echo -n "docker-nuke-builder (Interactive)$(_newline)";
+	@echo -n "$(_underlined)> FRONT$(_cleardecorations)$(_newline)";
+	@echo -n "serve-front$(_newline)";
 
 # start-all
 # Starts back and front ends

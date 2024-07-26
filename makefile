@@ -16,14 +16,8 @@ start-attached:
 	sudo docker builder prune -f;
 	sudo docker-compose --profile serve up -V --force-recreate;
 
-# start-all
-# Starts back and front ends
-start-all:
-	make start;
-	make serve-front;
-
 # stop
-# Stops running containers
+# Stops back end stack containers
 stop:
 	sudo docker-compose down -v;
 
@@ -33,7 +27,7 @@ serve-front:
 	cd front && npm run start;
 
 # test-back
-# Runs tests in the back directory
+# Runs back end tests in the back directory
 test-back:
 	cd back && npm run test;
 

@@ -36,55 +36,74 @@ export class ProductsService {
     }
 
     getProducts(): Observable<Product[]> {
-        if( ! ProductsService.productslist )
-        {
-            this.http.get<any>(`/products`).subscribe(data => {
-                console.log(data);
-                ProductsService.productslist = data;
-                
-                this.products$.next(ProductsService.productslist);
-            });
-        }
-        else
-        {
-            this.products$.next(ProductsService.productslist);
-        }
-
+        this.http.get<ProductPayload>(`/api/products`).subscribe({
+            next: (data) => {
+                ProductsService.productList = data.data;
+                this.products$.next(ProductsService.productList);
+            },
+            error:  (error: { error: ApiErrorPayload, headers: { status: number } }) => this.broadCastError(error)
+        });
         return this.products$;
     }
 
     create(prod: Product): Observable<Product[]> {
-
-        ProductsService.productslist.push(prod);
-        this.products$.next(ProductsService.productslist);
-        
+        this.http
+            .post<ProductDetailsPayload>(`/api/products`, prod)
+            .subscribe({
+                next: (resp) => {
+                    ProductsService.productList.push(resp.data);
+                    this.products$.next(ProductsService.productList);
+                },
+                error:  (error: { error: ApiErrorPayload, headers: { status: number } }) => this.broadCastError(error)
+            });
         return this.products$;
     }
 
-    update(prod: Product): Observable<Product[]>{
-        ProductsService.productslist.forEach(element => {
-            if(element.id == prod.id)
-            {
-                element.name = prod.name;
-                element.category = prod.category;
-                element.code = prod.code;
-                element.description = prod.description;
-                element.image = prod.image;
-                element.inventoryStatus = prod.inventoryStatus;
-                element.price = prod.price;
-                element.quantity = prod.quantity;
-                element.rating = prod.rating;
-            }
+    update(prod: Product): Observable<Product[]> {
+        const updateValues = {
+            categoryId: prod.categoryId,
+            code: prod.code,
+            name: prod.name,
+            description: prod.description,
+            image: prod.image,
+            price: prod.price,
+            quantity: prod.quantity,
+        };
+        this.http
+            .patch<ProductDetailsPayload>(`/api/products/${prod.id}`, updateValues)
+            .subscribe({
+                next: (resp) => {
+                    const targetIndex = ProductsService.productList.findIndex(
+                        (p) => p.id === prod.id
+                    );
+                    if (targetIndex < 0)
+                        throw new Error(`Product to update must be in productList.`);
+                    const updated = resp.data;
+                    console.log(
+                        `About to replace product index ${targetIndex} = ${JSON.stringify(
+                            ProductsService.productList[targetIndex]
+                        )} with ${JSON.stringify(updated)}`
+                    );
+                    ProductsService.productList.splice(targetIndex, 1, updated);
+                    this.products$.next(ProductsService.productList);
+                },
+                error:  (error: { error: ApiErrorPayload, headers: { status: number } }) => this.broadCastError(error)
+            });
+        return this.products$;
+    }
+
+    delete(id: number): Observable<Product[]> {
+        this.http.delete<void>(`/api/products/${id}`).subscribe({
+            next: () => {
+                ProductsService.productList = ProductsService.productList.filter(
+                    (value) => {
+                        return value.id !== id;
+                    }
+                );
+                this.products$.next(ProductsService.productList);
+            },
+            error:  (error: { error: ApiErrorPayload, headers: { status: number } }) => this.broadCastError(error)
         });
-        this.products$.next(ProductsService.productslist);
-
-        return this.products$;
-    }
-    
-
-    delete(id: number): Observable<Product[]>{
-        ProductsService.productslist = ProductsService.productslist.filter(value => { return value.id !== id } );
-        this.products$.next(ProductsService.productslist);
         return this.products$;
     }
 }

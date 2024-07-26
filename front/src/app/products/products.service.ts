@@ -22,8 +22,18 @@ export class ProductsService {
     private products$: BehaviorSubject<Product[]> = new BehaviorSubject<
         Product[]
     >([]);
+    private apiErrorSource = new Subject<ApiErrorPayload>();
+    apiError = this.apiErrorSource.asObservable();
 
     constructor(private http: HttpClient) { }
+
+    private broadCastError(error: { error: ApiErrorPayload, headers: { status: number } }){
+        console.log(`Caught server response with code ${error.headers.status}`);
+        console.log(`Server error stack: ${error.error.description}: \n${
+            Object.entries(error.error.errors||{}).map(([f,v])=>`${f}: ${v}`).join(`, \n`)
+        }`);
+        this.apiErrorSource.next(error.error);
+    }
 
     getProducts(): Observable<Product[]> {
         if( ! ProductsService.productslist )

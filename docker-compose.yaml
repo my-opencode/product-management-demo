@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: "./Dockerfile.back.dev"
     image: product-management-demo:alpha1.0
-    profiles: [serve, servedebug]
+    profiles: [serve, servedebug, serve-no-ui, servedebug-no-ui]
     volumes:
       - "./docker-compose.serve.env:/app/database/devdb.env:ro"
       - "./docker-logs:/app/logs/:rw"
@@ -28,7 +28,7 @@ services:
     image: mysql:8.4
     env_file: "./docker-compose.serve.env"
     container_name: demodb
-    profiles: [serve, servedebug]
+    profiles: [serve, servedebug, serve-no-ui, servedebug-no-ui]
     # ports:
     #   - "52000:52000"
     volumes:
@@ -44,11 +44,24 @@ services:
   debugpma:
     image: phpmyadmin:5
     container_name: debugpma
-    profiles: [servedebug]
+    profiles: [servedebug, servedebug-no-ui]
     env_file: "./docker-compose.serve.env"
     ports:
       - "8080:80"
     depends_on:
       - "demodb"
+    networks:
+      - demo_nw
+  demofront:
+    image: nginx:latest
+    container_name: demofront
+    profiles: [serve, servedebug]
+    volumes:
+      - ./front-docker/nginx.conf:/etc/nginx/nginx.conf
+      - ./front-dist:/usr/share/nginx/html
+    ports:
+      - "4200:80"
+    depends_on:
+      - "demoback"
     networks:
       - demo_nw

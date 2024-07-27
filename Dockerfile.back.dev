@@ -4,7 +4,7 @@ ENV PORT 80
 
 WORKDIR /app
 COPY ./back/package*.json /app/
-RUN npm install --omit=dev
+RUN npm ci --omit=dev
 COPY ./back-dist /app/
 
 RUN chown -R node:node /app

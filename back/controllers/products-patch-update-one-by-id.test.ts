@@ -3,7 +3,7 @@ import { RequestWithProduct } from "../types";
 import * as assert from "node:assert";
 import { NextFunction, Request } from "express";
 import Product from "../models/Products";
-import productsUpdateOneByID from "./products-patch-update-one-by-id";
+import productsUpdateOneById from "./products-patch-update-one-by-id";
 import { getDummyProduct } from "../lib/test-product-util";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 
@@ -28,7 +28,7 @@ describe(`Products update one by id controller`, function () {
       response.status.mock.resetCalls();
       next.mock.resetCalls();
       // call controller
-      await productsUpdateOneByID(request as unknown as RequestWithProduct, response, next);
+      await productsUpdateOneById(request as unknown as RequestWithProduct, response, next);
     });
     it(`should call response.status 404`, function () {
       assert.strictEqual(response.status.mock.callCount(), 1);
@@ -43,7 +43,7 @@ describe(`Products update one by id controller`, function () {
       response.status.mock.resetCalls();
       next.mock.resetCalls();
       // call controller
-      await productsUpdateOneByID(request, response, next);
+      await productsUpdateOneById(request, response, next);
     });
     it(`should call next with ValidationError`, function () {
       assert.strictEqual(next.mock.callCount(), 1);
@@ -65,7 +65,7 @@ describe(`Products update one by id controller`, function () {
       // call controller
     });
     it(`should call next with ValidationErrorStack`, async function () {
-      await productsUpdateOneByID(request as unknown as Request, response, next);
+      await productsUpdateOneById(request as unknown as Request, response, next);
       assert.strictEqual(next.mock.callCount(), 1);
       //@ts-ignore
       assert.ok(next.mock.calls[0].arguments[0] instanceof ValidationErrorStack);
@@ -89,7 +89,7 @@ describe(`Products update one by id controller`, function () {
       response.status.mock.resetCalls();
       next.mock.resetCalls();
       // call controller
-      await productsUpdateOneByID(request as unknown as Request, response, next);
+      await productsUpdateOneById(request as unknown as Request, response, next);
     });
     it(`should call next with error`, function () {
       assert.strictEqual(next.mock.callCount(), 1);
@@ -110,7 +110,7 @@ describe(`Products update one by id controller`, function () {
       response.status.mock.resetCalls();
       next.mock.resetCalls();
       // call controller
-      await productsUpdateOneByID(request as unknown as Request, response, next);
+      await productsUpdateOneById(request as unknown as Request, response, next);
     });
     it(`should call next with error`, function () {
       assert.strictEqual(next.mock.callCount(), 1);
@@ -146,7 +146,7 @@ describe(`Products update one by id controller`, function () {
       response.status.mock.resetCalls();
       next.mock.resetCalls();
       // call controller
-      await productsUpdateOneByID(request, response, next);
+      await productsUpdateOneById(request, response, next);
     });
     it(`should call response.status 200`, function () {
       assert.strictEqual(response.status.mock.callCount(), 1);

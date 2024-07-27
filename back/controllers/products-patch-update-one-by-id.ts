@@ -5,7 +5,7 @@ import renderer from "../views/product-details";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 const logger = Logger(`controllers/products-patch-update-one-by-id`, `debug`);
 
-export default async function productsUpdateOneByID(request: RequestWithProduct, response: Response, next: NextFunction) {
+export default async function productsUpdateOneById(request: RequestWithProduct, response: Response, next: NextFunction) {
   logger.log(`debug`, `Entering`);
   try {
     if (!request.product) {
@@ -49,7 +49,7 @@ export default async function productsUpdateOneByID(request: RequestWithProduct,
   } catch (err) {
     if(err instanceof ValidationErrorStack && err.message === `Conflicting Product`)
         err.statusCode = 409;
-    logger.log(`warn`, `Error in productsUpdateOneByID: ${err instanceof Error ? err.message : String(err)}`);
+    logger.log(`warn`, `Error in productsUpdateOneById: ${err instanceof Error ? err.message : String(err)}`);
     next(err);
   }
 }

@@ -1,0 +1,29 @@
+version: '3.1'
+volumes:
+  node_modules:
+
+services:
+
+  back-builder:
+    profiles: [back, all]
+    image: node:22
+    user: "node"
+    working_dir: /home/node/app
+    volumes:
+      - "./back:/home/node/app:rw"
+      - "./back-dist:/home/node/back-dist:rw"
+    environment:
+      NODE_ENV: development
+    entrypoint: "./docker-entrypoint.build-back.sh"
+
+  front-builder:
+    profiles: [front, all]
+    image: node:22
+    user: "node"
+    working_dir: /home/node/app
+    volumes:
+      - "./front:/home/node/app:rw"
+      - "./front-dist:/home/node/front-dist:rw"
+    environment:
+      NODE_ENV: development
+    entrypoint: "./docker-entrypoint.build-front.sh"

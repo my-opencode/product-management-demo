@@ -34,7 +34,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [],
-            "outputPath": "dist",
+            "outputPath": "/tmp/dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -107,7 +107,7 @@
                 }
               ],
               "localize": ["en"],
-              "outputPath": "dist",
+              "outputPath": "/tmp/dist",
               "i18nMissingTranslation": "error"
             },
             "fr": {
@@ -118,7 +118,7 @@
                 }
               ],
               "localize": ["fr"],
-              "outputPath": "dist",
+              "outputPath": "/tmp/dist",
               "i18nMissingTranslation": "error"
             }
           },

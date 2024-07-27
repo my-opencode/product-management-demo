@@ -1,94 +1,174 @@
 help:
-	@echo -n "$(_underlined)=== Supported commands: ===$(_cleardecorations)$(_newline)";
-	@echo -n "$(_underlined)> GLOBAL$(_cleardecorations)$(_newline)";
-	@echo -n "\033[32mstart-all\033[0m (\033[32myou should start here\033[0m - Interactive)$(_newline)";
-	@echo -n "$(_underlined)> BACK$(_cleardecorations)$(_newline)";
-	@echo -n "start (Interactive)\n";
-	@echo -n "start-attached (Interactive)$(_newline)";
-	@echo -n "pre-start (Interactive)$(_newline)";
-	@echo -n "stop$(_newline)";
-	@echo -n "test-back$(_newline)";
-	@echo -n "build-back$(_newline)";
-	@echo -n "clear-logs$(_newline)";
-	@echo -n "docker-nuke-image (Interactive)$(_newline)";
-	@echo -n "docker-nuke-builder (Interactive)$(_newline)";
-	@echo -n "$(_underlined)> FRONT$(_cleardecorations)$(_newline)";
-	@echo -n "serve-front$(_newline)";
+	@echo -n                        "===========================$(_newline)";
+	@echo -n                        "=== Important commands: ===$(_newline)";
+	@echo -n                        "===========================$(_newline)$(_newline)";
+	@echo -n "$(_underlined)$(_green)start$(_cleardecorations) $(_green)Main command.$(_cleardecorations) Installs, builds and runs all services.$(_newline)";
+	@echo -n          "$(_underlined)stop$(_cleardecorations) Stop all running services.$(_newline)";
+	@echo -n          "$(_underlined)restart$(_cleardecorations) Restart services.$(_newline)";
+	@echo -n          "$(_underlined)start-dev-ui$(_cleardecorations) Run back end services and serve dev front end.$(_newline)";
+	@echo -n          "$(_underlined)start-back-attached$(_cleardecorations) Run the back end only, attached.$(_newline)";
+	@echo -n          "$(_underlined)test-back$(_cleardecorations) Run back end tests.$(_newline)";
+	@echo -n          "$(_underlined)serve-front$(_cleardecorations) Serve front end.$(_newline)";
+	@echo -n          "$(_underlined)build-back-with-docker$(_cleardecorations) Build back end dist.$(_newline)";
+	@echo -n          "$(_underlined)build-front-with-docker$(_cleardecorations) Build front end dist.$(_newline)";
+	@echo -n          "$(_underlined)clear-logs$(_cleardecorations) Delete log files.$(_newline)";
+	@echo -n                        "===========================$(_newline)";
+	@echo -n                        "Find all commands and their documentation in the 'makefile' itself. (Text file)$(_newline)";
 
-# start-all
-# Starts back and front ends
-# Back end stack starts detached
-# Front end is served as dev server in terminal
-start-all:
-	make start;
+# Starts all services detached.
+#
+# Installs and builds back and front ends.
+# Prepares docker image, runs all services.
+start:
+	make pre-start-all;
+	make docker-run-all;
+
+# Restarts all services detached.
+#
+# Requires start to have run once.
+restart:
+	make docker-run-all;
+
+# Starts all back end services detached.
+# Serves development front end.
+#
+# Installs and builds back end.
+# Prepares docker image, runs all back end services.
+#
+# To start the PHP My Admin service, switch profile "serve-no-ui" for
+# profile "servedebug-no-ui".
+start-dev-ui:
+	make pre-start-docker;
+	make build-back-with-docker;
+	sudo docker-compose --profile serve-no-ui up -V --force-recreate -d;
 	make serve-front;
 
-# pre-start
-# Performs common operations for a start sequence
-# - Stops back end if running
-# - Rebuilds back end
+# Starts all back end services attached.
+# Does not start front end.
+# 
+# Installs and builds back end.
+# Prepares docker image, runs all back end services.
+#
+# To start the PHP My Admin service, switch profile "serve-no-ui" for
+# profile "servedebug-no-ui".
+start-back-attached:
+	make stop;
+	make build-back-with-docker;
+	sudo docker-compose --profile serve-no-ui up -V --force-recreate;
+
+# Performs all install and build.
+#
+# - Stops all services
+# - Builds back end
+# - Builds front end
 # - Resets logs
 # - Clears back end Docker image
-# - Clears Docker build cache to force rebuilding back end image
-pre-start:
+# - Prunes Docker images
+# - Prunes Docker build cache (to force clean image rebuild)
+pre-start-all:
 	make stop;
-	make build-back;
+	make build-apps-with-docker;
 	make clear-logs;
 	make docker-nuke-image;
 	make docker-nuke-builder;
 
-# start
-# Starts the back end stack detached.
-# Switch between "serve" and "servedebug" profiles to
-# toggle phpmyadmin (servedebug) or not (serve)
-# - call docker compose to build and run
-start:
-	make pre-start;
-	sudo docker-compose --profile servedebug up -V --force-recreate -d;
+# Performs Docker cleanup tasks.
+# To be used when only the back end is built.
+#
+# - Stops all services
+# - Resets logs
+# - Clears back end Docker image
+# - Prunes Docker images
+# - Prunes Docker build cache (to force clean image rebuild)
+pre-start-docker:
+	make stop;
+	make clear-logs;
+	make docker-nuke-image;
+	make docker-nuke-builder;
 
-# start-attached
-# Starts the back end stack attached to the terminal
-# Switch between "serve" and "servedebug" profiles to
-# toggle phpmyadmin (servedebug) or not (serve)
-# - call docker compose to build and run
-start-attached:
-	make pre-start;
-	sudo docker-compose --profile servedebug up -V --force-recreate;
-
-# stop
-# Stops back end stack containers
+# Stops all services.
+#
+# Removes volumes.
 stop:
 	sudo docker-compose down -v;
 
-# serve-front
-# Starts the front server
+# Starts the development front server.
 serve-front:
 	cd front && npm run start;
 
-# test-back
-# Runs back end tests in the back directory
+# Runs back end tests in the back directory.
 test-back:
 	cd back && npm run test;
 
-# build-back
-# Builds the back end
-# - removes build dir
-# - install dev dependencies
-# - run build
-build-back:
-	rm -rf back-dist;
-	cd back && npm i;
+# Builds the back end using local install.
+#
+# - Resets build dir
+# - Installs dev & prod dependencies
+# - Runs build
+build-back-local:
+	make clear-back-dist;
+	cd back && npm ci;
 	cd back && npm run build;
 
-# clear-logs
+# Builds the back end using a container.
+#
+# - Resets build dir
+# - Runs install & build in container
+build-back-with-docker: 
+	make clear-back-dist;
+	sudo docker-compose -f docker-compose.build-apps.yaml --profile back up;
+
+# Builds the front end using local install.
+#
+# - Resets build dir
+# - Installs dev & prod dependencies
+# - Runs build
+build-front-local:
+	make clear-front-dist;
+	cd front && npm ci;
+	cd front && npm run build:prod;
+
+# Builds the front end using a container.
+#
+# - Resets build dir
+# - Runs install & build in container
+build-front-with-docker: 
+	make clear-front-dist;
+	sudo docker-compose -f docker-compose.build-apps.yaml --profile front up;
+
+# Builds back & front ends using a container.
+#
+# - Resets build dirs
+# - Runs install & build in container
+build-apps-with-docker: 
+	make clear-back-dist;
+	make clear-front-dist;
+	sudo docker-compose -f docker-compose.build-apps.yaml --profile all up;
+
+# Runs all services.
+#
+# To start the PHP My Admin service, switch profile "serve" for
+# profile "servedebug".
+docker-run-all:
+	sudo docker-compose --profile serve up -V --force-recreate -d;
+
+# Resets the front end build directory.
+clear-front-dist:
+	rm -rf front-dist;
+	mkdir -p front-dist;
+
+# Resets the back end build directory.
+clear-back-dist:
+	rm -rf back-dist;
+	mkdir -p back-dist;
+
+# Remove logs.
 clear-logs:
+	mkdir -p ./docker-logs;
+	rm -rf ./docker-logs/*;
 	mkdir -p ./docker-logs/controllers;
 	mkdir -p ./docker-logs/middleware;
 	mkdir -p ./docker-logs/models;
-	rm -rf ./docker-logs/controllers/*;
-	rm -rf ./docker-logs/middleware/*;
-	rm -rf ./docker-logs/models/*;
-	rm -rf ./docker-logs/*.log;
 	
 ###########################################################################
 #####                           DANGER ZONE                           #####

@@ -1,7 +1,7 @@
 import { Application, Express, Request } from "express";
 import { Pool } from "mysql2/promise";
 import AppSymbols from "./AppSymbols";
-import Product from "./models/Products";
+import Product from "./models/product";
 import * as core from "express-serve-static-core";
 
 export interface RichApp extends Express.Application, Record<string, any> {

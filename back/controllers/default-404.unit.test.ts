@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { describe, it, before, mock } from "node:test";
 import * as assert from "node:assert";
-import default404 from "./default.404";
+import default404 from "./default-404";
 
 describe(`Default 404 controller`, function(){
   let response:any;

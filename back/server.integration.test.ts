@@ -5,12 +5,12 @@ import path from "node:path";
 import startServer from "./server";
 import inject, { Response } from "light-my-request";
 import express, { Express } from "express";
-import { ProductAsInTheJson } from "./models/Products";
-import { CategoryFromDb } from "./models/Categories";
+import { ProductAsInTheJson } from "./models/product";
+import { CategoryFromDb } from "./models/category";
 import productsRouter from "./routes/products";
 import categoriesRouter from "./routes/categories";
-import errorHandler from "./controllers/errorHandler";
-import default404 from "./controllers/default.404";
+import errorHandler from "./controllers/error-handler";
+import default404 from "./controllers/default-404";
 import validationErrorHandler from "./controllers/validation-error-handler";
 import { ValidationErrorResponseJson } from "./views/422-validation";
 

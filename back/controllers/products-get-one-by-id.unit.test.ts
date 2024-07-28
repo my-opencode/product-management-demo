@@ -3,7 +3,7 @@ import { RequestWithProduct } from "../types";
 import * as assert from "node:assert";
 import { NextFunction, Request } from "express";
 import productsGetOneById from "./products-get-one-by-id";
-import Product from "../models/Products";
+import Product from "../models/product";
 
 describe(`Products get one by id controller`, function () {
   let request = {

@@ -1,6 +1,6 @@
 import { NextFunction, Response, RequestParamHandler } from "express";
 import { RequestWithProduct } from "../types";
-import Product from "../models/Products";
+import Product from "../models/product";
 import { ValidationError } from "../lib/validators";
 import Logger from "../lib/winston";
 const logger = Logger(`middleware/products-param-id`, `debug`);

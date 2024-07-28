@@ -1,5 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { ProductAsInTheJson } from "../models/Products";
+import { ProductAsInTheJson } from "../models/product";
 
 // direct product select
 export type DirectProductSelectExecuteResponse = ProductAsInTheJson[];

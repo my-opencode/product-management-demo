@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction, Express } from "express";
-import Product from "../models/Products";
+import Product from "../models/product";
 import Logger from "../lib/winston";
 import renderer from "../views/product-list";
 const logger = Logger(`controllers/products-get-all`, `debug`);

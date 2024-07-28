@@ -1,6 +1,6 @@
 import { before, beforeEach, describe, it, mock } from "node:test";
 import * as assert from "assert";
-import Product, { ProductAsInTheJson, ProductBase, SQL_CALL_UPDATE_FIELDS_LIST } from "./Products";
+import Product, { ProductAsInTheJson, ProductBase, SQL_CALL_UPDATE_FIELDS_LIST } from "./product";
 import AppSymbols from "../AppSymbols";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 import { QueryError, ResultSetHeader } from "mysql2";

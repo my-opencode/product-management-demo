@@ -1,4 +1,4 @@
-import Product, { ProductAsInTheJson } from "../models/Products";
+import Product, { ProductAsInTheJson } from "../models/product";
 
 export default function renderer(products:(Product|ProductAsInTheJson)[]):string{
   return JSON.stringify({

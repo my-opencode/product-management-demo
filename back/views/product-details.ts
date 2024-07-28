@@ -1,4 +1,4 @@
-import Product, { ProductAsInTheJson, ProductBase } from "../models/Products";
+import Product, { ProductAsInTheJson } from "../models/product";
 
 export default function renderer(product: (Product | ProductAsInTheJson)): string {
   return JSON.stringify({

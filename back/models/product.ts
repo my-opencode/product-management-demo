@@ -1,7 +1,7 @@
 import { QueryError, RowDataPacket } from "mysql2";
 import { RichApp } from "../types";
 import AppSymbols from "../AppSymbols";
-import Id from "./Id";
+import Id from "./id";
 import { validateFloat, validateInt, validateString, validateTinyInt, ValidationError, ValidationErrorStack } from "../lib/validators";
 import Logger from "../lib/winston";
 import { DirectInsertUpdateDeleteExecuteResponse, DirectProductSelectExecuteResponse, NewProductStoredProcedureExecuteResponse, UpdateProductStoredProcedureExecuteResponse } from "../database/adapter-response-format";

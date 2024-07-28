@@ -1,11 +1,11 @@
 import { describe, it, before, beforeEach, after, mock, Mock } from "node:test";
-import Category from "../models/Categories";
-import { CategoryFromDb } from "../models/Categories";
+import Category from "../models/category";
+import { CategoryFromDb } from "../models/category";
 import { RichApp } from "../types";
 type ListFromDatabase = (app: RichApp) => Promise<CategoryFromDb[]>;
 import categoriesGetAll from "./categories-get-all";
 import * as assert from "node:assert";
-import { Request, RequestHandler } from "express";
+import { Request } from "express";
 
 describe(`Categories get all controller`, function () {
   let response: any;

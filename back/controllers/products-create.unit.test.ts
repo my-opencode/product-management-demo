@@ -1,8 +1,8 @@
 import { describe, it, before, after, mock, Mock } from "node:test";
 import * as assert from "node:assert";
 import { NextFunction, Request } from "express";
-import Product from "../models/Products";
-import productsCreate from "./products-post-create";
+import Product from "../models/product";
+import productsCreate from "./products-create";
 import { ValidationErrorStack } from "../lib/validators";
 
 describe(`Products create controller`, function () {

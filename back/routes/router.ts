@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express from "express";
 import productsRouter from "./products";
 import default404 from "../controllers/default-404";
 import errorHandler from "../controllers/error-handler";

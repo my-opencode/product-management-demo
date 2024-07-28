@@ -1,7 +1,7 @@
 import { describe, it, before, after, mock, Mock } from "node:test";
 import { RequestWithProduct } from "../types";
 import * as assert from "node:assert";
-import { NextFunction, Request } from "express";
+import { NextFunction } from "express";
 import productsGetOneById from "./products-get-one-by-id";
 import Product from "../models/product";
 

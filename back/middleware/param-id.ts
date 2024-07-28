@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request } from "express";
+import { NextFunction, Response } from "express";
 import { RequestWithId } from "../types";
 import Id from "../models/id";
 import { ValidationError } from "../lib/validators";

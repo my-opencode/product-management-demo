@@ -5,7 +5,7 @@ import { RichApp } from "../types";
 type ListFromDatabase = (app: RichApp) => Promise<ProductAsInTheJson[]>;
 import productsGetAll from "./products-get-all";
 import * as assert from "node:assert";
-import { Request, RequestHandler } from "express";
+import { Request } from "express";
 
 describe(`Products get all controller`, function () {
   let response: any;

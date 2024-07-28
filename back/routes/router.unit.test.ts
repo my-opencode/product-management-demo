@@ -1,11 +1,4 @@
-// import { RequestHandler, Express } from "express";
-// import { describe, it, before, mock } from "node:test";
-// import * as assert from "node:assert";
-// import default404 from "../controllers/default.404";
-// import setRoutes from "./router";
-// import errorHandler from "../controllers/errorHandler";
-
-import { RequestHandler, Router } from "express";
+import { Router } from "express";
 import { describe, it } from "node:test";
 import * as assert from "node:assert";
 import router from "./router";

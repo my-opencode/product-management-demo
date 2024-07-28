@@ -1,4 +1,4 @@
-import Product, { ProductAsInTheJson } from "../models/Products";
+import Product, { ProductAsInTheJson } from "../models/product";
 
 export interface DummyProductOptions {
   isSaved?: boolean;

@@ -1,6 +1,6 @@
 import { before, beforeEach, describe, it, mock } from "node:test";
 import * as assert from "assert";
-import Categories from "./Products";
+import Categories from "./category";
 import AppSymbols from "../AppSymbols";
 
 describe(`Category class`, function () {

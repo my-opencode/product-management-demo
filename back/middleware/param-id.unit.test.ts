@@ -1,5 +1,5 @@
 import { after, before, describe, it, mock, Mock } from "node:test";
-import Id from "../models/Id";
+import Id from "../models/id";
 import { RequestWithId } from "../types";
 import { NextFunction } from "express";
 import paramValidatorMwId from "./param-id";

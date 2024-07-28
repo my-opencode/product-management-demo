@@ -3,7 +3,7 @@ import { RequestWithProduct } from "../types";
 import { NextFunction } from "express";
 import productsParamMwGetProductById from "./products-param-id";
 import assert from "node:assert";
-import Product, { ProductAsInTheJson } from "../models/Products";
+import Product, { ProductAsInTheJson } from "../models/product";
 import { ValidationError } from "../lib/validators";
 
 describe(`Products Id param middleware`, function () {

@@ -2,9 +2,9 @@ import { describe, it, before, after, mock, Mock } from "node:test";
 import { RequestWithProduct } from "../types";
 import * as assert from "node:assert";
 import { NextFunction, Request } from "express";
-import Product from "../models/Products";
+import Product from "../models/product";
 import { getDummyProduct } from "../lib/test-product-util";
-import productsDeleteOneById from "./products-delete-delete-one-by-id";
+import productsDeleteOneById from "./products-delete-one-by-id";
 
 describe(`Products update one by id controller`, function () {
   let request = {

@@ -4,6 +4,7 @@
   "description": "Back End for a product management demo",
   "main": "server.js",
   "scripts": {
+    "test:unit":"npx tsx --test --test-concurrency=1 **/*.unit.test.ts || true",
     "pretest": "echo 'Booting Database' && sudo docker-compose -f test-db.yaml --profile test up -d -V",
     "test": "npm run clearlogs && npx tsx --test --test-concurrency=1 || true",
     "posttest": "echo 'Closing Database' && sudo docker-compose -f test-db.yaml down --volumes",

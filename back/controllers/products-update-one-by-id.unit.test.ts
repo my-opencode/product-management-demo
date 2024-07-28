@@ -2,8 +2,8 @@ import { describe, it, before, after, mock, Mock } from "node:test";
 import { RequestWithProduct } from "../types";
 import * as assert from "node:assert";
 import { NextFunction, Request } from "express";
-import Product from "../models/Products";
-import productsUpdateOneById from "./products-patch-update-one-by-id";
+import Product from "../models/product";
+import productsUpdateOneById from "./products-update-one-by-id";
 import { getDummyProduct } from "../lib/test-product-util";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 

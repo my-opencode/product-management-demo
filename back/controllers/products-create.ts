@@ -1,6 +1,6 @@
 import { Response, NextFunction, Request } from "express";
 import Logger from "../lib/winston";
-import Product from "../models/Products";
+import Product from "../models/product";
 import renderer from "../views/product-details";
 const logger = Logger(`controllers/products-post-create`, `debug`);
 import { ValidationErrorStack } from "../lib/validators";

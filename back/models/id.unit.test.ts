@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
-import Id from "./Id";
+import Id from "./id";
 import { ValidationError } from "../lib/validators";
 
 describe(`Id class`, function(){

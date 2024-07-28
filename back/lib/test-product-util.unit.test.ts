@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { before, describe, it } from "node:test";
 import { getDummyProduct, randomStr } from "./test-product-util";
-import Product from "../models/Products";
+import Product from "../models/product";
 
 describe.skip(`randomStr`, function () {
   it(`should return string`, function () {

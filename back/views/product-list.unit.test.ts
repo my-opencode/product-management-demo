@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
-import Product, { ProductAsInTheJson } from "../models/Products";
+import { ProductAsInTheJson } from "../models/product";
 import renderer from "./product-list";
 
 describe(`Product details renderer`, function () {

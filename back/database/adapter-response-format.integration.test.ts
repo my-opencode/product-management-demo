@@ -2,7 +2,7 @@ import connector, {waitForDbServer} from "./connector";
 import { describe, it, after, before } from "node:test";
 import * as assert from "node:assert";
 import mysql, { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { ProductAsInTheJson } from "../models/Products";
+import { ProductAsInTheJson } from "../models/product";
 import { DirectInsertUpdateDeleteExecuteResponse, DirectProductSelectExecuteResponse, NewProductStoredProcedureExecuteResponse, UpdateProductStoredProcedureExecuteResponse } from "./adapter-response-format";
 
 

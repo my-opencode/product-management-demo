@@ -3,10 +3,10 @@ import productsGetAll from "../controllers/products-get-all";
 import productsGetOneById from "../controllers/products-get-one-by-id";
 import productsParamMwGetProductById from "../middleware/products-param-id";
 import paramValidatorMwId from "../middleware/param-id";
-import productsCreate from "../controllers/products-post-create";
-import jsonBodyParser from "../lib/jsonBodyParser";
-import productsUpdateOneById from "../controllers/products-patch-update-one-by-id";
-import productsDeleteOneById from "../controllers/products-delete-delete-one-by-id";
+import productsCreate from "../controllers/products-create";
+import jsonBodyParser from "../lib/json-body-parser";
+import productsUpdateOneById from "../controllers/products-update-one-by-id";
+import productsDeleteOneById from "../controllers/products-delete-one-by-id";
 
 const productsRouter = express.Router();
 productsRouter.param(`id`, paramValidatorMwId);

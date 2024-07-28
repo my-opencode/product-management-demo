@@ -105,6 +105,4 @@ describe(`Validation Error Handler controller`, function () {
     });
   });
 
-
-
 });

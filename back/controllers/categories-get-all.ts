@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction, Express } from "express";
-import Category from "../models/Categories";
+import Category from "../models/category";
 import Logger from "../lib/winston";
 import renderer from "../views/category-list";
 const logger = Logger(`controllers/categories-get-all`);

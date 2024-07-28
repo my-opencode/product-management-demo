@@ -1,4 +1,4 @@
-import { CategoryFromDb } from "../models/Categories";
+import { CategoryFromDb } from "../models/category";
 
 export default function renderer(categories: (CategoryFromDb)[]): string {
   return JSON.stringify({

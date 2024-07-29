@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
 import renderer from "./product-details";
-import { ProductAsInTheJson } from "../models/product";
+import { ProductAsInTheJson } from "../models/product.types";
 
 describe(`Product details renderer`, function () {
   it(`should return string from ProductAsInTheJSON`, function () {

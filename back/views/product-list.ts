@@ -1,4 +1,5 @@
-import Product, { InventoryStatus, ProductAsInTheJson, ProductBase } from "../models/product";
+import Product from "../models/product";
+import { InventoryStatus, ProductBase } from "../models/product.types";
 import { ProductListJsonResponse } from "./json-response-format";
 
 /**

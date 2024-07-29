@@ -1,5 +1,5 @@
 import { CategoryBase } from "../models/category";
-import { ProductBase } from "../models/product";
+import { ProductBase } from "../models/product.types";
 
 /**
  * Type of the list of validation error fields in a Validation Error JSON response payload

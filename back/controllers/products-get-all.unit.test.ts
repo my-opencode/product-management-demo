@@ -1,6 +1,6 @@
 import { describe, it, before, beforeEach, after, mock, Mock } from "node:test";
 import Product from "../models/product";
-import { ProductAsInTheJson } from "../models/product";
+import { ProductAsInTheJson } from "../models/product.types";
 import { RichApp } from "../types";
 type ListFromDatabase = (app: RichApp) => Promise<ProductAsInTheJson[]>;
 import productsGetAll from "./products-get-all";

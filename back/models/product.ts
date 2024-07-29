@@ -1,96 +1,16 @@
-import { QueryError, RowDataPacket } from "mysql2";
+import { QueryError } from "mysql2";
 import { RichApp } from "../types";
 import AppSymbols from "../AppSymbols";
 import Id from "./id";
 import { validateFloat, validateInt, validateString, validateTinyInt, ValidationError, ValidationErrorStack } from "../lib/validators";
 import Logger from "../lib/winston";
 import { DirectInsertUpdateDeleteExecuteResponse, DirectProductSelectExecuteResponse, NewProductStoredProcedureExecuteResponse, UpdateProductStoredProcedureExecuteResponse } from "../database/adapter-response-format";
+import { InventoryStatus, ProductBase, UpdatableFieldKey } from "./product.types";
+import { sqlCallNewProductStatement, sqlCallUpdateFieldsListStatement, sqlSelectAllProductsStatement, sqlSelectProductByIdStatement, sqlUpdateSetDeletedById } from "./product.queries";
 const logger = Logger(`models/Product`, `debug`);
 
-export type InventoryStatus = "OUTOFSTOCK" | "LOWSTOCK" | "INSTOCK";
-
-export interface ProductAsInTheJson extends RowDataPacket, ProductBase {
-}
-
-export interface ProductBase {
-  id: number;
-  code: string;
-  name: string;
-  description: string;
-  image?: string;
-  price: number;
-  categoryId: number;
-  category: string;
-  quantity: number;
-  inventoryStatus: InventoryStatus;
-  rating?: number;
-}
-
-/**
- * Returns the select all products sql statement
- * @returns {String}
- */
-const SQL_SELECT_ALL_PRODUCTS = () => `SELECT 
-      p.id, 
-      p.code, 
-      p.name, 
-      p.description, 
-      p.image, 
-      p.Category_id as categoryId,
-      ProductCategories.name as category, 
-      prices.price, 
-      ratings.rating, 
-      inventory.quantity, 
-      inventory.inventory_status AS inventoryStatus 
-FROM \`Products\`  AS p
-LEFT JOIN ProductCategories 
-ON p.Category_id = ProductCategories.id
-RIGHT JOIN (
-	SELECT * FROM (
-        SELECT Product_id, price,
-    	RANK() OVER (PARTITION BY Product_id ORDER BY date_start DESC) date_rank
-    	FROM ProductsPrices WHERE date_start <= NOW() AND (date_end IS NULL OR date_end > NOW())
-    ) AS sp WHERE sp.date_rank = 1) AS prices 
-ON p.id = prices.Product_id 
-RIGHT JOIN (
-	SELECT * FROM (
-        SELECT Product_id, rating,
-    	RANK() OVER (PARTITION BY Product_id ORDER BY date DESC) rating_rank
-    	FROM ProductsRatings
-    ) AS sr WHERE sr.rating_rank = 1) AS ratings 
-ON p.id = ratings.Product_id 
-RIGHT JOIN (
-	SELECT * FROM (
-        SELECT Product_id, quantity, inventory_status,
-    	RANK() OVER (PARTITION BY Product_id ORDER BY date DESC) inv_rank
-    	FROM ProductsInventory
-    ) AS si WHERE si.inv_rank = 1) AS inventory 
-ON p.id = inventory.Product_id 
-WHERE deleted = 0;`
-/**
- * Returns the select one product by id sql statement
- * @param {Number} id product id
- * @returns {String}
- */
-const SQL_SELECT_PRODUCT_BY_ID = (id: Id) => SQL_SELECT_ALL_PRODUCTS().slice(0, -1) + ` AND p.id = ${id} LIMIT 1;`;
-type UpdatableFieldKey = "category" | "code" | "name" | "description" | "image" | "price" | "quantity";
 const updatableFields: UpdatableFieldKey[] = [`category`, `code`, `name`, `description`, `image`, `price`, `quantity`];
-/**
- * Datbase String. Wraps a string value inside quotation marks
- * @param {any} s string value
- * @returns {String}
- */
-const ds = (s:any) => `"${s}"`;
-export const SQL_CALL_UPDATE_FIELDS_LIST = (p: Product) => 
-  `CALL update_product(${p.id
-  }, ${p.updatedFields.has(`code`) ? ds(p.code) : `NULL`
-  }, ${p.updatedFields.has(`name`) ? ds(p.name) : `NULL`
-  }, ${p.updatedFields.has(`description`) ? ds(p.description) : `NULL`
-  }, ${p.updatedFields.has(`image`) ? ds(p.image) : `NULL`
-  }, ${p.updatedFields.has(`category`) ? p.categoryId : `NULL`
-  }, ${p.updatedFields.has(`price`) ? p.price : `NULL`
-  }, ${p.updatedFields.has(`quantity`) ? p.quantity : `NULL`
-  });`;
+
 function handleProcedureSqlSignals(err: Error) {
   //TO-DO mock up class for QueryError in order to check with instanceof
   let _err = err as unknown as QueryError;
@@ -339,7 +259,7 @@ export class Product {
   async delete(app: RichApp){
     if (!this.isSaved || !this.id)
       throw new Error(`Delete called on unsaved product.`);
-    await Product.deleteById(app, this.id);
+    await Product.deleteById(app, this._id);
     this._id = undefined;
   }
   productFieldUpdateAfterSave(updatedProduct: Product) {
@@ -377,7 +297,7 @@ export class Product {
     const pool = app.get(AppSymbols.connectionPool);
     let procedureResult: NewProductStoredProcedureExecuteResponse | undefined = undefined;
     try {
-      const callStatement = `CALL new_product( ${ds(product.code)}, ${ds(product.name)}, ${ds(product.description)}, ${product.image ? `, ${ds(product.image)}` : `NULL`}, ${product.categoryId}, ${product.price.toFixed(2)}, ${product.quantity}, 0, @id);`;
+      const callStatement = sqlCallNewProductStatement(product);
       logger.log(`debug`, `insertNewToDatabase query: ` + callStatement);
       ([procedureResult] =
         (await pool.execute<NewProductStoredProcedureExecuteResponse>(callStatement))||[]);
@@ -417,7 +337,7 @@ export class Product {
     logger.log(`verbose`, `Proceeding with updateInDatabase.`);
     const pool = app.get(AppSymbols.connectionPool);
     try {
-      const callStatement = SQL_CALL_UPDATE_FIELDS_LIST(product);
+      const callStatement = sqlCallUpdateFieldsListStatement(product);
       logger.log(`debug`, `updateInDatabase query: ` + callStatement);
       await pool.execute<UpdateProductStoredProcedureExecuteResponse>(callStatement);
     } catch (err) {
@@ -443,7 +363,7 @@ export class Product {
   }
   static async listFromDatabase(app: RichApp) {
     const pool = app.get(AppSymbols.connectionPool);
-    const [rows] = await pool.execute<DirectProductSelectExecuteResponse>(SQL_SELECT_ALL_PRODUCTS());
+    const [rows] = await pool.execute<DirectProductSelectExecuteResponse>(sqlSelectAllProductsStatement());
     return rows;
   }
   static async getById(app: RichApp, id: Id) {
@@ -453,7 +373,7 @@ export class Product {
     logger.log(`verbose`, `Entering getFromDatabaseById.`);
     const pool = app.get(AppSymbols.connectionPool);
     logger.log(`debug`, `Querying DB for Product with id = ${id}.`);
-    const query = SQL_SELECT_PRODUCT_BY_ID(id);
+    const query = sqlSelectProductByIdStatement(id);
     logger.log(`debug`, `getFromDatabaseById query: ` + query);
     const response = await pool.execute<DirectProductSelectExecuteResponse>(query);
     logger.log(`debug`, `getFromDatabaseById Database QueryResult is [${JSON.stringify(response?.[0])}]`);
@@ -476,10 +396,10 @@ export class Product {
       throw new Error(`Unable to parse product from database in getFromDatabaseById.`);
     }
   }
-  static async setDeletedInDatabase(app:RichApp, id: number){
+  static async setDeletedInDatabase(app: RichApp, id: Id): Promise<void> {
     logger.log(`verbose`, `Entering setDeletedInDatabase`);
     const pool = app.get(AppSymbols.connectionPool);
-    const query = `UPDATE Products SET deleted = 1 WHERE id = ${id};`;
+    const query = sqlUpdateSetDeletedById(id);
     logger.log(`debug`, query);
     try {
       await pool.execute<DirectInsertUpdateDeleteExecuteResponse>(query);
@@ -493,6 +413,7 @@ export class Product {
     logger.log(`debug`, `Product id = ${id} — set to deleted.`);
   }
   static async deleteById(app:RichApp, id: number){
+  static async deleteById(app: RichApp, id: Id): Promise<void> {
     return await this.setDeletedInDatabase(app, id);
   }
 }

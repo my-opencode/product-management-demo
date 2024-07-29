@@ -67,7 +67,8 @@ describe(`App.param: id validation`, function () {
     });
     it(`should set request.id & request.params.id`, function () {
       assert.strictEqual(request.params.id, "1");
-      assert.strictEqual(request.id, 1);
+      assert.ok(request.id instanceof Id);
+      assert.equal(request.id.valueOf(), 1);
     });
   });
   describe(`Unexpected error`, function () {

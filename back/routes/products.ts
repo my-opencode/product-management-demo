@@ -8,6 +8,15 @@ import jsonBodyParser from "../lib/json-body-parser";
 import productsUpdateOneById from "../controllers/products-update-one-by-id";
 import productsDeleteOneById from "../controllers/products-delete-one-by-id";
 
+/**
+ * router for path /products
+ * Supported subroutes:
+ * DELETE /:id
+ * GET /:id
+ * PATCH /:id
+ * GET /
+ * POST /
+ */
 const productsRouter = express.Router();
 productsRouter.param(`id`, paramValidatorMwId);
 productsRouter.param(`id`, productsParamMwGetProductById);

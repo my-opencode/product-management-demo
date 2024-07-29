@@ -15,6 +15,12 @@ export interface StartServerOptions {
 }
 /**
  * Entry point for the server.
+ * Accepts start options for easier testing:
+ * @param {StartServerOptions} [options] start options
+ * @param {Boolean} [options.skipDatabase] starts server without connecting to a database
+ * @param {Boolean} [options.skipListen] creates server app without listening to a port
+ * @param {Boolean} [options.skipRoutes] starts server without mounting routes
+ * @returns {Express}
  */
 export default async function startServer(options?: StartServerOptions) {
   const app = express();
@@ -66,6 +72,7 @@ export default async function startServer(options?: StartServerOptions) {
     }
     disconnectDatabase();
   }
+  // graceful shutdown
   app.on(`close`, shutdown);
   process.on('SIGTERM', () => {
     logger.log(`warn`, `Received SIGTERM signal: closing server.`);
@@ -80,6 +87,10 @@ export default async function startServer(options?: StartServerOptions) {
   return app;
 }
 
+/**
+ * Will start automatically if this script is called by node.
+ * Will not start if this script is imported/required by another.
+ */
 if (require.main === module) {
   logger.log(`debug`, `Called directly`);
   startServer();

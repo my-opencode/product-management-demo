@@ -9,6 +9,11 @@ export interface CategoryBase {
 }
 
 export interface CategoryFromDb extends RowDataPacket, CategoryBase { }
+
+/**
+ * @class Category
+ * @classdesc Category class
+ */
 export class Category {
   static async list(app:RichApp){
     return await this.listFromDatabase(app);

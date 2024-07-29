@@ -25,7 +25,7 @@ function loadEnvFromFile(){
 loadEnvFromFile();
 
 /**
- * Parses text env port value as integer. Returns default 1234.
+ * Parses text env mysql port value as integer. Returns default 1234.
  * @returns {number}
  */
 function portFromEnv(){

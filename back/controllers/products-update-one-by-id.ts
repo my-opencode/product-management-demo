@@ -5,12 +5,20 @@ import renderer from "../views/product-details";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 const logger = Logger(`controllers/products-patch-update-one-by-id`, `debug`);
 
+/**
+ * PATCH /products/:id controller
+ * Sends a {"data":ProductAsInJson} response.
+ * @param {Request} request Express request object
+ * @param {Response} response Express response object
+ * @param {NextFunction} next Express next function
+ */
 export default async function productsUpdateOneById(request: RequestWithProduct, response: Response, next: NextFunction) {
   logger.log(`verbose`, `Entering`);
   try {
     if (!request.product) {
       response.status(404);
       logger.log(`warn`, `Product is not defined on request.`);
+      // return response.status(404);
       return;
     }
     logger.log(`debug`, `Body: ${typeof request.body} "${JSON.stringify(request.body)}"`);

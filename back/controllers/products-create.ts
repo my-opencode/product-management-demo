@@ -5,6 +5,13 @@ import renderer from "../views/product-details";
 const logger = Logger(`controllers/products-post-create`, `debug`);
 import { ValidationErrorStack } from "../lib/validators";
 
+/**
+ * POST /products controller
+ * Sends a {"data":ProductAsInJson[]} response.
+ * @param {Request} request Express request object
+ * @param {Response} response Express response object
+ * @param {NextFunction} next Express next function
+ */
 export default async function productsCreate(request: Request, response: Response, next: NextFunction) {
   logger.log(`verbose`, `Entering`);
   try {

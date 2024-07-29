@@ -4,6 +4,13 @@ import Logger from "../lib/winston";
 import renderer from "../views/category-list";
 const logger = Logger(`controllers/categories-get-all`);
 
+/**
+ * GET /categories controller
+ * Sends a {"data":Category[]} response.
+ * @param {Request} request Express request object
+ * @param {Response} response Express response object
+ * @param {NextFunction} next Express next function
+ */
 export default async function categoriesGetAll(request: Request, response: Response, next: NextFunction) {
   logger.log(`verbose`,`Entering`);
   try {

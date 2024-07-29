@@ -13,6 +13,15 @@ function* GenId(){
 }
 const genId = GenId();
 
+/**
+ * Returns a dummy Product instance for tests.
+ * Accepts constructor options.
+ * @param {DummyProductOptions} [options] constructor options
+ * @param {boolean|undefined} [options.isSaved] product with an id and flag isSaved set to true.
+ * @param {boolean|undefined} [options.isReadOnly] product without categoryId value and flag isReadOnly set to true.
+ * @param {boolean|undefined} [options.isUpdated] product with flags isSaved and isUpdated set to true.
+ * @returns {Product}
+ */
 export function getDummyProduct(options?:DummyProductOptions){
   const isSaved = options?.isSaved || options?.isUpdated;
   const id = isSaved ? genId.next().value : undefined;
@@ -44,10 +53,20 @@ export function getDummyProduct(options?:DummyProductOptions){
   return p;
 }
 
+/**
+ * Generates a random product rating value between 0 and 5.
+ * @returns {number}
+ */
 function randomRating(){
   return Math.floor(Math.random()*6)
 }
 
+/**
+ * Generates a random string of controlled length.
+ * @param maxLength max length of the string
+ * @param minLength min length of the string
+ * @returns {String}
+ */
 export function randomStr(maxLength=255, minLength=10) {
   let str = ``;
   const characters = `-_ ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 '`;

@@ -4,6 +4,13 @@ import Logger from "../lib/winston";
 import renderer from "../views/product-list";
 const logger = Logger(`controllers/products-get-all`, `debug`);
 
+/**
+ * GET /products controller
+ * Sends a {"data":ProductAsInJson[]} response.
+ * @param {Request} request Express request object
+ * @param {Response} response Express response object
+ * @param {NextFunction} next Express next function
+ */
 export default async function productsGetAll(request: Request, response: Response, next: NextFunction) {
   logger.log(`verbose`, `Entering`);
   try {

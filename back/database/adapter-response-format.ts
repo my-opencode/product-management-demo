@@ -1,14 +1,30 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { ProductAsInTheJson } from "../models/product";
 import { CategoryFromDb } from "../models/category";
+
+/**
+ * Type of the response from conn.execute for Category.list SELECT query
+ */
 export type DirectCategorySelectExecuteResponse = CategoryFromDb[];
+/**
+ * Type of the response from conn.execute for Product.list SELECT query
+ */
 export type DirectProductSelectExecuteResponse = ProductAsInTheJson[];
-// direct insert, update, delete
+/**
+ * Type of the response from conn.execute for any insert, update, delete query
+ */
 export type DirectInsertUpdateDeleteExecuteResponse = ResultSetHeader;
-// stored procedure new_product
+/**
+ * Type of the return value of the new_product stored procedure
+ */
 export interface SpNewProductResult extends RowDataPacket {
   id: number;
 }
+/**
+ * Type of the response from conn.execute for Product.insertNewInDatabase
+ */
 export type NewProductStoredProcedureExecuteResponse = [SpNewProductResult[],ResultSetHeader];
-// stored procedure update_product
+/**
+ * Type of the response from conn.execute for Product.updateInDatabase
+ */
 export type UpdateProductStoredProcedureExecuteResponse = ResultSetHeader;

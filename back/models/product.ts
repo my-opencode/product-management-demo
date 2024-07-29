@@ -39,7 +39,7 @@ function handleProcedureSqlSignals(err: Error) {
     );
 }
 /**
- * Product Class
+ * @class Product
  * Note: rating is updated/saved independently to the product.
  */
 export class Product {
@@ -136,6 +136,7 @@ export class Product {
       throw new ValidationError(`Cannot reset existing category value to undefined.`, `product.categoryId`);
     let isSet = false;
     let error: ValidationError | undefined = undefined;
+    // try as category id first
     try {
       this.categoryId = val;
       isSet = true;
@@ -143,9 +144,11 @@ export class Product {
       if (err instanceof ValidationError) error = err;
       else throw err;
     }
+    // then try as category name
     if (!isSet && typeof val === `string`) {
       this.categoryName = val;
     }
+    // or throw id validation error
     else if (error !== undefined)
       throw error;
   }
@@ -242,9 +245,9 @@ export class Product {
     }
   }
   /**
-   * Saves a new Product
-   * Updates an existing Product
-   * (alias for saveNewToDatabase)
+   * Saves a Product:
+   * - Inserts new Product OR updates an existing Product.
+   * - Updates Product property values.
    * @param {RichApp} app express application
    * @returns {Promise<Product>}
    */
@@ -252,16 +255,36 @@ export class Product {
     const newProduct = await Product.insertNewToDatabase(app, this);
     return this.productFieldUpdateAfterSave(newProduct);
   }
+  /**
+   * Saves an updated Product:
+   * - Updates an existing Product
+   * - Updates Product property values.
+   * @param {RichApp} app express application
+   * @returns {Promise<Product>}
+   */
   async update(app: RichApp): Promise<Product> {
     const updatedProduct = await Product.updateInDatabase(app, this);
     return this.productFieldUpdateAfterSave(updatedProduct);
   }
+  /**
+   * Deletes a Product:
+   * - Sets existing Product as deleted
+   * - Updates Product to be isSaved===false.
+   * @param {RichApp} app express application
+   * @returns {Promise<void>}
+   */
   async delete(app: RichApp){
     if (!this.isSaved || !this.id)
       throw new Error(`Delete called on unsaved product.`);
     await Product.deleteById(app, this._id);
     this._id = undefined;
   }
+  /**
+   * Updates Product property values using values from updatedProduct.
+   * Clears Product's updatedFields value.
+   * @param {Product} updatedProduct updated product instance
+   * @returns {Product}
+   */
   productFieldUpdateAfterSave(updatedProduct: Product) {
     this._id = updatedProduct._id;
     this._code = updatedProduct._code;
@@ -323,6 +346,12 @@ export class Product {
     logger.log(`verbose`, `Exiting insertNewToDatabase.`);
     return newProduct;
   }
+  /**
+   * Updates an existing Product
+   * @param {RichApp} app express application
+   * @param {Product} product Product instance
+   * @returns {Promise<Product>}
+   */
   static async updateInDatabase(app: RichApp, product: Product): Promise<Product> {
     logger.log(`verbose`, `Entering updateInDatabase`);
     if (!product || !(product instanceof Product))
@@ -358,17 +387,40 @@ export class Product {
     logger.log(`verbose`, `Exiting updateInDatabase.`);
     return updatedProduct;
   }
+  /**
+   * Fetches the list of products from database
+   * Alias for Product.listFromDatabase
+   * @param {RichApp} app express application
+   * @returns {Promise<DirectProductSelectExecuteResponse>}
+   */
   static async list(app: RichApp) {
     return await this.listFromDatabase(app);
   }
+  /**
+   * Fetches the list of products from database
+   * @param {RichApp} app express application
+   * @returns {Promise<DirectProductSelectExecuteResponse>}
+   */
   static async listFromDatabase(app: RichApp) {
     const pool = app.get(AppSymbols.connectionPool);
     const [rows] = await pool.execute<DirectProductSelectExecuteResponse>(sqlSelectAllProductsStatement());
     return rows;
   }
+  /**
+   * Fetches a product's detailed information from database
+   * Alias for Product.getFromDatabaseById
+   * @param {RichApp} app express application
+   * @returns {Promise<Product|undefined>}
+   */
   static async getById(app: RichApp, id: Id) {
     return await this.getFromDatabaseById(app, id);
   }
+  /**
+   * Fetches a product's detailed information from database
+   * Alias for Product.getFromDatabaseById
+   * @param {RichApp} app express application
+   * @returns {Promise<Product|undefined>}
+   */
   static async getFromDatabaseById(app: RichApp, id: Id): Promise<Product | undefined> {
     logger.log(`verbose`, `Entering getFromDatabaseById.`);
     const pool = app.get(AppSymbols.connectionPool);
@@ -396,6 +448,12 @@ export class Product {
       throw new Error(`Unable to parse product from database in getFromDatabaseById.`);
     }
   }
+  /**
+   * Sets a product as deleted in database
+   * @param {RichApp} app express application
+   * @param {Id} id id of the product to 'delete'
+   * @returns {Promise<void> }
+   */
   static async setDeletedInDatabase(app: RichApp, id: Id): Promise<void> {
     logger.log(`verbose`, `Entering setDeletedInDatabase`);
     const pool = app.get(AppSymbols.connectionPool);
@@ -412,7 +470,13 @@ export class Product {
     }
     logger.log(`debug`, `Product id = ${id} — set to deleted.`);
   }
-  static async deleteById(app:RichApp, id: number){
+  /**
+   * Sets a product as deleted in database
+   * Alias for setDeletedInDatabase
+   * @param {RichApp} app express application
+   * @param {Id} id id of the product to 'delete'
+   * @returns {Promise<void> }
+   */
   static async deleteById(app: RichApp, id: Id): Promise<void> {
     return await this.setDeletedInDatabase(app, id);
   }

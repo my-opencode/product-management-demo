@@ -3,6 +3,13 @@ import { Response, NextFunction } from "express";
 import Logger from "../lib/winston";
 const logger = Logger(`controllers/products-delete-delete-one-by-id`, `debug`);
 
+/**
+ * DELETE /product/:id controller
+ * Sends an empty response.
+ * @param {Request} request Express request object
+ * @param {Response} response Express response object
+ * @param {NextFunction} next Express next function
+ */
 export default async function productsDeleteOneById(request: RequestWithProduct, response: Response, next: NextFunction) {
   logger.log(`verbose`, `Entering`);
   try {
@@ -10,6 +17,7 @@ export default async function productsDeleteOneById(request: RequestWithProduct,
       response.status(404);
       logger.log(`warn`, `Product is not defined on request.`);
       return;
+      // return response.status(404);
     }
 
     logger.log(`verbose`, `Deleting`);

@@ -4,6 +4,13 @@ import Logger from "../lib/winston";
 import renderer from "../views/product-details";
 const logger = Logger(`controllers/products-get-one-by-id`, `debug`);
 
+/**
+ * GET /products/:id controller
+ * Sends a {"data":ProductAsInJson} response.
+ * @param {Request} request Express request object
+ * @param {Response} response Express response object
+ * @param {NextFunction} next Express next function
+ */
 export default async function productsGetOneById(request: RequestWithProduct, response: Response, next: NextFunction) {
 
   logger.log(`verbose`, `Entering`);

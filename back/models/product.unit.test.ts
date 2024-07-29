@@ -844,18 +844,18 @@ describe(`Product static - setDeletedInDatabase - Product not found`, function (
     pool.execute.mock.resetCalls();
   });
   it(`should call app.get once`, async function () {
-    await assert.rejects(Product.setDeletedInDatabase(app, 999));
+    await assert.rejects(Product.setDeletedInDatabase(app, new Id(999)));
     assert.strictEqual(app.get.mock.callCount(), 1);
     assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
   });
   it(`should call pool.execute once`, async function () {
-    await assert.rejects(Product.setDeletedInDatabase(app, 999));
+    await assert.rejects(Product.setDeletedInDatabase(app, new Id(999)));
     assert.strictEqual(pool.execute.mock.callCount(), 1);
     assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0,31), `UPDATE Products SET deleted = 1`);
   });
   it(`should throw validation stack`, async function () {
     await assert.rejects(
-      Product.setDeletedInDatabase(app, 999),
+      Product.setDeletedInDatabase(app, new Id(999)),
       ValidationErrorStack
     );
   });
@@ -879,11 +879,11 @@ describe(`Product static - setDeletedInDatabase`, function () {
     pool.execute.mock.resetCalls();
   });
   it(`should call app.get once`, async function () {
-    await Product.setDeletedInDatabase(app, 1);
+    await Product.setDeletedInDatabase(app, new Id(1));
     assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
   });
   it(`should call pool.execute once`, async function () {
-    await Product.setDeletedInDatabase(app, 1);
+    await Product.setDeletedInDatabase(app, new Id(1));
     assert.strictEqual(pool.execute.mock.callCount(), 1);
     assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0,31), `UPDATE Products SET deleted = 1`);
   });

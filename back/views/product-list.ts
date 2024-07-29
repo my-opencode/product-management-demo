@@ -1,21 +1,28 @@
-import Product, { ProductAsInTheJson } from "../models/product";
+import Product, { InventoryStatus, ProductAsInTheJson, ProductBase } from "../models/product";
+import { ProductListJsonResponse } from "./json-response-format";
 
-export default function renderer(products:(Product|ProductAsInTheJson)[]):string{
-  return JSON.stringify({
+/**
+ * Returns a JSON view of a list of products
+ * @param {Product | ProductBase} products array of products
+ * @returns {String}
+ */
+export default function renderer(products:(Product|ProductBase)[]):string{
+  const payload : ProductListJsonResponse = {
     data: products.map(
       p => ({
-        id: p.id,
+        id: p.id!,
         code: p.code,
         name: p.name,
-        category: p.categoryName || p.category,
-        categoryId: p.categoryId,
+        category: p instanceof Product ? p.categoryName : p.category,
+        categoryId: p.categoryId!,
         description: p.description,
         image: p.image || undefined,
         quantity: p.quantity,
-        inventoryStatus: p.inventoryStatus || undefined,
+        inventoryStatus: p.inventoryStatus as InventoryStatus,
         price: p.price,
         rating: p.rating || undefined
       })
     )
-  });
+  };
+  return JSON.stringify(payload);
 }

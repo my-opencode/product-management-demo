@@ -5,7 +5,7 @@ import path from "node:path";
 import startServer from "./server";
 import inject, { Response } from "light-my-request";
 import express, { Express } from "express";
-import { ProductAsInTheJson } from "./models/product";
+import { ProductAsInTheJson } from "./models/product.types";
 import { CategoryFromDb } from "./models/category";
 import productsRouter from "./routes/products";
 import categoriesRouter from "./routes/categories";

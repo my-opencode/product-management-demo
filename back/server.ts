@@ -31,7 +31,7 @@ export default async function startServer(options?: StartServerOptions) {
     disconnectDatabase = function () {
       logger.log(`debug`, `Disconnecting DB.`);
       connectionPool.end();
-      logger.log(`debug`, `Disonnected DB.`);
+      logger.log(`debug`, `Disconnected DB.`);
     }
     app.set(AppSymbols.connectionPool, connectionPool);
   } else logger.log(`warn`, `Skipping Database`);

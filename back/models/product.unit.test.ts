@@ -8,6 +8,7 @@ import { ValidationError, ValidationErrorStack } from "../lib/validators";
 import { QueryError, ResultSetHeader } from "mysql2";
 import { getDummyProduct } from "../lib/test-product-util";
 import { DirectProductSelectExecuteResponse, NewProductStoredProcedureExecuteResponse, SpNewProductResult } from "../database/adapter-response-format";
+import Id from "./id";
 
 describe(`SQL update call statement maker`, function(){
   let p : Product;
@@ -224,17 +225,17 @@ describe(`Product static - getById (getFromDatabaseById alias)`, function () {
     pool.execute.mock.resetCalls();
   });
   it(`should call app.get`, async function () {
-    await Product.getById(app, 1);
+    await Product.getById(app, new Id(1));
     assert.strictEqual(app.get.mock.callCount(), 1);
     assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
   });
   it(`should call pool.execute`, async function () {
-    await Product.getById(app, 1);
+    await Product.getById(app, new Id(1));
     assert.strictEqual(pool.execute.mock.callCount(), 1);
     assert.strictEqual(typeof pool.execute.mock.calls[0].arguments[0], `string`);
   });
   it(`should return a product`, async function () {
-    const result = await Product.getById(app, 1);
+    const result = await Product.getById(app, new Id(1));
     // assert.deepStrictEqual(
     //   result,
     //   { id: 1 }
@@ -273,17 +274,17 @@ describe(`Product static - getFromDatabaseById`, function () {
     pool.execute.mock.resetCalls();
   });
   it(`should call app.get`, async function () {
-    await Product.getFromDatabaseById(app, 1);
+    await Product.getFromDatabaseById(app, new Id(1));
     assert.strictEqual(app.get.mock.callCount(), 1);
     assert.strictEqual(app.get.mock.calls[0].arguments[0], AppSymbols.connectionPool);
   });
   it(`should call pool.execute`, async function () {
-    await Product.getFromDatabaseById(app, 1);
+    await Product.getFromDatabaseById(app, new Id(1));
     assert.strictEqual(pool.execute.mock.callCount(), 1);
     assert.strictEqual(typeof pool.execute.mock.calls[0].arguments[0], `string`);
   });
   it(`should return results`, async function () {
-    const result = await Product.getFromDatabaseById(app, 1);
+    const result = await Product.getFromDatabaseById(app, new Id(1));
     assert.ok(result instanceof Product);
     assert.strictEqual(result.id, 2);
   });

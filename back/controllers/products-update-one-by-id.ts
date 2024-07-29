@@ -13,7 +13,6 @@ export default async function productsUpdateOneById(request: RequestWithProduct,
       logger.log(`debug`, `No product found.`);
       return;
     }
-    const product = request.product;
     logger.log(`debug`, `Body: ${typeof request.body} "${JSON.stringify(request.body)}"`);
     // aggregate validation errors
     const validationErrors: ValidationError[] = [];
@@ -23,6 +22,7 @@ export default async function productsUpdateOneById(request: RequestWithProduct,
       else throw e;
     };
     // validate & set fields
+    const product = request.product;
     try { if (request.body?.code !== undefined) product.code = request.body.code; } catch (e) { valErrHandler(e); }
     try { if (request.body?.name !== undefined) product.name = request.body.name; } catch (e) { valErrHandler(e); }
     try { if (request.body?.description !== undefined) product.description = request.body.description; } catch (e) { valErrHandler(e); }

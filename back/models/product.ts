@@ -123,6 +123,17 @@ function handleProcedureSqlSignals(err: Error) {
  * Note: rating is updated/saved independently to the product.
  */
 export class Product {
+  _id: Id | undefined = undefined;
+  _code!:string;
+  _name!:string;
+  _description!:string;
+  _image: string | undefined;
+  _price!:number;
+  _category: number | undefined;
+  _categoryName = ``;
+  _quantity!:number;
+  _inventoryStatus: InventoryStatus | "" = ``;
+  _rating = -1;
   isReadOnly = true;
   updatedFields: Set<UpdatableFieldKey> = new Set();
   get isSaved(): boolean {
@@ -137,17 +148,6 @@ export class Product {
   resetUpdated() {
     this.updatedFields = new Set();
   }
-  _id: Id | undefined = undefined;
-  _code!:string;
-  _name!:string;
-  _description!:string;
-  _image: string | undefined;
-  _price!:number;
-  _category: number | undefined;
-  _categoryName = ``;
-  _quantity!:number;
-  _inventoryStatus: InventoryStatus | "" = ``;
-  _rating = -1;
   get id(): number | undefined {
     return this._id?.valueOf();
   }

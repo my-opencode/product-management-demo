@@ -1,7 +1,7 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { ProductAsInTheJson } from "../models/product";
-
-// direct product select
+import { CategoryFromDb } from "../models/category";
+export type DirectCategorySelectExecuteResponse = CategoryFromDb[];
 export type DirectProductSelectExecuteResponse = ProductAsInTheJson[];
 // direct insert, update, delete
 export type DirectInsertUpdateDeleteExecuteResponse = ResultSetHeader;

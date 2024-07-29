@@ -1,7 +1,7 @@
 import { RequestWithProduct } from "../types";
 import { Response, NextFunction } from "express";
 import Logger from "../lib/winston";
-const logger = Logger(`controllers/products-delete-delete-one-by-id`, `debug`);
+const logger = Logger(`controllers/products-delete-delete-one-by-id`);
 
 /**
  * DELETE /product/:id controller

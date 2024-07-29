@@ -7,7 +7,7 @@ import Logger from "../lib/winston";
 import { DirectInsertUpdateDeleteExecuteResponse, DirectProductSelectExecuteResponse, NewProductStoredProcedureExecuteResponse, UpdateProductStoredProcedureExecuteResponse } from "../database/adapter-response-format";
 import { InventoryStatus, ProductBase, UpdatableFieldKey } from "./product.types";
 import { sqlCallNewProductStatement, sqlCallUpdateFieldsListStatement, sqlSelectAllProductsStatement, sqlSelectProductByIdStatement, sqlUpdateSetDeletedById } from "./product.queries";
-const logger = Logger(`models/Product`, `debug`);
+const logger = Logger(`models/Product`);
 
 const updatableFields: UpdatableFieldKey[] = [`category`, `code`, `name`, `description`, `image`, `price`, `quantity`];
 

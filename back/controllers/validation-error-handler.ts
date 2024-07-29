@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Logger from "../lib/winston";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 import renderer from "../views/422-validation";
-const logger = Logger(`controllers/validation-error-handler`, `debug`);
+const logger = Logger(`controllers/validation-error-handler`);
 
 /**
  * validation error controller

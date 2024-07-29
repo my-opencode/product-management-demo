@@ -3,7 +3,7 @@ import { RequestWithId } from "../types";
 import Id from "../models/id";
 import { ValidationError } from "../lib/validators";
 import Logger from "../lib/winston";
-const logger = Logger(`middleware/param-id`, `debug`);
+const logger = Logger(`middleware/param-id`);
 
 /**
  * Express Application.param middleware.

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Logger from "../lib/winston";
 import renderer from "../views/generic-error";
-const logger = Logger(`controllers/404-handler`,`debug`);
+const logger = Logger(`controllers/404-handler`);
 
 /**
  * 404 controller

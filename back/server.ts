@@ -6,7 +6,7 @@ import router from "./routes/router";
 import { Server } from "http";
 import AppSymbols from "./AppSymbols";
 import setCors from "./middleware/cors";
-const logger = Logger(`server`, `silly`);
+const logger = Logger(`server`);
 const PORT = process.env.APP_PORT ? parseInt(process.env.APP_PORT) : 3000;
 export interface StartServerOptions {
   skipDatabase?: boolean;

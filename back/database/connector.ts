@@ -2,7 +2,7 @@ import mysql,{ Pool } from "mysql2/promise";
 import databaseConfig from "./config";
 import Logger from "../lib/winston";
 
-const logger = Logger(`connector`, `debug`);
+const logger = Logger(`connector`);
 
 /**
  * Initializes a mysql connection pool

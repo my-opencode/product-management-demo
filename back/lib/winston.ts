@@ -1,4 +1,5 @@
 import winston from "winston";
+const DEFAULT_LOG_LEVEL = process?.env?.LOG_LEVEL || `info`;
 
 /**
  * Initialises a winston logger for a service
@@ -6,7 +7,7 @@ import winston from "winston";
  * @param {string} [level] Minimum logging level. Defaults to info
  * @returns {winston.Logger}
  */
-export default function Logger(service:string, level="info"){
+export default function Logger(service:string, level=DEFAULT_LOG_LEVEL){
   const logger = winston.createLogger({
     level,
     format: winston.format.json(),

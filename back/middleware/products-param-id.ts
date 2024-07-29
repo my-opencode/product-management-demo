@@ -3,7 +3,8 @@ import { RequestWithProduct } from "../types";
 import Product from "../models/product";
 import { ValidationError } from "../lib/validators";
 import Logger from "../lib/winston";
-const logger = Logger(`middleware/products-param-id`, `debug`);
+const logger = Logger(`middleware/products-param-id`);
+
 /**
  * Express Application.param middleware.
  * Retrieves Product from DB by ID.

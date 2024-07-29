@@ -3,7 +3,7 @@ import { Response, NextFunction } from "express";
 import Logger from "../lib/winston";
 import renderer from "../views/product-details";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
-const logger = Logger(`controllers/products-patch-update-one-by-id`, `debug`);
+const logger = Logger(`controllers/products-patch-update-one-by-id`);
 
 /**
  * PATCH /products/:id controller

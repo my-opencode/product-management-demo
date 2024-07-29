@@ -2,7 +2,7 @@ import { RequestWithProduct } from "../types";
 import { Response, NextFunction } from "express";
 import Logger from "../lib/winston";
 import renderer from "../views/product-details";
-const logger = Logger(`controllers/products-get-one-by-id`, `debug`);
+const logger = Logger(`controllers/products-get-one-by-id`);
 
 /**
  * GET /products/:id controller

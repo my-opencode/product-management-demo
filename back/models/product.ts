@@ -470,7 +470,7 @@ export class Product {
         handleProcedureSqlSignals(err);
       throw err;
     }
-    logger.log(`debug`, `Product id = ${id} — set to deleted.`);
+    logger.log(`verbose`, `Exiting setDeletedInDatabase`);
   }
   /**
    * Sets a product as deleted in database

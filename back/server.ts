@@ -74,11 +74,11 @@ export default async function startServer(options?: StartServerOptions) {
   }
   // graceful shutdown
   app.on(`close`, shutdown);
-  process.on('SIGTERM', () => {
+  process.on(`SIGTERM`, () => {
     logger.log(`warn`, `Received SIGTERM signal: closing server.`);
     shutdown();
   });
-  process.on('SIGINT', () => {
+  process.on(`SIGINT`, () => {
     logger.log(`warn`, `Received SIGINT signal: closing server.`);
     shutdown();
   });

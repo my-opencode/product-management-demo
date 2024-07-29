@@ -11,8 +11,7 @@ export default async function productsDeleteOneById(request: RequestWithProduct,
       logger.log(`debug`, `No product found.`);
       return;
     }
-    const product = request.product;
-    await product.delete(request.app);
+    await request.product.delete(request.app);
 
     response.status(204).send();
   } catch (err) {

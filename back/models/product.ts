@@ -123,9 +123,11 @@ function handleProcedureSqlSignals(err: Error) {
  * Note: rating is updated/saved independently to the product.
  */
 export class Product {
-  isSaved = false;
   isReadOnly = true;
   updatedFields: Set<UpdatableFieldKey> = new Set();
+  get isSaved(): boolean {
+    return !!this._id;
+  }
   get isUpdated(): boolean {
     return this.updatedFields.size > 0;
   }
@@ -340,7 +342,6 @@ export class Product {
       throw new Error(`Delete called on unsaved product.`);
     await Product.deleteById(app, this.id);
     this._id = undefined;
-    this.isSaved = false;
   }
   productFieldUpdateAfterSave(updatedProduct: Product) {
     this._id = updatedProduct._id;
@@ -354,7 +355,6 @@ export class Product {
     this._inventoryStatus = updatedProduct._inventoryStatus;
     this._category = updatedProduct._category;
     this._categoryName = updatedProduct._categoryName;
-    this.isSaved = updatedProduct.isSaved;
     this.isReadOnly = updatedProduct.isReadOnly;
     this.resetUpdated();
     return this;

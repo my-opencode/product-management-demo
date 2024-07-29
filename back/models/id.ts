@@ -1,6 +1,17 @@
 import { validateInt, ValidationError } from "../lib/validators";
 
-export default class Id {
+/**
+ * @class Id
+ * @classdesc Represents a MySQL int PK
+ * @extends {Number}
+ * @implements {Number}
+ */
+export default class Id extends Number implements Number {
+  fieldName: string;
+  constructor(id:number, fieldName?:string){
+    super(Id.validator(id, undefined, fieldName));
+    this.fieldName = fieldName || `id`
+  }
   /**
    * Validates an id value
    * @param {String|Number} candidate candidate value for a database id

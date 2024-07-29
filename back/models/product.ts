@@ -72,7 +72,7 @@ WHERE deleted = 0;`
  * @param {Number} id product id
  * @returns {String}
  */
-const SQL_SELECT_PRODUCT_BY_ID = (id: number) => SQL_SELECT_ALL_PRODUCTS().slice(0, -1) + ` AND p.id = ${id} LIMIT 1;`;
+const SQL_SELECT_PRODUCT_BY_ID = (id: Id) => SQL_SELECT_ALL_PRODUCTS().slice(0, -1) + ` AND p.id = ${id} LIMIT 1;`;
 type UpdatableFieldKey = "category" | "code" | "name" | "description" | "image" | "price" | "quantity";
 const updatableFields: UpdatableFieldKey[] = [`category`, `code`, `name`, `description`, `image`, `price`, `quantity`];
 /**
@@ -135,7 +135,7 @@ export class Product {
   resetUpdated() {
     this.updatedFields = new Set();
   }
-  _id: number | undefined = undefined;
+  _id: Id | undefined = undefined;
   _code!:string;
   _name!:string;
   _description!:string;
@@ -147,17 +147,16 @@ export class Product {
   _inventoryStatus: InventoryStatus | "" = ``;
   _rating = -1;
   get id(): number | undefined {
-    return this._id;
+    return this._id?.valueOf();
   }
-  set id(val: number | undefined) {
+  set id(val: Id | number | undefined) {
     if (val === this._id) return;
-    if (val === undefined) {
+    else if (val === undefined) {
       this._id = undefined;
-      this.isSaved = false;
+    } else if (val instanceof Id) {
+      this._id = val;
     } else {
-      this._id = Id.validator(val, undefined, `product.id`);
-      if (this._id)
-        this.isSaved = true;
+      this._id = new Id(val, `product.id`);
     }
   }
   get code(): string {
@@ -388,7 +387,7 @@ export class Product {
       throw err;
     }
 
-    const productId: number = procedureResult?.[0]?.[0]?.id;
+    const productId = new Id(procedureResult?.[0]?.[0]?.id);
     if(!productId) throw new Error(`New product id undefined. Check SP execution logs.`);
 
     let newProduct:Product|undefined = undefined;
@@ -424,7 +423,7 @@ export class Product {
 
     let updatedProduct:Product|undefined = undefined;
     try {
-      updatedProduct = await this.getFromDatabaseById(app, product.id);
+      updatedProduct = await this.getFromDatabaseById(app, product._id!);
     } catch (err){
       logger.log(`debug`, `Error in getFromDatabaseById.`);
     }
@@ -439,10 +438,10 @@ export class Product {
     const [rows] = await pool.execute<DirectProductSelectExecuteResponse>(SQL_SELECT_ALL_PRODUCTS());
     return rows;
   }
-  static async getById(app: RichApp, id: number) {
+  static async getById(app: RichApp, id: Id) {
     return await this.getFromDatabaseById(app, id);
   }
-  static async getFromDatabaseById(app: RichApp, id: number): Promise<Product | undefined> {
+  static async getFromDatabaseById(app: RichApp, id: Id): Promise<Product | undefined> {
     const pool = app.get(AppSymbols.connectionPool);
     logger.log(`debug`, `Querying DB for Product with id = ${id}.`);
     const query = SQL_SELECT_PRODUCT_BY_ID(id);

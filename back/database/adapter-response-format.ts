@@ -1,5 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { ProductAsInTheJson } from "../models/product";
+import { ProductAsInTheJson } from "../models/product.types";
 import { CategoryFromDb } from "../models/category";
 
 /**

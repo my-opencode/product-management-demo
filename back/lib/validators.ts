@@ -1,4 +1,4 @@
-export class ValidationErrorStack extends Array {
+export class ValidationErrorStack extends Array<ValidationError> {
   message = ``;
   statusCode = 422;
   /**

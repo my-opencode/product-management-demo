@@ -1,22 +1,36 @@
 import { ValidationErrorStack, ValidationError } from "../lib/validators";
-export interface ValidationErrorResponseJson {
-  description?: string;
-  errors: { [fieldName: string]: string|number };
-}
+import { ValidationErrorStackJsonResponse } from "./json-response-format";
+
+/**
+ * Returns a JSON view of a validation error
+ * @param {ValidationErrorStack | ValidationError} errorData single validation error or stack
+ * @returns {String}
+ */
 export default function renderer(errorData: ValidationErrorStack | ValidationError): string {
-  if (errorData instanceof ValidationErrorStack)
-    return renderErrorStack(errorData);
-  else
-    return renderOneError(errorData);
+  return JSON.stringify(
+    errorData instanceof ValidationErrorStack
+    ? convertErrorStackToPayload(errorData)
+    : convertOneErrorToPayload(errorData)
+  );
 }
-export function renderOneError(err: ValidationError): string {
-  return JSON.stringify({ errors: { [err.fieldName]: err.message }, description: err.message });
+/**
+ * Converts a ValidationError into a ValidationErrorStackJsonResponse
+ * @param {ValidationError} err validation error
+ * @returns {ValidationErrorStackJsonResponse}
+ */
+export function convertOneErrorToPayload(err: ValidationError): ValidationErrorStackJsonResponse {
+  return { errors: { [err.fieldName]: err.message }, description: err.message };
 }
-export function renderErrorStack(errors: ValidationErrorStack): string {
-  const payload: { errors: any, description?: string } = {
-    errors: errors.reduce((obj, err) => { obj[err.fieldName] = err.message; return obj; }, {})
-  };
+/**
+ * Converts a ValidationErrorStack into a ValidationErrorStackJsonResponse
+ * @param {ValidationErrorStack} errors validation error stack
+ * @returns {ValidationErrorStackJsonResponse}
+ */
+export function convertErrorStackToPayload(errors: ValidationErrorStack) {
+  const payload: ValidationErrorStackJsonResponse = { errors: {} };
   if (errors.message)
     payload.description = errors.message;
-  return JSON.stringify(payload);
+  for (const err of errors)
+      payload.errors[err.fieldName] = err.message;
+  return payload;
 }

@@ -38,7 +38,7 @@ describe(`Products get one by id controller`, function () {
       // update request
       request.product = 
       new Product(
-        {id:1,name:`a`,code:`a`,description:`a`,quantity:1,price:10, categoryId:2}
+        {id:1,name:`a`,code:`a`,description:`a`,quantity:1,price:10, categoryId:2, inventoryStatus:`INSTOCK`}
       )
       ;
       response.send.mock.resetCalls();
@@ -53,7 +53,7 @@ describe(`Products get one by id controller`, function () {
     });
     it(`should call response.send with payload`,function(){
       assert.strictEqual(response.send.mock.callCount(),1);
-      assert.strictEqual(response.send.mock.calls[0]?.arguments?.[0], `{"data":{"id":1,"code":"a","name":"a","category":2,"categoryId":2,"description":"a","quantity":1,"price":10}}`);
+      assert.strictEqual(response.send.mock.calls[0]?.arguments?.[0], `{"data":{"id":1,"code":"a","name":"a","category":2,"categoryId":2,"description":"a","quantity":1,"inventoryStatus":"INSTOCK","price":10}}`);
     });
   });
 });

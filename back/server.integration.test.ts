@@ -12,7 +12,7 @@ import categoriesRouter from "./routes/categories";
 import errorHandler from "./controllers/error-handler";
 import default404 from "./controllers/default-404";
 import validationErrorHandler from "./controllers/validation-error-handler";
-import { ValidationErrorResponseJson } from "./views/422-validation";
+import { ValidationErrorStackJsonResponse } from "./views/json-response-format";
 
 const REAL_PRODUCT_ID = 1000;
 
@@ -67,11 +67,24 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(response.headers["access-control-allow-origin"], `*`);
     });
   });
+  describe(`415`, function () {
+    it(`should return status code 415`, async function () {
+      const response = await inject(app, { 
+        method: `get`, 
+        url: `/`,
+        headers: {
+          accept: `text/html`
+        } 
+      });
+      assert.strictEqual(response.statusCode, 415);
+      assert.strictEqual(response.payload, `This API only supports application/json media type.`);
+    });
+  });
   describe(`404`, function () {
     it(`should return status code 404`, async function () {
       const response = await inject(app, { method: `get`, url: `/` });
       assert.strictEqual(response.statusCode, 404);
-      assert.strictEqual(response.payload, `Resource "/" not found.`);
+      assert.strictEqual(response.payload, `{"description":"Resource \\"/\\" not found."}`);
     });
   });
   describe(`GET /categories`, async function () {
@@ -112,7 +125,7 @@ describe(`Test API endpoints`, function () {
   });
   describe(`POST /products 422`, async function () {
     let response: Response;
-    let json: ValidationErrorResponseJson;
+    let json: ValidationErrorStackJsonResponse;
     await before(async function () {
       response = await inject(app, {
         method: `post`,
@@ -137,7 +150,7 @@ describe(`Test API endpoints`, function () {
   });
   describe(`POST /products 409 Category_id`, async function () {
     let response: Response;
-    let json: ValidationErrorResponseJson;
+    let json: ValidationErrorStackJsonResponse;
     await before(async function () {
       response = await inject(app, {
         method: `post`,
@@ -171,7 +184,7 @@ describe(`Test API endpoints`, function () {
   });
   describe(`POST /products 409 code`, async function () {
     let response: Response;
-    let json: ValidationErrorResponseJson;
+    let json: ValidationErrorStackJsonResponse;
     await before(async function () {
       response = await inject(app, {
         method: `post`,
@@ -280,7 +293,7 @@ describe(`Test API endpoints`, function () {
   });
   describe(`PATCH /products/:id 422 - validation`, async function () {
     let response: Response;
-    let json: ValidationErrorResponseJson;
+    let json: ValidationErrorStackJsonResponse;
     await before(async function () {
       response = await inject(app, {
         method: `patch`,
@@ -306,7 +319,7 @@ describe(`Test API endpoints`, function () {
   });
   describe(`PATCH /products/:id 422 - no change`, async function () {
     let response: Response;
-    let json: ValidationErrorResponseJson;
+    let json: ValidationErrorStackJsonResponse;
     await before(async function () {
       const sourceValues = {
         "id": 1000,
@@ -341,7 +354,7 @@ describe(`Test API endpoints`, function () {
   });
   describe(`PATCH /products/:id 409 - code exists`, async function () {
     let response: Response;
-    let json: ValidationErrorResponseJson;
+    let json: ValidationErrorStackJsonResponse;
     await before(async function () {
       response = await inject(app, {
         method: `patch`,
@@ -366,7 +379,7 @@ describe(`Test API endpoints`, function () {
   });
   describe(`PATCH /products/:id 409 - category does not exist`, async function () {
     let response: Response;
-    let json: ValidationErrorResponseJson;
+    let json: ValidationErrorStackJsonResponse;
     await before(async function () {
       response = await inject(app, {
         method: `patch`,
@@ -601,7 +614,10 @@ describe(`Test API error endpoint`, function () {
       assert.strictEqual(response.statusCode, 500);
     });
     it(`should return message`, function () {
-      assert.strictEqual(response.payload, `Unexpected error. Please contact our support if the error persists.`);
+      assert.deepEqual(
+        response.payload, 
+        `{"description":"Unexpected error. Please contact our support if the error persists."}`
+      );
     });
   });
 });

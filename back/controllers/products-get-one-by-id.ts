@@ -13,7 +13,7 @@ export default async function productsGetOneById(request: RequestWithProduct, re
     }
     const payload = renderer(request.product);
     logger.log(`debug`, `Returning ${payload}`);
-    response.status(200).set('Content-Type', 'application/json').send(payload);
+    response.status(200).send(payload);
   } catch (err) {
     logger.log(`warn`, `Error in productsGetOneById: ${err instanceof Error ? err.message : String(err)}`);
     next(err);

@@ -32,9 +32,12 @@ describe(`Error Handler controller`, function () {
     });
     it(`should call next with error`, function () {
       assert.strictEqual(response.status.mock.callCount(), 0);
-      assert.strictEqual(response.send.mock.callCount(), 0);
-      assert.strictEqual(nextFn.mock.callCount(), 1);
-      assert.deepStrictEqual(nextFn.mock.calls[0].arguments, [new Error(`Oops`)]);
+      assert.strictEqual(response.send.mock.callCount(), 1);
+      assert.strictEqual(nextFn.mock.callCount(), 0);
+      assert.deepStrictEqual(
+        response.send.mock.calls[0].arguments, 
+        [`Unexpected error. Please contact our support if the error persists.`]
+      );
     });
   });
   describe(`Empty Error`, function () {

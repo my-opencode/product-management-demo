@@ -13,7 +13,7 @@ export default async function productsCreate(request: Request, response: Respons
     await product.save(request.app);
     const payload = renderer(product);
     logger.log(`debug`, `Returning ${payload}`);
-    response.status(201).set('Content-Type', 'application/json').send(payload);
+    response.status(201).send(payload);
   } catch (err) {
     if(err instanceof ValidationErrorStack && err.message === `Conflicting Product`)
         err.statusCode = 409;

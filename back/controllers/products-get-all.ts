@@ -10,7 +10,7 @@ export default async function productsGetAll(request: Request, response: Respons
     const productList = await Product.list(request.app as Express);
     const payload = renderer(productList);
     logger.log(`debug`,`Returning ${payload}`);
-    response.status(200).set('Content-Type', 'application/json').send(payload);
+    response.status(200).send(payload);
   } catch(err){
     logger.log(`debug`,`Error in productsGetAll: ${err instanceof Error ? err.message : String(err)}`);
     next(err);

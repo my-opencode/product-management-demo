@@ -9,5 +9,5 @@ export default function validationErrorHandler(err: Error|ValidationError|Valida
     return next(err);
   }
   logger.log(`debug`, `Caught validation error for ${req.method} "${req.url}" — ${err.message}`);
-  res.status(err.statusCode || 422).set('Content-Type', 'application/json').send(renderer(err));
+  res.status(err.statusCode || 422).send(renderer(err));
 }

@@ -339,6 +339,7 @@ export class Product {
     try {
       logger.log(`verbose`, `Retrieving new product.`);
       newProduct = await this.getFromDatabaseById(app, productId);
+    } catch (err) {
       logger.log(`warn`, `Error in retrieving new product.`);
       logger.log(`debug`, `Error: ${err instanceof Error ? err.message : err} – ${err instanceof Error ? err.stack : `no stack`}`);
     }
@@ -380,6 +381,7 @@ export class Product {
     try {
       logger.log(`verbose`, `Retrieving updated product.`);
       updatedProduct = await this.getFromDatabaseById(app, product._id!);
+    } catch (err) {
       logger.log(`warn`, `Error in retrieving updated product.`);
       logger.log(`debug`, `Error: ${err instanceof Error ? err.message : err} – ${err instanceof Error ? err.stack : `no stack`}`);
     }

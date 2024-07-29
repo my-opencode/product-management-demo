@@ -7,7 +7,7 @@ import Logger from "../lib/winston";
 import { DirectInsertUpdateDeleteExecuteResponse, DirectProductSelectExecuteResponse, NewProductStoredProcedureExecuteResponse, UpdateProductStoredProcedureExecuteResponse } from "../database/adapter-response-format";
 const logger = Logger(`models/Product`, `debug`);
 
-type InventoryStatus = "OUTOFSTOCK" | "LOWSTOCK" | "INSTOCK";
+export type InventoryStatus = "OUTOFSTOCK" | "LOWSTOCK" | "INSTOCK";
 
 export interface ProductAsInTheJson extends RowDataPacket, ProductBase {
 }

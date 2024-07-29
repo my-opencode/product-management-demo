@@ -46,8 +46,7 @@ export async function waitForDbServer(timeoutInSeconds = 60) {
     throw new Error(`Initial connection to DB server timed out.`);
 
   logger.log(`info`, `Connected after ${iterationCount} attempts.`);
-  const result = await _c.query(`SELECT 1 AS nbr;`)
-  // logger.log(`debug`, result);
+  await _c.query(`SELECT 1 AS nbr;`)
   _c.end();
   logger.log(`verbose`, `Closing connection after successful probing query.`);
 }

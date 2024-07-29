@@ -8,7 +8,7 @@ import { ProductDetailsJsonResponse } from "./json-response-format";
  * @returns {String}
  */
 export default function renderer(product: (Product | ProductAsInTheJson)): string {
-  const payload : ProductDetailsJsonResponse = {
+  const payload: ProductDetailsJsonResponse = {
     data: {
       id: product.id!,
       code: product.code,

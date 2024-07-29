@@ -7,7 +7,7 @@ export interface DummyProductOptions {
   isUpdated?: boolean;
 }
 
-function* GenId(){
+function* GenId() {
   let id = 100;
   while (id < 1000000)
     yield id++;
@@ -23,14 +23,14 @@ const genId = GenId();
  * @param {boolean|undefined} [options.isUpdated] product with flags isSaved and isUpdated set to true.
  * @returns {Product}
  */
-export function getDummyProduct(options?:DummyProductOptions){
+export function getDummyProduct(options?: DummyProductOptions) {
   const isSaved = options?.isSaved || options?.isUpdated;
   const id = isSaved ? genId.next().value : undefined;
   const name = randomStr(1024);
-  const quantity = Math.max(0,Math.floor(Math.random()*9999));
+  const quantity = Math.max(0, Math.floor(Math.random() * 9999));
   const rating = isSaved ? randomRating() : undefined;
   const inventoryStatus = !isSaved ? undefined : quantity === 0 ? `OUTOFSTOCK` : quantity < 10 ? `LOWSTOCK` : `INSTOCK`;
-  const category = !!options?.isReadOnly ? undefined: 1;
+  const category = !!options?.isReadOnly ? undefined : 1;
   const po = {
     id,
     code: randomStr(),
@@ -39,15 +39,15 @@ export function getDummyProduct(options?:DummyProductOptions){
     image: `img/${name}.png`,
     categoryId: category,
     quantity,
-    price: parseFloat((Math.random()*9999).toFixed(2)),
+    price: parseFloat((Math.random() * 9999).toFixed(2)),
     rating,
     inventoryStatus
   } as ProductAsInTheJson;
   const p = new Product(po);
-  if(options?.isReadOnly)
+  if (options?.isReadOnly)
     p.category = `Some category`;
-    p.resetUpdated();
-  if(options?.isUpdated) {
+  p.resetUpdated();
+  if (options?.isUpdated) {
     p.category = 2;
     p.category = randomStr();
   }
@@ -58,8 +58,8 @@ export function getDummyProduct(options?:DummyProductOptions){
  * Generates a random product rating value between 0 and 5.
  * @returns {number}
  */
-function randomRating(){
-  return Math.floor(Math.random()*6)
+function randomRating() {
+  return Math.floor(Math.random() * 6)
 }
 
 /**
@@ -68,11 +68,11 @@ function randomRating(){
  * @param minLength min length of the string
  * @returns {String}
  */
-export function randomStr(maxLength=255, minLength=10) {
+export function randomStr(maxLength = 255, minLength = 10) {
   let str = ``;
   const characters = `-_ ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 '`;
   const charactersLn = characters.length;
-  let length = minLength + Math.ceil(Math.random()*(maxLength-1-minLength));
+  let length = minLength + Math.ceil(Math.random() * (maxLength - 1 - minLength));
   let counter = 0;
   while (counter < length) {
     str += characters.charAt(Math.floor(Math.random() * charactersLn));

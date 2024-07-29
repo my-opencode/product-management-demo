@@ -49,8 +49,8 @@ export default async function startServer(options?: StartServerOptions) {
   });
 
   // restrict to application/json
-  app.use(function(req, res, next) {
-    if(req.headers?.accept && req.headers.accept !== `application/json`)
+  app.use(function (req, res, next) {
+    if (req.headers?.accept && req.headers.accept !== `application/json`)
       return res.status(415).send(`This API only supports application/json media type.`);
     res.set(`Content-Type`, `application/json`);
     next();

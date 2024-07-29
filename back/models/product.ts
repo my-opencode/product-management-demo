@@ -44,14 +44,14 @@ function handleProcedureSqlSignals(err: Error) {
  */
 export class Product {
   _id: Id | undefined = undefined;
-  _code!:string;
-  _name!:string;
-  _description!:string;
+  _code!: string;
+  _name!: string;
+  _description!: string;
   _image: string | undefined;
-  _price!:number;
+  _price!: number;
   _category: number | undefined;
   _categoryName = ``;
-  _quantity!:number;
+  _quantity!: number;
   _inventoryStatus: InventoryStatus | "" = ``;
   _rating = -1;
   isReadOnly = true;
@@ -186,7 +186,7 @@ export class Product {
     const prevPrice = this._price;
     this._price = validateFloat(val, 999999.99, 0.01, `product.price`);
     // prevPrice is undefined when constructor is called
-    if (prevPrice !== undefined && this._price.toFixed(2) !== (prevPrice?.toFixed?.(2)||``)){
+    if (prevPrice !== undefined && this._price.toFixed(2) !== (prevPrice?.toFixed?.(2) || ``)) {
       this.setUpdated(`price`);
     }
   }
@@ -274,7 +274,7 @@ export class Product {
    * @returns {Promise<void>}
    */
   async delete(app: RichApp): Promise<void> {
-    if (!this.isSaved || !this.id)
+    if (!this.isSaved || !this._id)
       throw new Error(`Delete called on unsaved product.`);
     await Product.deleteById(app, this._id);
     this._id = undefined;
@@ -323,7 +323,7 @@ export class Product {
       const callStatement = sqlCallNewProductStatement(product);
       logger.log(`debug`, `insertNewToDatabase query: ` + callStatement);
       ([procedureResult] =
-        (await pool.execute<NewProductStoredProcedureExecuteResponse>(callStatement))||[]);
+        (await pool.execute<NewProductStoredProcedureExecuteResponse>(callStatement)) || []);
     } catch (err) {
       logger.log(`debug`, `Product InsertNewToDatabase received QueryErr: "${JSON.stringify(err)}"`);
       if (err instanceof Error)
@@ -333,9 +333,9 @@ export class Product {
 
     const productId = new Id(procedureResult?.[0]?.[0]?.id);
     logger.log(`debug`, `insertNewToDatabase new id: ` + productId);
-    if(!productId) throw new Error(`New product id undefined. Check SP execution logs.`);
+    if (!productId) throw new Error(`New product id undefined. Check SP execution logs.`);
 
-    let newProduct:Product|undefined = undefined;
+    let newProduct: Product | undefined = undefined;
     try {
       logger.log(`verbose`, `Retrieving new product.`);
       newProduct = await this.getFromDatabaseById(app, productId);
@@ -377,7 +377,7 @@ export class Product {
       throw err;
     }
 
-    let updatedProduct:Product|undefined = undefined;
+    let updatedProduct: Product | undefined = undefined;
     try {
       logger.log(`verbose`, `Retrieving updated product.`);
       updatedProduct = await this.getFromDatabaseById(app, product._id!);
@@ -431,8 +431,8 @@ export class Product {
     logger.log(`debug`, `getFromDatabaseById query: ` + query);
     const response = await pool.execute<DirectProductSelectExecuteResponse>(query);
     logger.log(`debug`, `getFromDatabaseById Database QueryResult is [${JSON.stringify(response?.[0])}]`);
-    if(!response || !Array.isArray(response) || !response[0])
-        throw new Error(`Received malformed response from db server. [${JSON.stringify(response?.[0])}]`);
+    if (!response || !Array.isArray(response) || !response[0])
+      throw new Error(`Received malformed response from db server. [${JSON.stringify(response?.[0])}]`);
     const value = response[0][0];
     if (!value) {
       logger.log(`debug`, `Querying DB for Product with id = ${id} got no result.`);
@@ -443,7 +443,7 @@ export class Product {
       const product = new Product(value);
       logger.log(`verbose`, `Exiting getFromDatabaseById.`);
       return product;
-    } catch(err){
+    } catch (err) {
       logger.log(`warn`, `Unable to instantiate product with value form db.`);
       logger.log(`debug`, `Value from db: ${JSON.stringify(value)}`);
       logger.log(`debug`, `Error: ${JSON.stringify(err)}`);
@@ -464,7 +464,7 @@ export class Product {
     try {
       await pool.execute<DirectInsertUpdateDeleteExecuteResponse>(query);
       logger.log(`debug`, `Product id = ${id} — set to deleted.`);
-    } catch(err){
+    } catch (err) {
       logger.log(`debug`, `Product setDeletedInDatabase received QueryErr: "${JSON.stringify(err)}"`);
       if (err instanceof Error)
         handleProcedureSqlSignals(err);

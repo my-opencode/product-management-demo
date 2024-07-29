@@ -24,6 +24,7 @@ productsRouter.param(`id`, productsParamMwGetProductById);
 productsRouter.delete(`/:id`, productsDeleteOneById);
 productsRouter.get(`/:id`, productsGetOneById);
 productsRouter.patch(`/:id`, jsonBodyParser, productsUpdateOneById);
+
 productsRouter.get(`/`, productsGetAll);
 productsRouter.post(`/`, jsonBodyParser, productsCreate);
 

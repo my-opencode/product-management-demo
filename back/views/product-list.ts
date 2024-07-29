@@ -7,8 +7,8 @@ import { ProductListJsonResponse } from "./json-response-format";
  * @param {Product | ProductBase} products array of products
  * @returns {String}
  */
-export default function renderer(products:(Product|ProductBase)[]):string{
-  const payload : ProductListJsonResponse = {
+export default function renderer(products: (Product | ProductBase)[]): string {
+  const payload: ProductListJsonResponse = {
     data: products.map(
       p => ({
         id: p.id!,

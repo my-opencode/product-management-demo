@@ -23,7 +23,7 @@ export interface SpNewProductResult extends RowDataPacket {
 /**
  * Type of the response from conn.execute for Product.insertNewInDatabase
  */
-export type NewProductStoredProcedureExecuteResponse = [SpNewProductResult[],ResultSetHeader];
+export type NewProductStoredProcedureExecuteResponse = [SpNewProductResult[], ResultSetHeader];
 /**
  * Type of the response from conn.execute for Product.updateInDatabase
  */

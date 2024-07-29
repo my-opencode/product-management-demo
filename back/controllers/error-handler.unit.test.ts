@@ -35,7 +35,7 @@ describe(`Error Handler controller`, function () {
       assert.strictEqual(response.send.mock.callCount(), 1);
       assert.strictEqual(nextFn.mock.callCount(), 0);
       assert.deepStrictEqual(
-        response.send.mock.calls[0].arguments, 
+        response.send.mock.calls[0].arguments,
         [`Unexpected error. Please contact our support if the error persists.`]
       );
     });

@@ -11,9 +11,9 @@ const logger = Logger(`controllers/validation-error-handler`);
  * @param {Response} response Express response object
  * @param {NextFunction} next Express next function
  */
-export default function validationErrorHandler(err: Error|ValidationError|ValidationErrorStack, req: Request, res: Response, next: NextFunction) {
+export default function validationErrorHandler(err: Error | ValidationError | ValidationErrorStack, req: Request, res: Response, next: NextFunction) {
   logger.log(`verbose`, `Entering`);
-  if(!err) return next();
+  if (!err) return next();
   if (res.headersSent || !(err instanceof ValidationError || err instanceof ValidationErrorStack)) {
     return next(err);
   }

@@ -20,7 +20,7 @@ export function paramValidatorMwId(req: RequestWithId, res: Response, next: Next
   logger.log(`verbose`, `Entering`);
   try {
     logger.log(`debug`, `Route "${req.url}" with parameter :id = ${val}.`);
-    req.id =  new Id(Id.validator(val, `Invalid URL parameter 'id'. Expected integer.`));
+    req.id = new Id(Id.validator(val, `Invalid URL parameter 'id'. Expected integer.`));
     /**
      * Express Doc recommends using app.param to alter route param values:
      * https://expressjs.com/en/4x/api.html#req.params

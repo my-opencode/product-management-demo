@@ -10,60 +10,60 @@ import { getDummyProduct } from "../lib/test-product-util";
 import { DirectProductSelectExecuteResponse, NewProductStoredProcedureExecuteResponse, SpNewProductResult } from "../database/adapter-response-format";
 import Id from "./id";
 
-describe(`SQL update call statement maker`, function(){
-  let p : Product;
-  beforeEach(function(){
-    p = getDummyProduct({isSaved:true});
+describe(`SQL update call statement maker`, function () {
+  let p: Product;
+  beforeEach(function () {
+    p = getDummyProduct({ isSaved: true });
   });
-  it(`Product is not updated`,function(){
+  it(`Product is not updated`, function () {
     assert.strictEqual(
       sqlCallUpdateFieldsListStatement(p),
       `CALL update_product(${p.id}, NULL, NULL, NULL, NULL, NULL, NULL, NULL);`
     );
   });
-  it(`code to update`,function(){
+  it(`code to update`, function () {
     p.code = `abcd`;
     assert.strictEqual(
       sqlCallUpdateFieldsListStatement(p),
       `CALL update_product(${p.id}, "abcd", NULL, NULL, NULL, NULL, NULL, NULL);`
     );
   });
-  it(`name to update`,function(){
+  it(`name to update`, function () {
     p.name = `abcd`;
     assert.strictEqual(
       sqlCallUpdateFieldsListStatement(p),
       `CALL update_product(${p.id}, NULL, "abcd", NULL, NULL, NULL, NULL, NULL);`
     );
   });
-  it(`desc to update`,function(){
+  it(`desc to update`, function () {
     p.description = `abcd`;
     assert.strictEqual(
       sqlCallUpdateFieldsListStatement(p),
       `CALL update_product(${p.id}, NULL, NULL, "abcd", NULL, NULL, NULL, NULL);`
     );
   });
-  it(`image to update`,function(){
+  it(`image to update`, function () {
     p.image = `abcd`;
     assert.strictEqual(
       sqlCallUpdateFieldsListStatement(p),
       `CALL update_product(${p.id}, NULL, NULL, NULL, "abcd", NULL, NULL, NULL);`
     );
   });
-  it(`category to update`,function(){
+  it(`category to update`, function () {
     p.category = 12;
     assert.strictEqual(
       sqlCallUpdateFieldsListStatement(p),
       `CALL update_product(${p.id}, NULL, NULL, NULL, NULL, 12, NULL, NULL);`
     );
   });
-  it(`price to update`,function(){
+  it(`price to update`, function () {
     p.price = 12.12;
     assert.strictEqual(
       sqlCallUpdateFieldsListStatement(p),
       `CALL update_product(${p.id}, NULL, NULL, NULL, NULL, NULL, 12.12, NULL);`
     );
   });
-  it(`quantity to update`,function(){
+  it(`quantity to update`, function () {
     p.quantity = 12;
     assert.strictEqual(
       sqlCallUpdateFieldsListStatement(p),
@@ -391,17 +391,17 @@ describe(`Product static - insertNewToDatabase - New not found`, function () {
   let app: any;
   let pool: any;
   let p: Product;
-    const createResult: NewProductStoredProcedureExecuteResponse = [
-      [{id:18} as SpNewProductResult],
-      {} as unknown as ResultSetHeader
-    ];
-    const getByIdResult : DirectProductSelectExecuteResponse = [];
-    function* ExecuteResult() {
-      yield [createResult];
-      yield [getByIdResult];
-    }
+  const createResult: NewProductStoredProcedureExecuteResponse = [
+    [{ id: 18 } as SpNewProductResult],
+    {} as unknown as ResultSetHeader
+  ];
+  const getByIdResult: DirectProductSelectExecuteResponse = [];
+  function* ExecuteResult() {
+    yield [createResult];
+    yield [getByIdResult];
+  }
 
-  beforeEach(function () {    
+  beforeEach(function () {
     const execRes = ExecuteResult();
     pool = {
       execute: mock.fn((statement: string) => Promise.resolve(execRes.next().value))
@@ -451,10 +451,10 @@ describe(`Product static - insertNewToDatabase`, function () {
   let pool: any;
   let p: Product;
   const createResult: NewProductStoredProcedureExecuteResponse = [
-    [{id:18} as SpNewProductResult],
+    [{ id: 18 } as SpNewProductResult],
     {} as unknown as ResultSetHeader
   ];
-  const getByIdResult : DirectProductSelectExecuteResponse = [
+  const getByIdResult: DirectProductSelectExecuteResponse = [
     {
       id: 18,
       code: `abc`,
@@ -467,13 +467,13 @@ describe(`Product static - insertNewToDatabase`, function () {
       price: 100,
       rating: 3,
       inventoryStatus: "INSTOCK"
-    } as ProductAsInTheJson ];
+    } as ProductAsInTheJson];
   beforeEach(function () {
     function* ExecuteResult() {
       yield [createResult];
       yield [getByIdResult];
     }
-      const execRes = ExecuteResult();
+    const execRes = ExecuteResult();
     pool = {
       execute: mock.fn((statement: string) => Promise.resolve(execRes.next().value))
     };
@@ -851,7 +851,7 @@ describe(`Product static - setDeletedInDatabase - Product not found`, function (
   it(`should call pool.execute once`, async function () {
     await assert.rejects(Product.setDeletedInDatabase(app, new Id(999)));
     assert.strictEqual(pool.execute.mock.callCount(), 1);
-    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0,31), `UPDATE Products SET deleted = 1`);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0, 31), `UPDATE Products SET deleted = 1`);
   });
   it(`should throw validation stack`, async function () {
     await assert.rejects(
@@ -885,7 +885,7 @@ describe(`Product static - setDeletedInDatabase`, function () {
   it(`should call pool.execute once`, async function () {
     await Product.setDeletedInDatabase(app, new Id(1));
     assert.strictEqual(pool.execute.mock.callCount(), 1);
-    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0,31), `UPDATE Products SET deleted = 1`);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0, 31), `UPDATE Products SET deleted = 1`);
   });
 });
 
@@ -1090,9 +1090,9 @@ describe(`Product class - update Product`, function () {
       assert.strictEqual(p.isUpdated, false);
     });
   });
-  describe(`update status - no update conditions`, function(){
-    let p:Product;
-    before(function(){
+  describe(`update status - no update conditions`, function () {
+    let p: Product;
+    before(function () {
       p = new Product({
         id: 1050,
         code: `aaaa`,
@@ -1105,51 +1105,51 @@ describe(`Product class - update Product`, function () {
         price: 12.00,
       });
     });
-    it(`should be saved`, function(){
+    it(`should be saved`, function () {
       assert.strictEqual(
         p.isSaved,
         true
       );
     });
-    it(`should not update given the same code`, function(){
+    it(`should not update given the same code`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.code = `aaaa`;
       assert.strictEqual(p.isUpdated, false);
       p.code = `  aaaa   `;
       assert.strictEqual(p.isUpdated, false);
     });
-    it(`should not update given the same name`, function(){
+    it(`should not update given the same name`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.name = `aaaa product`;
       assert.strictEqual(p.isUpdated, false);
       p.name = `  aaaa product  `;
       assert.strictEqual(p.isUpdated, false);
     });
-    it(`should not update given the same description`, function(){
+    it(`should not update given the same description`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.description = `aaaa desc`;
       assert.strictEqual(p.isUpdated, false);
       p.description = `  aaaa desc  `;
       assert.strictEqual(p.isUpdated, false);
     });
-    it(`should not update given the same image`, function(){
+    it(`should not update given the same image`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.image = `aaaa.png`;
       assert.strictEqual(p.isUpdated, false);
       p.image = `  aaaa.png  `;
       assert.strictEqual(p.isUpdated, false);
     });
-    it(`should not update given the same categoryId`, function(){
+    it(`should not update given the same categoryId`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.categoryId = 1;
       assert.strictEqual(p.isUpdated, false);
     });
-    it(`should not update given the same quantity`, function(){
+    it(`should not update given the same quantity`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.quantity = 12;
       assert.strictEqual(p.isUpdated, false);
     });
-    it(`should not update given the same price`, function(){
+    it(`should not update given the same price`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.price = 12.00;
       assert.strictEqual(p.isUpdated, false);
@@ -1159,9 +1159,9 @@ describe(`Product class - update Product`, function () {
       assert.strictEqual(p.isUpdated, false);
     });
   });
-  describe(`update status - update conditions`, function(){
-    let p:Product;
-    beforeEach(function(){
+  describe(`update status - update conditions`, function () {
+    let p: Product;
+    beforeEach(function () {
       p = new Product({
         id: 1050,
         code: `aaaa`,
@@ -1174,49 +1174,49 @@ describe(`Product class - update Product`, function () {
         price: 12.12,
       });
     });
-    it(`should update given new code`, function(){
+    it(`should update given new code`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.code = `bbbb`;
       assert.strictEqual(p.isUpdated, true);
       assert.strictEqual(p.updatedFields.size, 1);
       assert.strictEqual(p.updatedFields.has(`code`), true);
     });
-    it(`should update given new name`, function(){
+    it(`should update given new name`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.name = `bbbb product`;
       assert.strictEqual(p.isUpdated, true);
       assert.strictEqual(p.updatedFields.size, 1);
       assert.strictEqual(p.updatedFields.has(`name`), true);
     });
-    it(`should update given new description`, function(){
+    it(`should update given new description`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.description = `bbbb desc`;
       assert.strictEqual(p.isUpdated, true);
       assert.strictEqual(p.updatedFields.size, 1);
       assert.strictEqual(p.updatedFields.has(`description`), true);
     });
-    it(`should update given new image`, function(){
+    it(`should update given new image`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.image = `bbbb.png`;
       assert.strictEqual(p.isUpdated, true);
       assert.strictEqual(p.updatedFields.size, 1);
       assert.strictEqual(p.updatedFields.has(`image`), true);
     });
-    it(`should update given new categoryId`, function(){
+    it(`should update given new categoryId`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.categoryId = 2;
       assert.strictEqual(p.isUpdated, true);
       assert.strictEqual(p.updatedFields.size, 1);
       assert.strictEqual(p.updatedFields.has(`category`), true);
     });
-    it(`should update given new quantity`, function(){
+    it(`should update given new quantity`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.quantity = 5;
       assert.strictEqual(p.isUpdated, true);
       assert.strictEqual(p.updatedFields.size, 1);
       assert.strictEqual(p.updatedFields.has(`quantity`), true);
     });
-    it(`should update given new price`, function(){
+    it(`should update given new price`, function () {
       assert.strictEqual(p.isUpdated, false);
       p.price = 8.95;
       assert.strictEqual(p.isUpdated, true);
@@ -1248,7 +1248,7 @@ describe(`Product inst - productFieldUpdateAfterSave`, function () {
   });
   Object.entries(target).forEach(([k, v]) =>
     it(`should have updated ${k}`, function () {
-      if(k==="category") k = "categoryName";
+      if (k === "category") k = "categoryName";
       //@ts-ignore
       assert.strictEqual(p[k], v);
     })
@@ -1260,10 +1260,10 @@ describe(`Product inst - Product.save`, function () {
   let pool: any;
   let p: Product;
   const createResult: NewProductStoredProcedureExecuteResponse = [
-    [{id:18} as SpNewProductResult],
+    [{ id: 18 } as SpNewProductResult],
     {} as unknown as ResultSetHeader
   ];
-  const getByIdResult : DirectProductSelectExecuteResponse = [
+  const getByIdResult: DirectProductSelectExecuteResponse = [
     {
       id: 18,
       code: `abc`,
@@ -1276,13 +1276,13 @@ describe(`Product inst - Product.save`, function () {
       price: 100,
       rating: 3,
       inventoryStatus: "INSTOCK"
-    } as ProductAsInTheJson ];
+    } as ProductAsInTheJson];
   beforeEach(function () {
     function* ExecuteResult() {
       yield [createResult];
       yield [getByIdResult];
     }
-      const execRes = ExecuteResult();
+    const execRes = ExecuteResult();
     pool = {
       execute: mock.fn((statement: string) => Promise.resolve(execRes.next().value))
     };
@@ -1433,7 +1433,7 @@ describe(`Product inst - Product.delete`, function () {
     };
   });
   beforeEach(function () {
-    p = getDummyProduct({isSaved:true});
+    p = getDummyProduct({ isSaved: true });
     app.get.mock.resetCalls();
     pool.execute.mock.resetCalls();
   });
@@ -1444,7 +1444,7 @@ describe(`Product inst - Product.delete`, function () {
   it(`should call pool.execute once`, async function () {
     await p.delete(app);
     assert.strictEqual(pool.execute.mock.callCount(), 1);
-    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0,31), `UPDATE Products SET deleted = 1`);
+    assert.strictEqual(pool.execute.mock.calls[0].arguments[0].slice(0, 31), `UPDATE Products SET deleted = 1`);
   });
   it(`should not update product`, async function () {
     assert.deepStrictEqual(
@@ -1459,8 +1459,8 @@ describe(`Product inst - Product.delete`, function () {
   });
 });
 
-describe(`#62 should accept Quantity 0`, function(){
-  it(`should accept a product from db with quantity = 0`, function(){
+describe(`#62 should accept Quantity 0`, function () {
+  it(`should accept a product from db with quantity = 0`, function () {
     const value = JSON.parse("{\"id\":1035,\"code\":\"set-quantity-to-zero\",\"name\":\"set-quantity-to-zero\",\"description\":\"tests set-quantity-to-zero\",\"image\":null,\"categoryId\":3,\"category\":\"Clothing\",\"price\":\"10.10\",\"rating\":0,\"quantity\":0,\"inventoryStatus\":\"OUTOFSTOCK\"}");
     assert.strictEqual(value.quantity, 0);
     const p = new Product(value);

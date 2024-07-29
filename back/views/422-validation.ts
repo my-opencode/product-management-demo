@@ -9,8 +9,8 @@ import { ValidationErrorStackJsonResponse } from "./json-response-format";
 export default function renderer(errorData: ValidationErrorStack | ValidationError): string {
   return JSON.stringify(
     errorData instanceof ValidationErrorStack
-    ? convertErrorStackToPayload(errorData)
-    : convertOneErrorToPayload(errorData)
+      ? convertErrorStackToPayload(errorData)
+      : convertOneErrorToPayload(errorData)
   );
 }
 /**
@@ -31,6 +31,6 @@ export function convertErrorStackToPayload(errors: ValidationErrorStack) {
   if (errors.message)
     payload.description = errors.message;
   for (const err of errors)
-      payload.errors[err.fieldName] = err.message;
+    payload.errors[err.fieldName] = err.message;
   return payload;
 }

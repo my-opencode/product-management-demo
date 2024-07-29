@@ -15,10 +15,10 @@ export interface CategoryFromDb extends RowDataPacket, CategoryBase { }
  * @classdesc Category class
  */
 export class Category {
-  static async list(app:RichApp){
+  static async list(app: RichApp) {
     return await this.listFromDatabase(app);
   }
-  static async listFromDatabase(app:RichApp){
+  static async listFromDatabase(app: RichApp) {
     const pool = app.get(AppSymbols.connectionPool);
     const [rows] = await pool.execute<DirectCategorySelectExecuteResponse>(`SELECT id, name FROM ProductCategories;`);
     return rows;

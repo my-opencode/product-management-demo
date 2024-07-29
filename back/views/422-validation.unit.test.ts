@@ -6,8 +6,8 @@ import { ValidationError, ValidationErrorStack } from "../lib/validators";
 describe(`one validation error conversion`, function () {
   it(`should return json string`, function () {
     assert.deepEqual(
-      convertOneErrorToPayload(new ValidationError(`something`, `field`)), 
-      {"errors":{"field":"something"},"description":"something"}
+      convertOneErrorToPayload(new ValidationError(`something`, `field`)),
+      { "errors": { "field": "something" }, "description": "something" }
     );
   });
 });
@@ -15,8 +15,8 @@ describe(`one validation error conversion`, function () {
 describe(`validation error stack conversion`, function () {
   it(`should return json string`, function () {
     assert.deepEqual(
-      convertErrorStackToPayload(new ValidationErrorStack([new ValidationError(`something`, `field`)], `failed validation`)), 
-      {"errors":{"field":"something"},"description":"failed validation"}
+      convertErrorStackToPayload(new ValidationErrorStack([new ValidationError(`something`, `field`)], `failed validation`)),
+      { "errors": { "field": "something" }, "description": "failed validation" }
     );
   });
 });

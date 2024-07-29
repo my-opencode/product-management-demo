@@ -9,15 +9,15 @@ interface CountQueryResult extends mysql.RowDataPacket {
 }
 
 describe(`Test DB rebuild`, function () {
-  let pool:Pool;
-  before(async function(){
+  let pool: Pool;
+  before(async function () {
     await waitForDbServer();
     pool = connector();
   });
-  after(function(){
+  after(function () {
     pool.end();
   })
-  it(`Database should be populated`, async function(){
+  it(`Database should be populated`, async function () {
     const [result] = (await pool.execute(
       "SELECT COUNT(DISTINCT `id`) AS cnt FROM `Products`;"
     )) as [CountQueryResult, FieldPacket[]];

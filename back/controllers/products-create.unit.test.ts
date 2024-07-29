@@ -41,8 +41,8 @@ describe(`Products create controller`, function () {
       // call controller
     });
     it(`should call next with ValidationErrorStack`, async function () {
-      await  productsCreate(request as unknown as Request, response, next);
-      assert.strictEqual(next.mock.callCount(),1);
+      await productsCreate(request as unknown as Request, response, next);
+      assert.strictEqual(next.mock.callCount(), 1);
       //@ts-ignore
       assert.ok(next.mock.calls[0].arguments[0] instanceof ValidationErrorStack);
     });

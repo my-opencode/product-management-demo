@@ -5,11 +5,11 @@ import renderer from "./generic-error";
 describe(`Generic error renderer`, function () {
   it(`should return json string`, function () {
     assert.strictEqual(
-      typeof renderer(new Error(`Oops`)), 
+      typeof renderer(new Error(`Oops`)),
       `string`
     );
     assert.strictEqual(
-      renderer(new Error(`Oops`)), 
+      renderer(new Error(`Oops`)),
       `{"description":"Oops"}`
     );
   });

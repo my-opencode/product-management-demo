@@ -69,12 +69,12 @@ describe(`Test API endpoints`, function () {
   });
   describe(`415`, function () {
     it(`should return status code 415`, async function () {
-      const response = await inject(app, { 
-        method: `get`, 
+      const response = await inject(app, {
+        method: `get`,
         url: `/`,
         headers: {
           accept: `text/html`
-        } 
+        }
       });
       assert.strictEqual(response.statusCode, 415);
       assert.strictEqual(response.payload, `This API only supports application/json media type.`);
@@ -298,7 +298,7 @@ describe(`Test API endpoints`, function () {
       response = await inject(app, {
         method: `patch`,
         url: `/products/${REAL_PRODUCT_ID}`,
-        body: `{"code":"${``.padEnd(256,`a`)}","image":"${``.padEnd(2049,`a`)}"}`,
+        body: `{"code":"${``.padEnd(256, `a`)}","image":"${``.padEnd(2049, `a`)}"}`,
         headers: {
           "content-type": `application/json`
         }
@@ -462,10 +462,10 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(response.payload, ``);
     });
   });
-  describe(`Create -> Update -> List of unique products`, async function(){
+  describe(`Create -> Update -> List of unique products`, async function () {
     describe(`Create product`, async function () {
       let response: Response;
-      let prod : ProductAsInTheJson;
+      let prod: ProductAsInTheJson;
       await before(async function () {
         response = await inject(app, {
           method: `post`,
@@ -489,45 +489,45 @@ describe(`Test API endpoints`, function () {
       it(`should return status code 201`, function () {
         assert.strictEqual(response.statusCode, 201);
       });
-        describe(`Update product`, async function(){
+      describe(`Update product`, async function () {
+        let response: Response;
+        await before(async function () {
+          // ensure different values for NOW()
+          await new Promise(r => setTimeout(r, 1000));
+          response = await inject(app, {
+            method: `patch`,
+            url: `/products/${prod.id}`,
+            body: `{"price":20.2,"quantity":"20"}`,
+            headers: {
+              "content-type": `application/json`
+            }
+          });
+        });
+        it(`should return status code 200`, function () {
+          assert.strictEqual(response.statusCode, 200);
+        });
+        describe(`List products`, async function () {
           let response: Response;
+          let json: { data: Array<ProductAsInTheJson> };
           await before(async function () {
-            // ensure different values for NOW()
-            await new Promise(r => setTimeout(r,1000));
-            response = await inject(app, {
-              method: `patch`,
-              url: `/products/${prod.id}`,
-              body: `{"price":20.2,"quantity":"20"}`,
-              headers: {
-                "content-type": `application/json`
-              }
-            });
+            await new Promise(r => setTimeout(r, 1000));
+            response = await inject(app, { method: `get`, url: `/products` });
+            json = JSON.parse(response.payload);
           });
           it(`should return status code 200`, function () {
             assert.strictEqual(response.statusCode, 200);
           });
-          describe(`List products`,async function(){
-            let response: Response;
-            let json: { data: Array<ProductAsInTheJson> };
-            await before(async function () {
-              await new Promise(r => setTimeout(r,1000));
-              response = await inject(app, { method: `get`, url: `/products` });
-              json = JSON.parse(response.payload);
-            });
-            it(`should return status code 200`, function () {
-              assert.strictEqual(response.statusCode, 200);
-            });
-            it(`should not return duplicated products`, function () {
-              assert.strictEqual(json.data.filter(p => p.id === prod.id).length, 1);
-            });
+          it(`should not return duplicated products`, function () {
+            assert.strictEqual(json.data.filter(p => p.id === prod.id).length, 1);
           });
+        });
       });
     });
   });
-  describe(`#62 Cannot set quantity to 0`, async function(){
+  describe(`#62 Cannot set quantity to 0`, async function () {
     describe(`Create product`, async function () {
       let response: Response;
-      let prod : ProductAsInTheJson;
+      let prod: ProductAsInTheJson;
       await before(async function () {
         response = await inject(app, {
           method: `post`,
@@ -551,38 +551,38 @@ describe(`Test API endpoints`, function () {
       it(`should return status code 201`, function () {
         assert.strictEqual(response.statusCode, 201);
       });
-        describe(`Update product`, async function(){
+      describe(`Update product`, async function () {
+        let response: Response;
+        await before(async function () {
+          // ensure different values for NOW()
+          await new Promise(r => setTimeout(r, 1000));
+          response = await inject(app, {
+            method: `patch`,
+            url: `/products/${prod.id}`,
+            body: `{"quantity":"0"}`,
+            headers: {
+              "content-type": `application/json`
+            }
+          });
+        });
+        it(`should return status code 200`, function () {
+          assert.strictEqual(response.statusCode, 200);
+        });
+        describe(`Get product`, async function () {
           let response: Response;
+          let json: { data: ProductAsInTheJson };
           await before(async function () {
-            // ensure different values for NOW()
-            await new Promise(r => setTimeout(r,1000));
-            response = await inject(app, {
-              method: `patch`,
-              url: `/products/${prod.id}`,
-              body: `{"quantity":"0"}`,
-              headers: {
-                "content-type": `application/json`
-              }
-            });
+            await new Promise(r => setTimeout(r, 1000));
+            response = await inject(app, { method: `get`, url: `/products/${prod.id}` });
+            json = JSON.parse(response.payload);
           });
           it(`should return status code 200`, function () {
             assert.strictEqual(response.statusCode, 200);
           });
-          describe(`Get product`,async function(){
-            let response: Response;
-            let json: { data: ProductAsInTheJson };
-            await before(async function () {
-              await new Promise(r => setTimeout(r,1000));
-              response = await inject(app, { method: `get`, url: `/products/${prod.id}` });
-              json = JSON.parse(response.payload);
-            });
-            it(`should return status code 200`, function () {
-              assert.strictEqual(response.statusCode, 200);
-            });
-            it(`should return product with qty = 0`, function () {
-              assert.strictEqual(json.data.quantity, 0);
-            });
+          it(`should return product with qty = 0`, function () {
+            assert.strictEqual(json.data.quantity, 0);
           });
+        });
       });
     });
   });
@@ -615,7 +615,7 @@ describe(`Test API error endpoint`, function () {
     });
     it(`should return message`, function () {
       assert.deepEqual(
-        response.payload, 
+        response.payload,
         `{"description":"Unexpected error. Please contact our support if the error persists."}`
       );
     });

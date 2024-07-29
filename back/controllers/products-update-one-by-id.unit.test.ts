@@ -55,7 +55,7 @@ describe(`Products update one by id controller`, function () {
     before(function () {
       Product.updateInDatabase = mock.fn(() => Promise.reject(new Error(`Should not be called`)));
       // update request
-      request.product = getDummyProduct({isSaved:true});
+      request.product = getDummyProduct({ isSaved: true });
       request.body = {
         image: ``.padEnd(2049, ".")
       };
@@ -81,7 +81,7 @@ describe(`Products update one by id controller`, function () {
         throw new Error(`Do not call me`);
       });
       // update request
-      request.product = getDummyProduct({ isSaved: true, isUpdated:false });
+      request.product = getDummyProduct({ isSaved: true, isUpdated: false });
       request.body = {
         rating: 4
       };
@@ -119,14 +119,14 @@ describe(`Products update one by id controller`, function () {
   });
   describe(`Updated`, function () {
     before(async function () {
-      request.product = getDummyProduct({isSaved:true});
+      request.product = getDummyProduct({ isSaved: true });
       Product.updateInDatabase = mock.fn(() => Promise.resolve(new Product({
         id: request.product!.id,
         categoryId: 4,
         code: `a`,
         name: `a`,
         description: `a`,
-        image:`a.png`,
+        image: `a.png`,
         quantity: 10000,
         price: 10000.1,
         inventoryStatus: "INSTOCK"
@@ -155,7 +155,7 @@ describe(`Products update one by id controller`, function () {
     it(`should call response.send with payload`, function () {
       assert.strictEqual(response.send.mock.callCount(), 1);
       assert.strictEqual(
-        response.send.mock.calls[0]?.arguments?.[0], 
+        response.send.mock.calls[0]?.arguments?.[0],
         `{"data":{"id":${request.product!.id},"code":"a","name":"a","category":4,"categoryId":4,"description":"a","image":"a.png","quantity":10000,"inventoryStatus":"INSTOCK","price":10000.1}}`
       );
     });

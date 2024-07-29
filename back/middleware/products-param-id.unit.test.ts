@@ -38,7 +38,7 @@ describe(`Products Id param middleware`, function () {
     it(`should call next with error`, function () {
       assert.strictEqual(next.mock.callCount(), 1);
       // console.log(next.mock.calls[0]?.arguments?.[0])
-      assert.ok ((next.mock.calls[0]?.arguments?.[0] as any) instanceof ValidationError);
+      assert.ok((next.mock.calls[0]?.arguments?.[0] as any) instanceof ValidationError);
     });
   });
   describe(`Not found`, async function () {

@@ -23,8 +23,8 @@ export default async function productsCreate(request: Request, response: Respons
     logger.log(`verbose`, `Exiting`);
     response.status(201).send(payload);
   } catch (err) {
-    if(err instanceof ValidationErrorStack && err.message === `Conflicting Product`)
-        err.statusCode = 409;
+    if (err instanceof ValidationErrorStack && err.message === `Conflicting Product`)
+      err.statusCode = 409;
     logger.log(`warn`, `Error: ${err instanceof Error ? err.message : String(err)}`);
     next(err);
   }

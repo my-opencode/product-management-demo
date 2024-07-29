@@ -5,20 +5,20 @@ import { ProductBase } from "../models/product.types";
  * Type of the list of validation error fields in a Validation Error JSON response payload
  */
 export interface ValidationFieldErrors {
-  [fieldName:string]:string;
+  [fieldName: string]: string;
 }
 /**
  * Type of a Validation Error JSON response payload
  */
 export interface ValidationErrorStackJsonResponse {
-  description?:string;
+  description?: string;
   errors: ValidationFieldErrors;
 }
 /**
  * Type of an Error JSON response payload
  */
 export interface ErrorJsonResponse {
-  description:string;
+  description: string;
   errors?: ValidationFieldErrors;
 }
 /**

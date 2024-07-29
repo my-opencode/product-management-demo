@@ -49,7 +49,7 @@ export default async function productsUpdateOneById(request: RequestWithProduct,
       logger.log(`verbose`, `No change on product.`);
       throw new ValidationError(`Expected changes.`);
     }
-    logger.log(`debug`,`Ready to update fields: ${[...product.updatedFields].join(`, `)}`);
+    logger.log(`debug`, `Ready to update fields: ${[...product.updatedFields].join(`, `)}`);
     logger.log(`verbose`, `Updating`);
     await product.update(request.app);
 
@@ -58,8 +58,8 @@ export default async function productsUpdateOneById(request: RequestWithProduct,
     logger.log(`verbose`, `Exiting`);
     response.status(200).send(payload);
   } catch (err) {
-    if(err instanceof ValidationErrorStack && err.message === `Conflicting Product`)
-        err.statusCode = 409;
+    if (err instanceof ValidationErrorStack && err.message === `Conflicting Product`)
+      err.statusCode = 409;
     logger.log(`warn`, `Error: ${err instanceof Error ? err.message : String(err)}`);
     next(err);
   }

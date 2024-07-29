@@ -13,19 +13,19 @@ export class ValidationErrorStack extends Array<ValidationError> {
    * @param {ValidationError[]} errors stack of validation errors
    * @param {string} [message] description of the stack of validation errors. Example: 'invalid product'
    */
-  constructor(errors: ValidationError[], message?: string, statusCodeOverride?:number) {
-    if(!Array.isArray(errors) || !errors.every(e => e instanceof ValidationError)) throw new TypeError(`Expecting array of ValidationErrors`);
+  constructor(errors: ValidationError[], message?: string, statusCodeOverride?: number) {
+    if (!Array.isArray(errors) || !errors.every(e => e instanceof ValidationError)) throw new TypeError(`Expecting array of ValidationErrors`);
     super();
     this.push(...errors);
     if (message) this.message = message;
-    if(statusCodeOverride && statusCodeOverride > 99 && statusCodeOverride < 600)
+    if (statusCodeOverride && statusCodeOverride > 99 && statusCodeOverride < 600)
       this.statusCode = statusCodeOverride;
   }
-  toString(){
+  toString() {
     let str = `ValidationErrorStack: ` + this.message + `; Stack: `;
     // fixes bug with VES.map(e=>String(e)).join() that calls constructor with the string value of errors.
     const errs = [...this];
-    if(this.length) str += errs.map(e=>String(e)).join(`, `);
+    if (this.length) str += errs.map(e => String(e)).join(`, `);
     else str += `empty`;
     return str;
   }
@@ -42,14 +42,14 @@ export class ValidationErrorStack extends Array<ValidationError> {
 export class ValidationError extends Error {
   fieldName: string = "unknown field";
   statusCode = 422;
-  constructor(msg: string, fieldName?: string, statusCodeOverride?:number) {
+  constructor(msg: string, fieldName?: string, statusCodeOverride?: number) {
     super(msg);
     if (fieldName)
       this.fieldName = fieldName;
-    if(statusCodeOverride && statusCodeOverride > 99 && statusCodeOverride < 600)
+    if (statusCodeOverride && statusCodeOverride > 99 && statusCodeOverride < 600)
       this.statusCode = statusCodeOverride;
   }
-  toString(){
+  toString() {
     return `ValidationError: ` + this.fieldName + `: ` + this.message;
   }
 };

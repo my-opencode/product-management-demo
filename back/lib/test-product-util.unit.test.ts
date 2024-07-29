@@ -48,7 +48,7 @@ describe(`getDummyProduct`, function () {
   describe(`isSaved`, function () {
     let p: Product;
     before(function () {
-      p = getDummyProduct({isSaved:true});
+      p = getDummyProduct({ isSaved: true });
     });
     it(`should return product`, function () {
       assert.ok(p instanceof Product);
@@ -67,7 +67,7 @@ describe(`getDummyProduct`, function () {
   describe(`isReadOnly`, function () {
     let p: Product;
     before(function () {
-      p = getDummyProduct({isReadOnly:true});
+      p = getDummyProduct({ isReadOnly: true });
     });
     it(`should return product`, function () {
       assert.ok(p instanceof Product);
@@ -86,7 +86,7 @@ describe(`getDummyProduct`, function () {
   describe(`isUpdated`, function () {
     let p: Product;
     before(function () {
-      p = getDummyProduct({isUpdated:true});
+      p = getDummyProduct({ isUpdated: true });
     });
     it(`should return product`, function () {
       assert.ok(p instanceof Product);
@@ -105,7 +105,7 @@ describe(`getDummyProduct`, function () {
   describe(`isSaved + isReadOnly`, function () {
     let p: Product;
     before(function () {
-      p = getDummyProduct({isReadOnly:true, isSaved:true});
+      p = getDummyProduct({ isReadOnly: true, isSaved: true });
     });
     it(`should return product`, function () {
       assert.ok(p instanceof Product);

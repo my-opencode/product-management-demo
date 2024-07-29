@@ -9,20 +9,20 @@ const logger = Logger(`controllers/404-handler`);
  * @param {Request} request Express request object
  * @param {Response} response Express response object
  */
-export default function default404 (req:Request,res:Response){
+export default function default404(req: Request, res: Response) {
   logger.log(`verbose`, `Entering`);
   try {
-  const message = `Resource "${req.url}" not found.`;
-  logger.log(`debug`, message);
-  logger.log(`verbose`, `Exiting`);
-  res
-    .status(404)
-    .send(renderer(message));
-  } catch(err){
+    const message = `Resource "${req.url}" not found.`;
+    logger.log(`debug`, message);
+    logger.log(`verbose`, `Exiting`);
+    res
+      .status(404)
+      .send(renderer(message));
+  } catch (err) {
     logger.log(`error`, err instanceof Error ? err.message : err);
     logger.log(`debug`, err instanceof Error ? err.stack : `no stack.`);
     // not calling renderer in case it caused the error 
     // because 404 runs after error catcher.
-    res.status(500).json({description:`Unexpected error occured.`,errors:[]});
+    res.status(500).json({ description: `Unexpected error occured.`, errors: [] });
   }
 }

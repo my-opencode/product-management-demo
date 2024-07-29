@@ -30,7 +30,7 @@ describe(`Products router`, function () {
       [`get`, [productsGetAll]],
     ]],
     [`/`, [
-      [`post`, [jsonBodyParser,productsCreate]],
+      [`post`, [jsonBodyParser, productsCreate]],
     ]]
   ];
   it(`that is not empty`, function () {
@@ -43,7 +43,7 @@ describe(`Products router`, function () {
     substack.forEach(([method, controllers]) => {
       it(`with ${method} ${url} controller`, function () {
         assert.strictEqual(productsRouter.stack[i]?.route?.stack?.[0]?.method, method);
-        controllers.forEach((controller,j) => 
+        controllers.forEach((controller, j) =>
           assert.deepEqual(productsRouter.stack[i]?.route?.stack?.[j]?.handle, controller)
         )
       });

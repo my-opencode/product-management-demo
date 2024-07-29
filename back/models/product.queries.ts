@@ -75,6 +75,6 @@ export function sqlCallNewProductStatement(product: Product) {
   return `CALL new_product( ${ds(product.code)}, ${ds(product.name)}, ${ds(product.description)}, ${product.image ? `, ${ds(product.image)}` : `NULL`}, ${product.categoryId}, ${product.price.toFixed(2)}, ${product.quantity}, 0, @id);`;
 }
 
-export function sqlUpdateSetDeletedById(id:Id){
+export function sqlUpdateSetDeletedById(id: Id) {
   return `UPDATE Products SET deleted = 1 WHERE id = ${id};`;
 }

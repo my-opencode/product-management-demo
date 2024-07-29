@@ -8,7 +8,7 @@ import { validateInt, ValidationError } from "../lib/validators";
  */
 export default class Id extends Number implements Number {
   fieldName: string;
-  constructor(id:number, fieldName?:string){
+  constructor(id: number, fieldName?: string) {
     super(Id.validator(id, undefined, fieldName));
     this.fieldName = fieldName || `id`
   }

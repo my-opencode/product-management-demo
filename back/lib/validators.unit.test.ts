@@ -43,16 +43,16 @@ describe(`ValidationErrorStack class`, function () {
     );
   });
   it(`should allow 2 arguments`, function () {
-    const e = new ValidationErrorStack([new ValidationError(`error message`)],`stack message`);
+    const e = new ValidationErrorStack([new ValidationError(`error message`)], `stack message`);
     assert.strictEqual(e.message, `stack message`);
     assert.strictEqual(e[0].message, `error message`);
   });
   it(`should allow 3 arguments`, function () {
-    const e = new ValidationErrorStack([new ValidationError(`error message`)],`stack message`, 444);
+    const e = new ValidationErrorStack([new ValidationError(`error message`)], `stack message`, 444);
     assert.strictEqual(e.statusCode, 444);
   });
   it(`should convert to formatted string`, function () {
-    const e = String(new ValidationErrorStack([new ValidationError(`error message`)],`stack message`, 444));
+    const e = String(new ValidationErrorStack([new ValidationError(`error message`)], `stack message`, 444));
     assert.strictEqual(e, `ValidationErrorStack: stack message; Stack: ValidationError: unknown field: error message`);
   });
 });

@@ -57,7 +57,7 @@ describe(`Products update one by id controller`, function () {
   });
   describe(`Deleted`, function () {
     before(async function () {
-      request.product = getDummyProduct({isSaved:true});
+      request.product = getDummyProduct({ isSaved: true });
       Product.setDeletedInDatabase = mock.fn(() => Promise.resolve());
       response.send.mock.resetCalls();
       response.status.mock.resetCalls();

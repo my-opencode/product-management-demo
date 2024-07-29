@@ -1,4 +1,4 @@
-import mysql,{ Pool } from "mysql2/promise";
+import mysql, { Pool } from "mysql2/promise";
 import databaseConfig from "./config";
 import Logger from "../lib/winston";
 
@@ -8,7 +8,7 @@ const logger = Logger(`connector`);
  * Initializes a mysql connection pool
  * @returns {Pool}
  */
-export default function connector():Pool {
+export default function connector(): Pool {
   const pool = mysql.createPool(databaseConfig);
   return pool;
 }
@@ -32,9 +32,9 @@ export async function waitForDbServer(timeoutInSeconds = 60) {
       _c = await mysql.createConnection(databaseConfig);
       continueFlag = false;
     } catch (err) {
-      if (err instanceof Error){
-        if(err.message.includes(`Access denied for user`))
-            throw new Error(`User is not allowed on DB. Please check the Database env file.`);
+      if (err instanceof Error) {
+        if (err.message.includes(`Access denied for user`))
+          throw new Error(`User is not allowed on DB. Please check the Database env file.`);
         logger.log(`warn`, `Got error ${err.message}`);
       }
     }

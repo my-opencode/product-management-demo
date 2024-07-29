@@ -12,16 +12,16 @@ const logger = Logger(`controllers/categories-get-all`);
  * @param {NextFunction} next Express next function
  */
 export default async function categoriesGetAll(request: Request, response: Response, next: NextFunction) {
-  logger.log(`verbose`,`Entering`);
+  logger.log(`verbose`, `Entering`);
   try {
     const productList = await Category.list(request.app as Express);
     const payload = renderer(productList);
-    logger.log(`debug`,payload);
-    logger.log(`verbose`,`Exiting`);
+    logger.log(`debug`, payload);
+    logger.log(`verbose`, `Exiting`);
     response.status(200).send(payload);
-  } catch(err){
-    logger.log(`error`,err instanceof Error ? err.message : err);
-    logger.log(`debug`,err instanceof Error ? err.stack : `no stack`);
+  } catch (err) {
+    logger.log(`error`, err instanceof Error ? err.message : err);
+    logger.log(`debug`, err instanceof Error ? err.stack : `no stack`);
     next(err);
   }
 }

@@ -1,4 +1,4 @@
-import connector, {waitForDbServer} from "./connector";
+import connector, { waitForDbServer } from "./connector";
 import { describe, it, after, before } from "node:test";
 import * as assert from "node:assert";
 import mysql, { FieldPacket, RowDataPacket } from "mysql2/promise";

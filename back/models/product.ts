@@ -251,7 +251,7 @@ export class Product {
    * @param {RichApp} app express application
    * @returns {Promise<Product>}
    */
-  async save(app: RichApp) {
+  async save(app: RichApp): Promise<Product> {
     const newProduct = await Product.insertNewToDatabase(app, this);
     return this.productFieldUpdateAfterSave(newProduct);
   }
@@ -273,7 +273,7 @@ export class Product {
    * @param {RichApp} app express application
    * @returns {Promise<void>}
    */
-  async delete(app: RichApp){
+  async delete(app: RichApp): Promise<void> {
     if (!this.isSaved || !this.id)
       throw new Error(`Delete called on unsaved product.`);
     await Product.deleteById(app, this._id);
@@ -393,7 +393,7 @@ export class Product {
    * @param {RichApp} app express application
    * @returns {Promise<DirectProductSelectExecuteResponse>}
    */
-  static async list(app: RichApp) {
+  static async list(app: RichApp): Promise<DirectProductSelectExecuteResponse> {
     return await this.listFromDatabase(app);
   }
   /**
@@ -401,7 +401,7 @@ export class Product {
    * @param {RichApp} app express application
    * @returns {Promise<DirectProductSelectExecuteResponse>}
    */
-  static async listFromDatabase(app: RichApp) {
+  static async listFromDatabase(app: RichApp): Promise<DirectProductSelectExecuteResponse> {
     const pool = app.get(AppSymbols.connectionPool);
     const [rows] = await pool.execute<DirectProductSelectExecuteResponse>(sqlSelectAllProductsStatement());
     return rows;
@@ -412,7 +412,7 @@ export class Product {
    * @param {RichApp} app express application
    * @returns {Promise<Product|undefined>}
    */
-  static async getById(app: RichApp, id: Id) {
+  static async getById(app: RichApp, id: Id): Promise<Product | undefined> {
     return await this.getFromDatabaseById(app, id);
   }
   /**

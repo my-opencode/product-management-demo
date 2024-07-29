@@ -15,6 +15,7 @@ const logger = Logger(`middleware/products-param-id`, `debug`);
  * @param {String} param name of the id paramater
  */
 async function productsParamMwGetProductById(req: RequestWithProduct, res: Response, next: NextFunction, val: string | number, param: string) {
+  logger.log(`verbose`, `Entering`);
   if (!req.id) {
     logger.log(`debug`, `Did not receive req.id on route "${req.url}".`);
     return next(new ValidationError(`Missing product id.`, `/products/{id}`, 400));
@@ -25,9 +26,10 @@ async function productsParamMwGetProductById(req: RequestWithProduct, res: Respo
       logger.log(`debug`, `Did not find product for req.id = ${req.id} on route "${req.url}".`);
       return res.status(404).send();
     }
+    logger.log(`verbose`, `Exiting`);
     next();
   } catch (err) {
-    logger.log(`debug`, `Unexpected error searching product with id ${req.id} on route "${req.url}".`);
+    logger.log(`warn`, `Unexpected error searching product with id ${req.id} on route "${req.url}".`);
     next(err);
   }
 }

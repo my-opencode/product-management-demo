@@ -38,7 +38,7 @@ export default async function startServer(options?: StartServerOptions) {
 
   // route logging
   app.use((req, res, next) => {
-    logger.log(`verbose`, `Received ${req.method} request to ${req.url}`);
+    logger.log(`debug`, `Received ${req.method} request to ${req.url}`);
     next();
   });
 

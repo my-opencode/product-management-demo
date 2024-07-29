@@ -17,6 +17,7 @@ const logger = Logger(`middleware/param-id`, `debug`);
  * @param {String} param name of the id paramater
  */
 export function paramValidatorMwId(req: RequestWithId, res: Response, next: NextFunction, val: string | number, param: string) {
+  logger.log(`verbose`, `Entering`);
   try {
     logger.log(`debug`, `Route "${req.url}" with parameter :id = ${val}.`);
     req.id =  new Id(Id.validator(val, `Invalid URL parameter 'id'. Expected integer.`));
@@ -34,13 +35,14 @@ export function paramValidatorMwId(req: RequestWithId, res: Response, next: Next
      */
     logger.log(`debug`, `Setting req.id = ${req.id} on Route "${req.url}"`);
     req.params[param] = String(req.id);
+    logger.log(`verbose`, `Exiting`);
     next();
   } catch (err) {
     if (err instanceof ValidationError) {
       logger.log(`debug`, `Invalid :id parameter on route "${req.url}".`);
       res.status(400).send(err.message);
     } else {
-      logger.log(`debug`, `Unexpected error validating :id parameter on route "${req.url}".`);
+      logger.log(`warn`, `Unexpected error validating :id parameter on route "${req.url}".`);
       next(err);
     }
   }

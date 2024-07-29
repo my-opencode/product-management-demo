@@ -5,14 +5,15 @@ import renderer from "../views/product-list";
 const logger = Logger(`controllers/products-get-all`, `debug`);
 
 export default async function productsGetAll(request: Request, response: Response, next: NextFunction) {
-  logger.log(`debug`,`Entering`);
+  logger.log(`verbose`, `Entering`);
   try {
     const productList = await Product.list(request.app as Express);
     const payload = renderer(productList);
-    logger.log(`debug`,`Returning ${payload}`);
+    logger.log(`debug`,`Payload: ${productList.length} products`);
+    logger.log(`verbose`, `Exiting`);
     response.status(200).send(payload);
   } catch(err){
-    logger.log(`debug`,`Error in productsGetAll: ${err instanceof Error ? err.message : String(err)}`);
+    logger.log(`error`,`Error: ${err instanceof Error ? err.message : String(err)}`);
     next(err);
   }
 }

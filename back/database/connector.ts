@@ -35,7 +35,7 @@ export async function waitForDbServer(timeoutInSeconds = 60) {
       if (err instanceof Error){
         if(err.message.includes(`Access denied for user`))
             throw new Error(`User is not allowed on DB. Please check the Database env file.`);
-        logger.log(`debug`, `Got error ${err.message}`);
+        logger.log(`warn`, `Got error ${err.message}`);
       }
     }
     continueFlag = continueFlag && iterationCount < timeoutInSeconds;
@@ -49,4 +49,5 @@ export async function waitForDbServer(timeoutInSeconds = 60) {
   const result = await _c.query(`SELECT 1 AS nbr;`)
   // logger.log(`debug`, result);
   _c.end();
+  logger.log(`verbose`, `Closing connection after successful probing query.`);
 }

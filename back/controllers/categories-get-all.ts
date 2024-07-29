@@ -5,14 +5,16 @@ import renderer from "../views/category-list";
 const logger = Logger(`controllers/categories-get-all`);
 
 export default async function categoriesGetAll(request: Request, response: Response, next: NextFunction) {
-  logger.log(`debug`,`Entering categoriesGetAll`);
+  logger.log(`verbose`,`Entering`);
   try {
     const productList = await Category.list(request.app as Express);
     const payload = renderer(productList);
-    logger.log(`debug`,`Exiting categoriesGetAll`);
+    logger.log(`debug`,payload);
+    logger.log(`verbose`,`Exiting`);
     response.status(200).send(payload);
   } catch(err){
-    logger.log(`debug`,`Error in categoriesGetAll`);
+    logger.log(`error`,err instanceof Error ? err.message : err);
+    logger.log(`debug`,err instanceof Error ? err.stack : `no stack`);
     next(err);
   }
 }

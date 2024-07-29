@@ -1,8 +1,9 @@
-import {describe, it, after} from "node:test";
+import {describe, it, after, before} from "node:test";
 import fs from "node:fs/promises";
 import assert from "node:assert";
 import path from "node:path";
 import Logger from "./winston";
+import winston from "winston";
 
 async function sleep(){
   await new Promise (r => setTimeout(r,200));
@@ -38,3 +39,45 @@ describe(`Test log file creation`, function(){
   });
 });
 
+describe(`Test log methods`, function(){
+    const methods = [
+      `error`,
+      `warn`,
+      // `help`,
+      // `data`,
+      `info`,
+      `debug`,
+      // `prompt`,
+      `http`,
+      `verbose`,
+      // `input`,
+      `silly`,
+    ];
+  let logger:winston.Logger;
+  before(function(){
+    logger = Logger(`silly`,`winston.unit.test`);
+  });
+  it(`should log with all method calls`, function(){
+    let workingMethods = [];
+    for (const method of methods)
+      try { 
+    //@ts-ignore
+        logger[method](`Hi, I am ${String(method)}`);
+        workingMethods.push(method);
+      } catch(err){
+        // do nothing
+      }
+      assert.deepStrictEqual(workingMethods, methods);
+  });
+  it(`should log with all log levels`, function(){
+    let workingMethods = [];
+    for (const method of methods)
+      try { 
+        logger.log(method, `Hi, I am ${String(method)}`);
+        workingMethods.push(method);
+      } catch(err){
+        // do nothing
+      }
+      assert.deepStrictEqual(workingMethods, methods);
+  });
+});

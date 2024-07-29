@@ -6,11 +6,11 @@ import { ValidationError, ValidationErrorStack } from "../lib/validators";
 const logger = Logger(`controllers/products-patch-update-one-by-id`, `debug`);
 
 export default async function productsUpdateOneById(request: RequestWithProduct, response: Response, next: NextFunction) {
-  logger.log(`debug`, `Entering`);
+  logger.log(`verbose`, `Entering`);
   try {
     if (!request.product) {
       response.status(404);
-      logger.log(`debug`, `No product found.`);
+      logger.log(`warn`, `Product is not defined on request.`);
       return;
     }
     logger.log(`debug`, `Body: ${typeof request.body} "${JSON.stringify(request.body)}"`);
@@ -32,24 +32,27 @@ export default async function productsUpdateOneById(request: RequestWithProduct,
     try { if (request.body?.price !== undefined) product.price = request.body.price; } catch (e) { valErrHandler(e); }
     // act on validation errors
     if (validationErrors.length) {
-      logger.log(`debug`, `Update has invalid values.`);
+      logger.log(`verbose`, `Update has invalid values.`);
+      logger.log(`debug`, validationErrors);
       throw new ValidationErrorStack(validationErrors, `Invalid Changes`);
     }
     // exit if no change
     if (!product.isUpdated) {
-      logger.log(`debug`, `Update yields no change.`);
+      logger.log(`verbose`, `No change on product.`);
       throw new ValidationError(`Expected changes.`);
     }
     logger.log(`debug`,`Ready to update fields: ${[...product.updatedFields].join(`, `)}`);
+    logger.log(`verbose`, `Updating`);
     await product.update(request.app);
 
     const payload = renderer(product);
-    logger.log(`debug`, `Returning ${payload}`);
+    logger.log(`debug`, `Payload: ${payload}`);
+    logger.log(`verbose`, `Exiting`);
     response.status(200).send(payload);
   } catch (err) {
     if(err instanceof ValidationErrorStack && err.message === `Conflicting Product`)
         err.statusCode = 409;
-    logger.log(`warn`, `Error in productsUpdateOneById: ${err instanceof Error ? err.message : String(err)}`);
+    logger.log(`warn`, `Error: ${err instanceof Error ? err.message : String(err)}`);
     next(err);
   }
 }

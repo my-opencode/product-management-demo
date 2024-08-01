@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from "express";
 import { describe, it, before, mock, Mock } from "node:test";
 import * as assert from "node:assert";
-import validationErrorHandler from "./validation-error-handler";
+import validationErrorHandler from "./error-validation-handler";
 import { ValidationError, ValidationErrorStack } from "../lib/validators";
 
 

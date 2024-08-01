@@ -11,7 +11,7 @@ import productsRouter from "./routes/products";
 import categoriesRouter from "./routes/categories";
 import errorHandler from "./controllers/error-handler";
 import default404 from "./controllers/default-404";
-import validationErrorHandler from "./controllers/validation-error-handler";
+import validationErrorHandler from "./controllers/error-validation-handler";
 import { ValidationErrorStackJsonResponse } from "./views/json-response-format";
 
 const REAL_PRODUCT_ID = 1000;

@@ -4,7 +4,7 @@ INSERT INTO ProductCategories (id, name) VALUES
 (3, "Clothing"),
 (4, "Electronics");
 
-INSERT INTO Products (id, code, name, description, image, Category_id, deleted ) VALUES 
+INSERT INTO Products (id, code, name, description, image, ProductsCategories_id, deleted ) VALUES 
 (1000,"f230fh0g3","Bamboo Watch","Product Description", "bamboo-watch.jpg", 1, 0),
 (1001,"nvklal433","Black Watch","Product Description", "black-watch.jpg", 1, 0),
 (1002,"zz21cz3c1","Blue Band","Product Description", "blue-band.jpg", 2, 0),
@@ -36,7 +36,7 @@ INSERT INTO Products (id, code, name, description, image, Category_id, deleted )
 (1028,"tx125ck42","Yoga Mat","Product Description", "yoga-mat.jpg", 2, 0),
 (1029,"gwuby345v","Yoga Set","Product Description", "yoga-set.jpg", 2, 0);
 
-INSERT INTO ProductsPrices (Product_id, date_start, date_end, price ) VALUES 
+INSERT INTO ProductsPrices (Products_id, date_start, date_end, price ) VALUES 
 (1000,NOW(),NULL, "65"),
 (1001,NOW(),NULL, "72"),
 (1002,NOW(),NULL, "79"),
@@ -68,7 +68,7 @@ INSERT INTO ProductsPrices (Product_id, date_start, date_end, price ) VALUES
 (1028,NOW(),NULL, "20"),
 (1029,NOW(),NULL, "20");
 
-INSERT INTO ProductsRatings (Product_id, date, rating, rating_count_1, rating_count_2, rating_count_3, rating_count_4, rating_count_5 ) VALUES 
+INSERT INTO ProductsRatings (Products_id, date, rating, rating_count_1, rating_count_2, rating_count_3, rating_count_4, rating_count_5 ) VALUES 
 (1000,NOW(),5, 0, 0, 0, 0, 1),
 (1001,NOW(),4, 0, 0, 0, 1, 0),
 (1002,NOW(),3, 0, 0, 1, 0, 0),
@@ -100,7 +100,7 @@ INSERT INTO ProductsRatings (Product_id, date, rating, rating_count_1, rating_co
 (1028,NOW(),5, 0, 0, 0, 0, 1),
 (1029,NOW(),5, 0, 0, 0, 0, 1);
 
-INSERT INTO ProductsInventory (Product_id, date, quantity) VALUES 
+INSERT INTO ProductsInventory (Products_id, date, quantity) VALUES 
 (1000,NOW(),24),
 (1001,NOW(),61),
 (1002,NOW(),2),

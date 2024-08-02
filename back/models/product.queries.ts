@@ -12,7 +12,7 @@ export function sqlSelectAllProductsStatement() {
       p.name, 
       p.description, 
       p.image, 
-      p.Category_id as categoryId,
+      p.ProductsCategories_id as categoryId,
       ProductCategories.name as category, 
       prices.price, 
       ratings.rating, 
@@ -20,28 +20,28 @@ export function sqlSelectAllProductsStatement() {
       inventory.inventory_status AS inventoryStatus 
 FROM \`Products\`  AS p
 LEFT JOIN ProductCategories 
-ON p.Category_id = ProductCategories.id
+ON p.ProductsCategories_id = ProductCategories.id
 RIGHT JOIN (
 	SELECT * FROM (
-        SELECT Product_id, price,
-    	RANK() OVER (PARTITION BY Product_id ORDER BY date_start DESC) date_rank
+        SELECT Products_id, price,
+    	RANK() OVER (PARTITION BY Products_id ORDER BY date_start DESC) date_rank
     	FROM ProductsPrices WHERE date_start <= NOW() AND (date_end IS NULL OR date_end > NOW())
     ) AS sp WHERE sp.date_rank = 1) AS prices 
-ON p.id = prices.Product_id 
+ON p.id = prices.Products_id 
 RIGHT JOIN (
 	SELECT * FROM (
-        SELECT Product_id, rating,
-    	RANK() OVER (PARTITION BY Product_id ORDER BY date DESC) rating_rank
+        SELECT Products_id, rating,
+    	RANK() OVER (PARTITION BY Products_id ORDER BY date DESC) rating_rank
     	FROM ProductsRatings
     ) AS sr WHERE sr.rating_rank = 1) AS ratings 
-ON p.id = ratings.Product_id 
+ON p.id = ratings.Products_id 
 RIGHT JOIN (
 	SELECT * FROM (
-        SELECT Product_id, quantity, inventory_status,
-    	RANK() OVER (PARTITION BY Product_id ORDER BY date DESC) inv_rank
+        SELECT Products_id, quantity, inventory_status,
+    	RANK() OVER (PARTITION BY Products_id ORDER BY date DESC) inv_rank
     	FROM ProductsInventory
     ) AS si WHERE si.inv_rank = 1) AS inventory 
-ON p.id = inventory.Product_id 
+ON p.id = inventory.Products_id 
 WHERE deleted = 0;`;
 }
 /**

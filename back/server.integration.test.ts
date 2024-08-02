@@ -148,7 +148,7 @@ describe(`Test API endpoints`, function () {
       assert.strictEqual(json.errors[`product.rating`], `Too high. Max value: 5.`);
     });
   });
-  describe(`POST /products 409 Category_id`, async function () {
+  describe(`POST /products 409 ProductsCategories_id`, async function () {
     let response: Response;
     let json: ValidationErrorStackJsonResponse;
     await before(async function () {

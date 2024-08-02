@@ -87,7 +87,7 @@ describe(`Validate Adapter Responses`, async function () {
       assert.strictEqual(response[0].serverStatus, 16386, `Expecting ResultSetHeader.serverStatus 16386.`);
     });
     await it(`direct delete rating`, async function () {
-      const response = await pool.execute<DirectInsertUpdateDeleteExecuteResponse>(`DELETE FROM ProductsRatings WHERE Product_id = 1030;`);
+      const response = await pool.execute<DirectInsertUpdateDeleteExecuteResponse>(`DELETE FROM ProductsRatings WHERE Products_id = 1030;`);
       console.log(JSON.stringify(response));
       assert.strictEqual(Array.isArray(response), true, `QueryResponse should be an array.`);
       assert.strictEqual(!Array.isArray(response[0]) && typeof response[0] === `object`, true, `ResultSetHeader should be an object.`);
@@ -97,7 +97,7 @@ describe(`Validate Adapter Responses`, async function () {
       assert.strictEqual(response[0].serverStatus, 2, `Expecting ResultSetHeader.serverStatus 2.`);
     });
     await it(`direct delete inventory`, async function () {
-      const response = await pool.execute<DirectInsertUpdateDeleteExecuteResponse>(`DELETE FROM ProductsInventory WHERE Product_id = 1030;`);
+      const response = await pool.execute<DirectInsertUpdateDeleteExecuteResponse>(`DELETE FROM ProductsInventory WHERE Products_id = 1030;`);
       console.log(JSON.stringify(response));
       assert.strictEqual(Array.isArray(response), true, `QueryResponse should be an array.`);
       assert.strictEqual(!Array.isArray(response[0]) && typeof response[0] === `object`, true, `ResultSetHeader should be an object.`);
@@ -107,7 +107,7 @@ describe(`Validate Adapter Responses`, async function () {
       assert.strictEqual(response[0].serverStatus, 2, `Expecting ResultSetHeader.serverStatus 2.`);
     });
     await it(`direct delete prices`, async function () {
-      const response = await pool.execute<DirectInsertUpdateDeleteExecuteResponse>(`DELETE FROM ProductsPrices WHERE Product_id = 1030;`);
+      const response = await pool.execute<DirectInsertUpdateDeleteExecuteResponse>(`DELETE FROM ProductsPrices WHERE Products_id = 1030;`);
       console.log(JSON.stringify(response));
       assert.strictEqual(Array.isArray(response), true, `QueryResponse should be an array.`);
       assert.strictEqual(!Array.isArray(response[0]) && typeof response[0] === `object`, true, `ResultSetHeader should be an object.`);

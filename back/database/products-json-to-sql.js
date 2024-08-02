@@ -48,7 +48,7 @@ function getCategoryId(category) {
  * @property {String} name
  * @property {String} description
  * @property {String|null} image
- * @property {Number} Category_id
+ * @property {Number} ProductsCategories_id
  * @property {Boolean} deleted
  */
 /** @type {Array<Product>} */
@@ -57,7 +57,7 @@ const products = [];
  * @typedef InventoryRecord An inventory record of a product in the database
  * @type {Object}
  * @property {Number} id
- * @property {Number} Product_id
+ * @property {Number} Products_id
  * @property {Date} date
  * @property {Number} quantity
  * @property {"INSTOCK"|"LOWSTOCK"|"OUTOFSTOCK"} inventoryStatus
@@ -69,7 +69,7 @@ const inventory = [];
  * @typedef Price A price of a product in the database
  * @type {Object}
  * @property {Number} id
- * @property {Number} Product_id
+ * @property {Number} Products_id
  * @property {Date} date_start
  * @property {Date} date_end
  * @property {Number} price
@@ -81,7 +81,7 @@ const prices = [];
  * @typedef Rating A rating of a product in the database
  * @type {Object}
  * @property {Number} id
- * @property {Number} Product_id
+ * @property {Number} Products_id
  * @property {Date} date
  * @property {Number} rating
  * @property {Number} rating_count_1
@@ -92,7 +92,7 @@ const prices = [];
  */
 /** @type {Array<Partial<Rating>>} */
 const ratings = [];
-/** @type {Omit<Rating,"id"|"Product_id"|"date"|"rating">} */
+/** @type {Omit<Rating,"id"|"Products_id"|"date"|"rating">} */
 const zeroRating = {
   rating_count_1: 0,
   rating_count_2: 0,
@@ -120,19 +120,19 @@ async function extractState() {
       name: p.name,
       description: p.description,
       image: p.image || null,
-      Category_id: getCategoryId(p.category),
+      ProductsCategories_id: getCategoryId(p.category),
       deleted: false
     };
     products.push(product);
     /** @type {Omit<InventoryRecord,"id"|"inventoryStatus"|"date">} */
     const inventoryRecord = {
-      Product_id: product.id,
+      Products_id: product.id,
       quantity: p.quantity
     };
     inventory.push(inventoryRecord);
     /** @type {Omit<Price,"id"|"date_start"|"date_end">} */
     const price = {
-      Product_id: product.id,
+      Products_id: product.id,
       price: p.price
     };
     prices.push(price);
@@ -140,7 +140,7 @@ async function extractState() {
     /** @type {Omit<Rating,"id"|"date">} */
     const rating = {
       ...zeroRating,
-      Product_id: product.id,
+      Products_id: product.id,
       rating: ratingValue,
       ...(ratingValue > 0 ? {[`rating_count_${ratingValue}`]: 1} : {})
     };
@@ -170,15 +170,15 @@ function writeCategoriesInsert(){
 }
 
 function writeProductsInsert(){
-  let statement = `INSERT INTO Products (id, code, name, description, image, Category_id, deleted ) VALUES `;
-  statement += `\n` + products.map(p => `(${p.id},"${p.code}","${p.name}","${p.description}", "${p.image}", ${p.Category_id}, ${p.deleted?1:0})`).join(`,\n`);
+  let statement = `INSERT INTO Products (id, code, name, description, image, ProductsCategories_id, deleted ) VALUES `;
+  statement += `\n` + products.map(p => `(${p.id},"${p.code}","${p.name}","${p.description}", "${p.image}", ${p.ProductsCategories_id}, ${p.deleted?1:0})`).join(`,\n`);
   statement += `;`;
   return statement;
 }
 
 function writeProductsPricesInsert(){
-  let statement = `INSERT INTO ProductsPrices (Product_id, date_start, date_end, price ) VALUES `;
-  statement += `\n` + prices.map(p => `(${p.Product_id},${NOW},NULL, "${p.price}")`).join(`,\n`);
+  let statement = `INSERT INTO ProductsPrices (Products_id, date_start, date_end, price ) VALUES `;
+  statement += `\n` + prices.map(p => `(${p.Products_id},${NOW},NULL, "${p.price}")`).join(`,\n`);
   statement += `;`;
   return statement;
 }
@@ -192,15 +192,15 @@ const ratingCounts = [
 ];
 
 function writeProductsRatingsInsert(){
-  let statement = `INSERT INTO ProductsRatings (Product_id, date, rating, ${ratingCounts.join(`, `)} ) VALUES `;
-  statement += `\n` + ratings.map(p => `(${p.Product_id},${NOW},${p.rating}, ${ratingCounts.map(k => p[k]).join(`, `)})`).join(`,\n`);
+  let statement = `INSERT INTO ProductsRatings (Products_id, date, rating, ${ratingCounts.join(`, `)} ) VALUES `;
+  statement += `\n` + ratings.map(p => `(${p.Products_id},${NOW},${p.rating}, ${ratingCounts.map(k => p[k]).join(`, `)})`).join(`,\n`);
   statement += `;`;
   return statement;
 }
 
 function writeProductsInventoryInsert(){
-  let statement = `INSERT INTO ProductsInventory (Product_id, date, quantity) VALUES `;
-  statement += `\n` + inventory.map(p => `(${p.Product_id},${NOW},${p.quantity})`).join(`,\n`);
+  let statement = `INSERT INTO ProductsInventory (Products_id, date, quantity) VALUES `;
+  statement += `\n` + inventory.map(p => `(${p.Products_id},${NOW},${p.quantity})`).join(`,\n`);
   statement += `;`;
   return statement;
 }

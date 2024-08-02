@@ -1,0 +1,614 @@
+# 008 Tasks
+
+^ Back to [parent](./001-planification.md)
+
+## Tasks & Deliverables
+
+1. Complete dev setup
+2. Dockerize DB server + express server (one route)
+3. Implement core features & associated tests
+4. Implement additional features & tests
+5. Prepare RC
+6. Production version
+
+## Milestones & Issues
+
+- [x] 02 setup issues
+- [x] 03 core feature issues
+- [x] 04 additional feature issues
+- [x] 05 rc feature issues
+
+## Tasks
+
+- main branch
+- [x] init git
+- [x] init npm
+- [x] install TS + tsconfig
+- [x] install OpenAPI tools
+
+- alpha branch
+- [x] init logger
+  - [x] imported library instead using winston
+  - [x] back/lib/winston.ts
+  - [x] back/lib/winston.test.ts
+  - [x] testing standard out logs
+  - [x] testing file logs
+  - ~~back/middlewares/logger.ts~~
+    - ~~mode from env~~
+    - ~~log levels from env~~
+    - ~~log file/dir from env~~
+  - ~~back/middlewares/logger.test.ts~~
+    ~~- test logging~~
+- [x] init db
+  - [x] mysql connection pool
+    - back/database/connector.ts
+    - back/database/connector.test.ts
+  - [x] config from env
+    - back/database/config.ts
+    - back/database/config.test.ts
+  - [x] env file
+    - back/database/devdb.env
+  - [x] utility to convert initial json to sql insert statement
+    - back/database/products.json.to.sql.js
+    - docker-entrypoint-initdb.d/002-database-state-insert.sql
+  - [x] automated tests with live test db
+    - back/test-db.yaml
+  - [x] database creation script
+    - database-model.mwb
+    - docker-entrypoint-initdb.d/001-database-model.sql
+  ~~- back/databases/sqlite-connection.ts~~
+    ~~- [ ] import logger~~
+    ~~- [ ] install sqlite3~~
+    ~~- [ ] sqlite file name from env~~
+    ~~- [ ] reconnect or create db~~
+  ~~- back/databases/sqlite-connection.test.ts~~
+    ~~- [ ] test sqlite file is created~~
+  - back/server.ts
+    - [x] import logger
+    - [x] import db
+  - back/server.test.ts
+    - [x] test logs
+    - [x] test db connection
+    ~~- [ ] test sqlite file is created~~
+- [x] init server
+  - [x] openapi.yaml
+  - back/server.ts
+    - [x] install Express
+    - [x] port ~~& domain~~ from env
+    - [x] export app for tests
+    - [x] conditional call to main method
+      - does not call if imported
+      - calls if entrypoint
+  - [x] error handler
+    - back/controllers/errorHandler.ts
+    - back/controllers/errorHandler.test.ts
+  - back/server.ts
+    - [x] listen
+  - [x] products route and controller
+    - directly implemented a real get /products controller
+      - checking relevant tasks further ahead
+    - back/controllers/products-get-all.ts
+      - [x] ~~dummy~~ controller --> 200
+    - back/controllers/products-get-all.test.ts
+      - [x] test ~~dummy~~ controller
+    - back/routes/products.ts
+      - [x] /products sub router
+    - back/routes/products.test.ts
+      - [x] test router export
+  - [x] centralized router
+  - back/routes/router.ts
+    - [x] ~~dummy~~ route GET /products
+    - [x] error handler route
+    - [x] default 404 route
+    - back/routes/router.test.ts
+      - [x] test route exports
+  - back/server.test.ts
+    - ~~[ ] test listen~~
+    - [x] test routes
+    - [x] test error
+    - [x] test 404
+    - [x] test GET /products
+- [x] serve
+  - [x] npm script
+    - npm start
+  - [x] makefile script
+    - make start
+- [x] build
+  - [x] build TS->JS into back-dist directory
+  - [x] npm script
+    - npm run build
+  - [x] makefile script
+    make build-back
+  - [x] [DEPRECATED] stand alone dockerfile build of the backend
+  - [x] Docker build within docker-compose
+- [x] run build
+  - [x] npm script
+    - [DEPRECATED][TO-REFACTOR] npm run built:start
+  - [x] makefile script
+    - [DEPRECATED] test-built
+    - make start
+- [x] list categories
+  - ~~[ ] update openapi.yaml~~ (prepopulated)
+  - [x] Add model
+    - back/Models/Categories.ts
+    - [x] Categories class
+      - string name
+      - number id
+    - [x] static method listFromDatabase
+      - pass db error
+    - [x] static method List (alias)
+  - back/Models/Categories.test.ts
+    - [x] test Categories.listFromDatabase
+    - [x] test Categories.list
+  - back/controllers/categories-list-all.ts
+    - [x] import logger
+    - [x] get list from model
+    - [x] serialize to json with view
+    - [x] return response
+  - back/controllers/categories-list-all.test.ts
+    - [x] test with db error
+    - [x] test without error
+  - Add route
+    - [x] Add GET /categories route
+      - back/routes/categories.ts
+      - back/routes/router.ts
+    - [x] test export GET /categories route
+      - back/routes/categories.test.ts
+      - back/routes/router.test.ts
+  - back/server.test.ts
+    - [x] test GET /categories
+- [x] list products — no options, no paging
+  - ~~[ ] update openapi.yaml~~ (prepopulated)
+  - back/Models/Products.ts
+    - [x] Products class
+    - [x] static method listFromDatabase
+      - [x] pass db error
+    - ~~[ ] static method databaseResponseToInstance~~
+      - ~~constructor throws~~
+    - ~~[ ] static method databaseResponseToInstanceArray~~
+    - [x] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+  - back/Models/Products.test.ts
+    - ~~[ ] test new Products()~~
+    - [x] test Products.listFromDatabase
+    - ~~[ ] test Products.databaseResponseToInstance~~
+    - ~~[ ] test Products.databaseResponseToInstanceArray~~
+    - [x] test Products.List
+  - [x] back/views/objectToJSON.ts
+  - [x] back/views/objectToJSON.test.ts
+  - ~~back/views/Products.ts~~
+    - ~~[ ] toJSON~~
+    - ~~[ ] listArrayToJSON~~
+  - ~~back/views/Products.test.ts~~
+    - ~~[ ] test toJSON~~
+    - ~~[ ] test listArrayToJSON~~
+  - back/controllers/products-list-all.ts
+    - [x] import logger
+    - [x] get list from model
+    - [x] serialize to json with view
+    - [x] return response
+  - back/controllers/products-list-all.test.ts
+    - [x] test with db error
+    - [x] test withouterror
+    - ~~[ ] test empty list~~
+    - ~~[ ] test malformed list~~
+    - ~~[ ] test valid list~~
+  - update tests
+    - [x] back/routes/products.test.ts
+    - [x] back/routes/router.test.ts
+    - [x] back/server.test.ts
+- [x] view product by id
+  - [x] Add Id model
+    - back/models/Id.ts
+    - [x] Id.validator static method
+    - back/models/Id.test.ts
+    - [x] Id.validator tests
+  - [x] Add Products.getById static method
+    - back/Models/Products.ts
+    - [x] static method getFromDatabaseById
+      - pass db error
+    - [x] static method getById (calls to databaseResponseToInstance(getFromDatabaseById))
+    - back/Models/Products.test.ts
+    - [x] test Products.getFromDatabaseById
+    - [x] test Products.getById
+  - [x] URL param mw validation
+    - back/middleware/param-id.ts
+    - back/middleware/param-id.test.ts
+    - [x] add mw to router
+      - back/routes/router.ts
+  - [x] Controller
+    - back/controllers/products-get-one-by-id.ts
+    - [x] import logger
+    - [x] get one product from model by id
+    - [x] serialize to json with view
+    - [x] return response
+    - back/controllers/products-get-one-by-id.test.ts
+      - [x] test no id
+      - [x] test unknown/deleted id
+      - [x] test valid id
+  - [x] add GET /products/:id route
+    - back/routes/products.ts
+    - [x] Add GET /products/{id} route
+    - back/routes/products.test.ts
+    - [x] test export GET /products/{id} route
+  - ~~[ ] update openapi.yaml~~
+  - back/server.test.ts
+    - [x] test GET /products/{id}
+- [ ] create new product
+  - [x] Common validators
+    - back/lib/validators.ts
+    - back/lib/validators.test.ts
+  - [x] Model
+    - back/Models/Products.ts
+      - [x] category exists
+      - [x] return product
+      - [x] Unique code
+        - ~~static method ensureUniqueActiveCode~~
+        - ~~stored procedure in mysql~~
+        - MYSQL doesn't have filtered indexes
+        - Function indexes exists but cannot be stored with the table in mysql workbench
+        - [x] Using aggregation column with index as workaround
+        - [x] Using insert and update triggers to populate the aggregation column
+          - same value as `code` when `deleted` = 0
+          - null when `deleted` = 1
+      - [x] constructor
+        - validates object properties
+        - ~~ensure code is unique among active products~~
+        - initialises isSaved=false instance without id
+        - initialises isSaved=true instance without id
+        - readonly rating
+      - [x] static method insertNewToDatabase
+        - pass db error
+        - calls updateInDatabase when id does not exist
+      - [x] static method updateInDatabase
+        - pass db error
+      - [x] method save (calls to insertNewToDatabase)
+    - back/Models/Products.test.ts
+      - [x] test new Products()
+      - [x] test Products.insertNewToDatabase
+      - [x] test save
+  - [ ] Controller
+    - back/controllers/products-create.ts
+      - [x] import logger
+      - [x] validate post data with model
+      - [x] 422 if invalid data
+      - [x] 409 if code exists among active products
+      - [x] 409 if category does not exist
+      - [x] save product to db with model
+      - [x] serialize to json with view
+      - [x] return response
+    - back/controllers/products-create.test.ts
+      - [x] test invalid form
+      - [x] test existing code
+      - [x] test valid code
+  - [x] Route
+    - [x] update back/routes/products.ts
+    - [x] update test back/routes/products.test.ts
+  - [x] Test updates
+    - back/router.test.ts
+      - [x] test export POST /products route
+    - back/server.test.ts
+      - [x] test endpoint
+  - [x] update openapi.yaml
+- [x] update product
+  - [x] DB update
+    - [x] indexes
+    - [x] update_product procedure
+  - [x] Model
+    - back/Models/Products.ts
+      - ~~[ ] static method databaseResponseToInstance~~
+        - ~~constructor throws~~
+      - [x] updatedFields property & tracking
+      - [x] getter isUpdated
+      - [x] method setUpdated ~~updateField~~
+        - integrated with field setters
+        - ~~validates one field value~~
+        - ~~f field is code, ensures code is unique among active products~~
+        - ~~update instance field value when new~~
+        - ~~add key to updated fields when new~~
+      - [x] update method
+      - [x] static updateInDatabase method
+        - call procedure for rollback
+    - back/Models/Products.test.ts
+      - [ ] ~~test Products.databaseResponseToInstance~~
+      - [ ] ~~test Products.updateField~~
+      - [x] test save updated
+      - [x] test updatedInDb
+  - [x] Controller
+    - back/controllers/products-update-by-id.ts
+      - [x] import logger
+      - [x] get product ~~with model~~ from mw
+      - [x] 404 if not found
+      - [x] update fields with model
+      - [x] 422 if invalid data
+      - [x] 409 if code exists among active products
+      - [x] save product to db with model
+      - [x] serialize to json with view
+      - [x] return response
+    - back/controllers/products-update-by-id.test.ts
+      - [x] test invalid form
+      - [x] test valid data
+  - [x] Routes
+    - back/routes/products.ts
+      - [x] Add PATCH /products/{id} route
+    - back/routes/products.test.ts
+  - [x] Test updates
+    - back/router.test.ts
+      - [x] test export PATCH /products/{id} route
+    - back/server.test.ts
+      - [x] test endpoint
+  - ~~[ ] update openapi.yaml~~
+- [ ] delete product
+  - [x] Model
+    - back/Models/Products.ts
+      - [x] static method setDeletedInDatabase
+      - [x] static method deleteById calls updateAsDeletedInDatabaseById
+        - pass db error
+      - [x] method delete
+    - back/Models/Products.test.ts
+      - [x] test Products.updateAsDeletedInDatabaseById
+      - [x] test Products.deleteById
+  - [x] Controller
+    - back/controllers/products-delete-by-id.ts
+      - [x] import logger
+      - [x] call delete by id with model
+      - [x] 404 if not found
+      - [x] 500 if error
+      - [x] return 204 response
+    - back/controllers/products-delete-by-id.test.ts
+      - [x] test missing id
+      - [x] test valid id
+  - [x] Routes
+    - back/routes/products.ts
+      - [x] Add DELETE /products/{id} route
+    - back/routes/products.test.ts
+  - [x] Test updates
+    - back/router.test.ts
+      - [x] test export DELETE /products/{id} route
+    - back/server.test.ts
+      - [x] test endpoint
+  - ~~[ ] update openapi.yaml~~
+
+  - House keeping
+    - [x] remove unused imports
+    - [x] enforce naming conventions
+      - [x] file names
+      - [x] variables
+      - [x] functions
+      - [x] classes
+      - [x] database
+    - [x] jsdoc
+      - [x] functions
+      - [x] classes
+    - [x] consistent logging
+      - [x] log level from env
+    - [ ] documentation
+      - [x] split readme
+      - [x] reorganize documentation
+      - [ ] simplify & highlight patterns & choices
+    - [x] openapi
+      - [x] map api endpoints
+      - [x] map models
+      - [x] map params
+
+- merge main branch
+
+- beta roles branch
+- [ ] list roles
+  - [ ] Model
+    - back/Models/Roles.ts
+      - [ ] Roles class
+        - string name
+        - number id
+      - [ ] static method listFromDatabase
+        - pass db error
+      - [ ] static method databaseResponseToInstance
+        - constructor throws
+      - [ ] static method databaseResponseToInstanceArray
+      - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+    - back/Models/Roles.test.ts
+      - [ ] test new Roles()
+      - [ ] test Roles.listFromDatabase
+      - [ ] test Roles.databaseResponseToInstance
+      - [ ] test Roles.databaseResponseToInstanceArray
+      - [ ] test Roles.List
+  - [ ] Controller
+    - back/controllers/roles-list-all.ts
+      - [ ] import logger
+      - [ ] get list from model
+      - [ ] serialize to json with view
+      - [ ] return response
+    - back/controllers/roles-list-all.test.ts
+      - [ ] test empty list
+      - [ ] test malformed list
+      - [ ] test valid list
+  - [ ] Routes
+    - back/routes/roles.ts
+      - [ ] Add GET /roles route
+    - back/routes/roles.test.ts
+  - [ ] Test updates
+    - back/router.test.ts
+      - [ ] test export GET /roles route
+    - back/server.test.ts
+      - [ ] test GET /roles
+  - [ ] update openapi.yaml
+- [ ] list users
+  - [ ] Model
+    - back/Models/Users.ts
+      - [ ] Users class
+      - [ ] static method listFromDatabase
+        - pass db error
+      - [ ] static method databaseResponseToInstance
+        - constructor throws
+      - [ ] static method databaseResponseToInstanceArray
+      - [ ] static method List (calls to databaseResponseToInstanceArray(listFromDatabase))
+    - back/Models/Products.test.ts
+      - [ ] test new Products()
+      - [ ] test Products.listFromDatabase
+      - [ ] test Products.databaseResponseToInstance
+      - [ ] test Products.databaseResponseToInstanceArray
+      - [ ] test Products.List
+  - [ ] Controller
+    - back/controllers/products-list-all.ts
+      - [ ] import logger
+      - [ ] get list from model
+      - [ ] serialize to json with view
+      - [ ] return response
+    - back/controllers/products-list-all.test.ts
+      - [ ] test empty list
+      - [ ] test malformed list
+      - [ ] test valid list
+  - [ ] Routes
+  - [ ] Test updates
+    - back/routes/router.test.ts
+      - [ ] test exports GET /users route
+    - back/server.test.ts
+      - [ ] update test GET /users
+  - [ ] update openapi.yaml
+- [ ] login mockup
+  - [ ] Model
+    - back/models/Users.ts
+      - [ ] static method getByName
+    - back/models/Users.test.ts
+      - [ ] test getByName
+  - [ ] Controller
+    - back/controllers/login.ts
+      - [ ] getByName using sanitized post data
+      - [ ] 501 if not found
+      - [ ] serialize response using view
+      - [ ] set user id in session cookie
+      - [ ] return payload
+    - back/controllers/login.test.ts
+      - [ ] test unknown name
+      - [ ] test valid name
+  - [ ] Routes
+    - back/routes/users.ts
+      - [ ] add POST /login route
+    - back/routes/users.test.ts
+  - [ ] Test updates
+    - back/router.test.ts
+      - [ ] test export POST /login route
+    - back/server.test.ts
+      - [ ] test endpoint
+  - [ ] update openapi.yaml
+- [ ] secure auth only routes
+  - back/middlewares/security-auth.ts
+    - [ ] test req for session cookie & user id
+  - back/middlewares/security-auth.test.ts
+    - [ ] test mw
+  - back/router.ts
+    - [ ] POST /products
+    - [ ] PATCH /products/{id}
+    - [ ] DELETE /products/{id}
+  - back/router.test.ts
+    - [ ] test export updates
+  - back/controllers/products-create.test.ts
+    - [ ] update test with auth cases
+  - back/controllers/products-update.test.ts
+    - [ ] update test with auth cases
+  - back/controllers/products-delete.test.ts
+    - [ ] update test with auth cases
+  - back/server.test.ts
+    - [ ] update test with auth cases
+- [ ] secure routes by roles
+  - back/controllers/login.ts
+    - [ ] list user roles using model
+    - [ ] set user roles in session cookie
+    - [ ] return payload
+  - back/controllers/login.test.ts
+    - [ ] test user roles in cookie
+  - back/middlewares/security-role.ts
+    - [ ] check roles in session cookie vs mw init role
+  - back/middlewares/security-role.test.ts
+    - [ ] test mw
+  - back/router.ts
+    - [ ] POST /products
+    - [ ] PATCH /products/{id}
+    - [ ] DELETE /products/{id}
+  - back/router.test.ts
+    - [ ] test export updates
+  - back/controllers/products-create.test.ts
+    - [ ] update test with role cases
+  - back/controllers/products-update.test.ts
+    - [ ] update test with role cases
+  - back/controllers/products-delete.test.ts
+    - [ ] update test with role cases
+  - back/server.test.ts
+    - [ ] update test with role cases
+- merge main branch
+
+- beta sql branch
+- [x] ~~switch sqlite to~~ mysql
+  - [x] dockerized db
+    - back/test-db.yaml
+    - docker-compose.yaml
+    - [x] database container
+    - [x] config from env/secret
+  - ~~back/makefile~~
+    - ~~[ ] update with db from docker-compose~~
+  - ~~back/package.json~~
+    - ~~[ ] update with db from docker-compose~~
+  - ~~back/databases/sqlite-connection.ts~~
+    - ~~[ ] remove file~~
+  - ~~back/databases/sqlite-connection.test.ts~~
+    - ~~[ ] remove file~~
+  - ~~back/databases/sql-connection.ts~~
+    - ~~[ ] import mysql library~~
+    - ~~[ ] auth from env/secret~~
+  - ~~back/databases/sql-connection.test.ts~~
+    ~~- [ ] test connection~~
+  - ~~back/models/*~~
+    ~~- [ ] convert SQL syntax from sqlite to mysql~~
+- [ ] automated CI/CD github tests
+  - [ ] update docker-compose.yaml
+  - [ ] add necessary Dockerfiles
+  - .github/workflows/test-with-db.yaml
+    - [ ] configure testing env & cmd
+  - [ ] test on github
+- [ ] db offline failsafe
+  - back/middlewares/failsafe-db-offline.ts
+    - [ ] test db connection status
+    - [ ] returns 503 if offline
+  - back/middlewares/failsafe-db-offline.test.ts
+    - [ ] test mw
+  - back/server.ts
+    - [ ] use mw for all
+  - back/server.test.ts
+    - [ ] add db offline test
+- merge main branch
+
+- beta data history branch
+- [ ] save data history
+  - back/models/DataHistory.ts
+    - [ ] DataHistory class
+    - [ ] static method log inserts to db
+  - back/models/DataHistory.test.ts
+    - [ ] test log
+  - back/models/Products.ts
+    - [ ] update to call to DataHistory.log
+  - back/models/Products.test.ts
+    - [ ] test call to DataHistory.log
+- [ ] list data history
+  - [ ] update openapi.yaml
+  - back/router.ts
+    - [ ] add POST /data-history
+    - [ ] mw: auth, role
+  - back/router.test.ts
+    - [ ] test exported route
+  - back/models/DataHistory.ts
+    - [ ] static method list
+  - back/models/DataHistory.test.ts
+    - [ ] test list
+  - back/views/DataHistory.ts
+    - [ ] static method toJSON
+    - [ ] static method listToJSONArray
+  - back/views/DataHistory.test.ts
+    - [ ] test list to JSONArray
+  - back/controllers/data-history-list.ts
+    - [ ] list using model
+    - [ ] serialize using view
+    - [ ] return payload
+  - back/controllers/data-history-list.test.ts
+    - [ ] test controller
+  - back/server.test.ts
+    - [ ] add list data history test
+- merge main branch

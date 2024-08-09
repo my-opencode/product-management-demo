@@ -87,6 +87,34 @@
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductToCreate'
+              examples:
+                POST_PRODUCT_VALIDATION_ERROR:
+                  value:
+                    rating: 6
+                POST_PRODUCT_VALIDATION_CATEGORY_CONFLICT_ERROR:
+                  value:
+                    category: 20
+                    code: a
+                    name: a
+                    description: a
+                    quantity: 10
+                    price: 10.1
+                POST_PRODUCT_VALIDATION_DUPLICATE_CODE_ERROR:
+                  value:
+                    category: 2
+                    code: f230fh0g3
+                    name: a
+                    description: a
+                    quantity: 10
+                    price: 10.1
+                POST_PRODUCT_SUCCESS:
+                  value:
+                    category: 2
+                    code: abcdefghi
+                    name: abcdefghi
+                    description: abcdefghi
+                    quantity: 10
+                    price: 10.1
           required: true
         responses:
           '201':
@@ -124,6 +152,23 @@
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDetailsToUpdate'
+              examples:
+                PATCH_PRODUCT_VALIDATION_ERROR:
+                  value:
+                    price: 999999999.999
+                PATCH_PRODUCT_NO_CHANGE_ERROR:
+                  value:
+                    id: 1000
+                    code: f230fh0g3
+                    name: Bamboo Watch
+                    description: Product Description
+                    image: bamboo-watch.jpg
+                    price: 65
+                    category: Accessories
+                    categoryId: 1
+                    quantity: 24
+                    inventoryStatus: INSTOCK
+                    rating: 5
           required: true
         responses:
           '200':
@@ -157,6 +202,17 @@
         description: The id of the target product.
         schema:
           $ref: "#/components/schemas/IdValue"
+        examples:
+          DELETE_PRODUCT_NOT_FOUND_ERROR:
+            value: 100
+          FETCH_PRODUCT_SUCCESS:
+            value: 1001
+          FETCH_PRODUCT_NOT_FOUND_ERROR:
+            value: 100
+          PATCH_PRODUCT_VALIDATION_ERROR:
+            value: 1000
+          PATCH_PRODUCT_NO_CHANGE_ERROR:
+            value: 1000
     responses:
       ProductDetails:
         description: A product object.

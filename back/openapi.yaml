@@ -6,7 +6,7 @@
       name: Internet Software Consortium Permissive Free Software License
       identifier: ISC
   servers:
-    - url: http://localhost:8080
+    - url: http://localhost:8181
   paths:
     /categories:
       get:
@@ -248,7 +248,7 @@
             maximum: 16777215
       Product:
         allOf:
-          - $ref: #/components/schemas/ProductToCreate"
+          - $ref: "#/components/schemas/ProductToCreate"
           - type: object
             required:
               - id
@@ -313,7 +313,7 @@
           data:
             type: array
             items:
-              - $ref "#/components/schemas/Category"
+              $ref: "#/components/schemas/Category"
       ProductPayload:
         type: object
         properties:

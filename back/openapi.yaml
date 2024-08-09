@@ -167,6 +167,9 @@
       NotFound:
         description: Resource not found.
         content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorJsonPayload"
           default:
             schema:
               $ref: "#/components/schemas/Error404Payload"

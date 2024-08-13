@@ -62,7 +62,9 @@ export default async function startServer(options?: StartServerOptions) {
 
   let server: Server;
   if (!options?.skipListen)
-    server = app.listen(PORT, () => { logger.log(`info`, `Server listening on ${PORT}.`); });
+    await new Promise((r)=>{
+      server = app.listen(PORT, () => { logger.log(`info`, `Server listening on ${PORT}.`); r(1);});
+    });
   else logger.log(`warn`, `Skipping Listening`);
 
   const shutdown = async function () {

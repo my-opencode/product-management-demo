@@ -50,6 +50,7 @@ WHERE deleted = 0;`;
  * @returns {String}
  */
 export function sqlSelectProductByIdStatement(id: Id) {
+  // slice removes the trailing ;
   return sqlSelectAllProductsStatement().slice(0, -1) + ` AND p.id = ${id} LIMIT 1;`;
 }
 

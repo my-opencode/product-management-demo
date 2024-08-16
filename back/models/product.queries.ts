@@ -31,14 +31,14 @@ ON p.id = prices.Products_id
 RIGHT JOIN (
 	SELECT * FROM (
         SELECT Products_id, rating,
-    	RANK() OVER (PARTITION BY Products_id ORDER BY date DESC) rating_rank
+    	RANK() OVER (PARTITION BY Products_id ORDER BY date DESC, id DESC) rating_rank
     	FROM ProductsRatings
     ) AS sr WHERE sr.rating_rank = 1) AS ratings 
 ON p.id = ratings.Products_id 
 RIGHT JOIN (
 	SELECT * FROM (
         SELECT Products_id, quantity, inventory_status,
-    	RANK() OVER (PARTITION BY Products_id ORDER BY date DESC) inv_rank
+    	RANK() OVER (PARTITION BY Products_id ORDER BY date DESC, id DESC) inv_rank
     	FROM ProductsInventory
     ) AS si WHERE si.inv_rank = 1) AS inventory 
 ON p.id = inventory.Products_id 

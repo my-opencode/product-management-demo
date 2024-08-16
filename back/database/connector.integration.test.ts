@@ -2,6 +2,10 @@ import connector, { waitForDbServer } from "./connector";
 import { describe, it, after, before } from "node:test";
 import * as assert from "node:assert";
 import mysql, { FieldPacket, RowDataPacket } from "mysql2/promise";
+import Logger from "../lib/winston";
+
+const logger = Logger(`connector.test`);
+logger.log(`debug`, `environment is ${JSON.stringify(process.env)}`);
 
 const waitForDbServerTime = process.env.GITHUB_ACTION === `1` ? 10 : 60;
 

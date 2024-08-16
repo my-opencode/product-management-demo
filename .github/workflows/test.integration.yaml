@@ -19,8 +19,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Start MySQL
         run: sudo /etc/init.d/mysql start && mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE }};' -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{env.MYSQL_HP}}
-      - name: Create MySQL user
-        run: sudo mysql -e 'CREATE USER ${{ env.MYSQL_USER }}@localhost IDENTIFIED BY "${{ env.MYSQL_PASSWORD }}";' -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }}  ${{env.MYSQL_HP}}
       - name: Apply MySQL schema
         run: sudo mysql ${{ env.MYSQL_DATABASE }} -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} < ${{ github.workspace }}/docker-entrypoint-initdb.d/001-database-model.sql
       - name: Populate MySQL

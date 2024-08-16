@@ -1,4 +1,3 @@
-
 import Logger from "./lib/winston";
 import connector, { waitForDbServer } from "./database/connector";
 import express from "express";

@@ -20,7 +20,7 @@ Instructions are in the [README_en-EN.md](./README_en-EN.md) file. The goal  to 
   ```
 - Run:
   ```bash
-  make start-all;
+  make start;
   ```
 
 ## Requirements

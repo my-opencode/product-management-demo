@@ -2,6 +2,12 @@ import connector, { waitForDbServer } from "./connector";
 import { describe, it, after, before } from "node:test";
 import * as assert from "node:assert";
 import mysql, { FieldPacket, RowDataPacket } from "mysql2/promise";
+import Logger from "../lib/winston";
+
+const logger = Logger(`connector.test`);
+logger.log(`debug`, `environment is ${JSON.stringify(process.env)}`);
+
+const waitForDbServerTime = process.env.GITHUB_STATE ? 10 : 60;
 
 // from mysql2/lib/constants/types.js
 const typeDict: { [key: number]: string } = {
@@ -63,7 +69,7 @@ describe(`Database connector`, async function () {
   before(async function () {
     // Waiting for the database server
     // TODO add env flag to trigger this behavior
-    await waitForDbServer();
+    await waitForDbServer(waitForDbServerTime);
     pool = connector();
   });
   after(function () {

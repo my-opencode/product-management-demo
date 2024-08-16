@@ -9,6 +9,7 @@ const logger = Logger(`connector`);
  * @returns {Pool}
  */
 export default function connector(): Pool {
+  logger.log(`debug`, `Database configuration is: ${JSON.stringify(databaseConfig)}`);
   const pool = mysql.createPool(databaseConfig);
   return pool;
 }

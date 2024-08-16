@@ -7,6 +7,7 @@ jobs:
   Integration-Tests:
     runs-on: ubuntu-22.04
     env:
+      MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: pswd
       MYSQL_DATABASE: demodb
       MYSQL_USER: demouser
@@ -14,11 +15,13 @@ jobs:
       MYSQL_TCP_PORT: 52000
     steps:
       - name: Start MySQL
-        run: sudo /etc/init.d/mysql start && mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE }};' -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASSWORD }} --port=${{env.MYSQL_TCP_PORT}}
+        run: sudo /etc/init.d/mysql start && mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE }};' -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} --port=${{env.MYSQL_TCP_PORT}}
+      - name: Create MySQL user
+        run: sudo mysql -e 'CREATE USER '${{ env.MYSQL_USER }}'@'localhost' IDENTIFIED WITH authentication_plugin BY '${{ env.MYSQL_PASSWORD }}';' -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }}
       - name: Apply MySQL schema
-        run: sudo mysql -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASSWORD }} --database=${{ env.MYSQL_DATABASE }} ./docker-entrypoint-init-b.d/001-database-model.sql
+        run: sudo mysql -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} --database=${{ env.MYSQL_DATABASE }} ./docker-entrypoint-init-b.d/001-database-model.sql
       - name: Populate MySQL
-        run: sudo mysql -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASSWORD }} --database=${{ env.MYSQL_DATABASE }} ./docker-entrypoint-init-b.d/002-database-state-insert.sql
+        run: sudo mysql -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} --database=${{ env.MYSQL_DATABASE }} ./docker-entrypoint-init-b.d/002-database-state-insert.sql
       - run: echo "Running Integration Tests in ${{ runner.os }} for branch ${{ github.ref }}."
       - name: Copy project directory
         uses: actions/checkout@v4

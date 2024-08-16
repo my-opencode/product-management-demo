@@ -20,9 +20,9 @@ jobs:
       - name: Start MySQL
         run: sudo /etc/init.d/mysql start && mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE }};' -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{env.MYSQL_HP}}
       - name: Apply MySQL schema
-        run: sudo mysql ${{ env.MYSQL_DATABASE }} -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < ${{ github.workspace }}/docker-entrypoint-initdb.d/001-database-model.sql
+        run: sudo mysql ${{ env.MYSQL_HP }} -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < ${{ github.workspace }}/docker-entrypoint-initdb.d/001-database-model.sql
       - name: Populate MySQL
-        run: sudo mysql ${{env.MYSQL_HP}} -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < ${{ github.workspace }}/docker-entrypoint-init-b.d/002-database-state-insert.sql
+        run: sudo mysql ${{ env.MYSQL_HP }} -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < ${{ github.workspace }}/docker-entrypoint-init-b.d/002-database-state-insert.sql
       - run: echo "Running Integration Tests in ${{ runner.os }} for branch ${{ github.ref }}."
       - name: Set Node.js
         uses: actions/setup-node@v4

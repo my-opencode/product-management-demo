@@ -7,7 +7,7 @@ import Logger from "../lib/winston";
 const logger = Logger(`connector.test`);
 logger.log(`debug`, `environment is ${JSON.stringify(process.env)}`);
 
-const waitForDbServerTime = process.env.GITHUB_ACTION === `1` ? 10 : 60;
+const waitForDbServerTime = process.env.GITHUB_STATE ? 10 : 60;
 
 // from mysql2/lib/constants/types.js
 const typeDict: { [key: number]: string } = {

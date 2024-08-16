@@ -8,7 +8,7 @@ import AppSymbols from "./AppSymbols";
 import setCors from "./middleware/cors";
 const logger = Logger(`server`);
 const PORT = process.env.APP_PORT ? parseInt(process.env.APP_PORT) : 3000;
-const waitForDbServerTime = process.env.GITHUB_ACTION === `1` ? 10 : 60;
+const waitForDbServerTime = process.env.GITHUB_STATE ? 10 : 60;
 export interface StartServerOptions {
   skipDatabase?: boolean;
   skipRoutes?: boolean;

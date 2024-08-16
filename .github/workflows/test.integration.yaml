@@ -21,10 +21,8 @@ jobs:
         run: sudo /etc/init.d/mysql start && mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE }};' -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{env.MYSQL_HP}}
       - name: Create MySQL user
         run: sudo mysql -e 'CREATE USER ${{ env.MYSQL_USER }}@localhost IDENTIFIED BY "${{ env.MYSQL_PASSWORD }}";' -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }}  ${{env.MYSQL_HP}}
-      - run: pwd && echo ${{ github.workspace }}
-      - run: ls ${{ github.workspace }}
       - name: Apply MySQL schema
-        run: sudo mysql ${{ env.MYSQL_DATABASE }} < ${{ github.workspace }}/docker-entrypoint-initdb.d/001-database-model.sql
+        run: sudo mysql ${{ env.MYSQL_DATABASE }} -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} < ${{ github.workspace }}/docker-entrypoint-initdb.d/001-database-model.sql
       - name: Populate MySQL
         run: sudo mysql ${{env.MYSQL_HP}} -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < ${{ github.workspace }}/docker-entrypoint-init-b.d/002-database-state-insert.sql
       - run: echo "Running Integration Tests in ${{ runner.os }} for branch ${{ github.ref }}."

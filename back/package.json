@@ -4,8 +4,8 @@
   "description": "Back End for a product management demo",
   "main": "server.js",
   "scripts": {
-    "test:integration":"export LOG_LEVEL=silly; npx tsx --test --test-concurrency=1 **/*.integration.test.ts",
-    "test:unit":"export LOG_LEVEL=verbose; npx tsx --test --test-concurrency=1 **/*.unit.test.ts",
+    "test:integration": "export LOG_LEVEL=silly; npx tsx --test --test-concurrency=1 **/*.integration.test.ts",
+    "test:unit": "export LOG_LEVEL=verbose; npx tsx --test --test-concurrency=1 **/*.unit.test.ts",
     "pretest": "echo 'Booting Database' && sudo docker-compose -f test-db.yaml --profile test up -d -V",
     "test": "export LOG_LEVEL=verbose; npm run clearlogs && npx tsx --test --test-concurrency=1 || true",
     "posttest": "echo 'Closing Database' && sudo docker-compose -f test-db.yaml down --volumes",

@@ -1,6 +1,6 @@
 import fs from "fs";
 import { PoolOptions } from "mysql2";
-const envFile = process.env.NODE_ENV === `production` ? `.env` : `devdb.env`;
+const envFile = process.env.GITHUB_ACTION === `1` ? `actiondb.env` : process.env.NODE_ENV === `production` ? `.env` : `devdb.env`;
 /**
  * Sync function to load database environment variables from file.
  * Mutates process.env 

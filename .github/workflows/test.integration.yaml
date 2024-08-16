@@ -1,0 +1,41 @@
+name: Integration Tests
+run-name: ${{ github.actor }} is running integration tests
+
+on:
+  push:
+    paths:
+      - back/**
+      - docker-entrypoint-initdb.d/**
+
+jobs:
+  Integration-Tests:
+    runs-on: ubuntu-22.04
+    env:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: demodb
+      MYSQL_USER: demouser
+      MYSQL_PASSWORD: demopswd
+      MYSQL_TCP_PORT: 3306
+      MYSQL_HP: --host=localhost --port=3306
+    steps:
+      - name: Copy project directory
+        uses: actions/checkout@v4
+      - name: Start MySQL
+        run: sudo /etc/init.d/mysql start && mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE }};' -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{env.MYSQL_HP}}
+      - name: Create MySQL user without host
+        run: sudo mysql -e 'CREATE USER ${{ env.MYSQL_USER }} IDENTIFIED BY "${{ env.MYSQL_PASSWORD }}";' -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }}  ${{env.MYSQL_HP}}
+      - name: Apply MySQL schema
+        run: sudo mysql ${{ env.MYSQL_HP }} -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < ${{ github.workspace }}/docker-entrypoint-initdb.d/001-database-model.sql
+      - name: Populate MySQL
+        run: sudo mysql ${{ env.MYSQL_HP }} -u${{ env.MYSQL_ROOT_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < ${{ github.workspace }}/docker-entrypoint-initdb.d/002-database-state-insert.sql
+      - run: echo "Running Integration Tests in ${{ runner.os }} for branch ${{ github.ref }}."
+      - name: Set Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+      - name: Install dependencies
+        run: cd back && npm ci
+      - name: Launch Integration Tests
+        run: cd back  && npm run test:integration
+      - run: echo "Test completed with status ${{ job.status }}."

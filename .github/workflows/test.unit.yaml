@@ -1,0 +1,25 @@
+name: Unit Tests
+run-name: ${{ github.actor }} is running unit tests
+
+on:
+  push:
+    paths:
+      - back/**
+      - docker-entrypoint-initdb.d/**
+
+jobs:
+  Unit-Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running Unit Tests in ${{ runner.os }} for branch ${{ github.ref }}."
+      - name: Copy project directory
+        uses: actions/checkout@v4
+      - name: Set Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+      - name: Install dependencies
+        run: cd back && npm ci
+      - name: Launch Unit Tests
+        run: cd back  && npm run test:unit
+      - run: echo "Test completed with status ${{ job.status }}."

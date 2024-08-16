@@ -6,6 +6,7 @@
       <span class="p-float-label">
         <input *ngIf="controlConfig.type === 'text'" type="text" pInputText [formControl]="formCtrl"> 
         <p-inputNumber *ngIf="controlConfig.type === 'number'" [formControl]="formCtrl"></p-inputNumber>
+        <p-inputNumber *ngIf="controlConfig.type === 'decimal'" [formControl]="formCtrl" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
         <p-calendar *ngIf="controlConfig.type === 'date'" [formControl]="formCtrl"></p-calendar>
         <label [class.mandatory-control]="isRequired" [for]="controlConfig.key">{{ controlConfig.label }}</label>
       </span>

@@ -25,7 +25,7 @@ export const PRODUCT_TABLE_CONF: CrudItemOptions[] = [
     key: 'code',
     controlType: ControlType.INPUT,
     type: TypeInput.TEXT,
-    label: 'code',
+    label: 'Code',
     columnOptions: {
       minScreenSize: ScreenWidth.small,
       default: true
@@ -35,7 +35,7 @@ export const PRODUCT_TABLE_CONF: CrudItemOptions[] = [
     key: 'name',
     controlType: ControlType.INPUT,
     type: TypeInput.TEXT,
-    label: 'name',
+    label: 'Name',
     columnOptions: {
       minScreenSize: ScreenWidth.small,
       default: true
@@ -45,19 +45,16 @@ export const PRODUCT_TABLE_CONF: CrudItemOptions[] = [
     key: 'description',
     controlType: ControlType.INPUT,
     type: TypeInput.TEXT,
-    label: 'description',
+    label: 'Description',
     columnOptions: {
       minScreenSize: ScreenWidth.large,
     },
   },
   {
-    key: 'category',
+    key: 'categoryId',
     controlType: ControlType.SELECT,
-    label: 'category',
-    options: [{value: "Accessories",label: "Accessories" },
-    {value: "Clothing",label: "Clothing" },
-    {value: "Electronics",label: "Electronics" },
-    {value: "Fitness",label: "Fitness" }],
+    label: 'Category',
+    options: [],
 
     columnOptions: {
       minScreenSize: ScreenWidth.small,
@@ -66,7 +63,7 @@ export const PRODUCT_TABLE_CONF: CrudItemOptions[] = [
   {
     key: 'inventoryStatus',
     controlType: ControlType.SELECT,
-    label: 'inventoryStatus',
+    label: 'Inventory Status',
     options: [{value: "INSTOCK",label: "INSTOCK" },
     {value:"LOWSTOCK",label: "LOWSTOCK" }, 
     {value: "OUTOFSTOCK",label: "OUTOFSTOCK"}],
@@ -77,8 +74,8 @@ export const PRODUCT_TABLE_CONF: CrudItemOptions[] = [
   {
     key: 'price',
     controlType: ControlType.INPUT,
-    type: TypeInput.NUMBER,
-    label: 'price',
+    type: TypeInput.DECIMAL,
+    label: 'Price',
     columnOptions: {
       minScreenSize: ScreenWidth.small,
     },

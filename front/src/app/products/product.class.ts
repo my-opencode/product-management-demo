@@ -7,11 +7,16 @@ export class Product {
   quantity?:number;
   inventoryStatus?:string;
   category?:string;
+  categoryId?:number;
   image?:string;
   rating?:number;
 }
 
 export interface ProductPayload {
-  products: Product[];
-  total: number;
+  data: Product[];
+  total?: number;
+}
+export interface ProductDetailsPayload {
+  data: Product;
+  total?: number;
 }

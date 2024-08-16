@@ -1,0 +1,67 @@
+version: '3.1'
+
+networks:
+  demo_nw:
+
+services:
+  demoback:
+    container_name: demoback
+    build:
+      context: .
+      dockerfile: "./Dockerfile.back.dev"
+    image: product-management-demo:alpha1.0
+    profiles: [serve, servedebug, serve-no-ui, servedebug-no-ui]
+    volumes:
+      - "./docker-compose.serve.env:/app/database/devdb.env:ro"
+      - "./docker-logs:/app/logs/:rw"
+    depends_on:
+      demodb:
+        condition: service_healthy
+    environment:
+      APP_PORT: 8181
+    ports:
+      - "8181:8181"
+    command: "node server.js"
+    networks:
+      - demo_nw
+  demodb:
+    image: mysql:8.4
+    env_file: "./docker-compose.serve.env"
+    container_name: demodb
+    profiles: [serve, servedebug, serve-no-ui, servedebug-no-ui]
+    # ports:
+    #   - "52000:52000"
+    volumes:
+      - "./docker-entrypoint-initdb.d/001-database-model.sql:/docker-entrypoint-initdb.d/01.sql"
+      - "./docker-entrypoint-initdb.d/002-database-state-insert.sql:/docker-entrypoint-initdb.d/02.sql"
+    networks:
+      - demo_nw
+    healthcheck:
+      test: mysql demodb --user=demouser --password='demopswd' --silent --execute "SELECT 1;"
+      interval: 30s
+      timeout: 10s
+      retries: 50
+  debugpma:
+    image: phpmyadmin:5
+    container_name: debugpma
+    profiles: [servedebug, servedebug-no-ui]
+    env_file: "./docker-compose.serve.env"
+    ports:
+      - "8080:80"
+    depends_on:
+      - "demodb"
+    networks:
+      - demo_nw
+  demofront:
+    image: nginx:latest
+    container_name: demofront
+    profiles: [serve, servedebug]
+    volumes:
+      - ./front-docker/nginx.conf:/etc/nginx/nginx.conf
+      - ./front-dist:/usr/share/nginx/html
+    ports:
+      - "4200:80"
+    depends_on:
+      - "demoback"
+    networks:
+      - demo_nw

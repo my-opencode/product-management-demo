@@ -1,7 +1,11 @@
 name: Integration Tests
 run-name: ${{ github.actor }} is running integration tests
 
-on: [push]
+on:
+  push:
+    paths:
+      - back/**
+      - docker-entrypoint-initdb.d/**
 
 jobs:
   Integration-Tests:

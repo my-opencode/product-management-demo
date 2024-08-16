@@ -1,7 +1,11 @@
 name: Unit Tests
 run-name: ${{ github.actor }} is running unit tests
 
-on: [push]
+on:
+  push:
+    paths:
+      - back/**
+      - docker-entrypoint-initdb.d/**
 
 jobs:
   Unit-Tests:

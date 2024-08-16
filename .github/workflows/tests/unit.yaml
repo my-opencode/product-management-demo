@@ -1,0 +1,19 @@
+name: Unit Tests
+run-name: ${{ github.actor }} is running unit tests
+
+on: [push]
+
+jobs:
+  Unit-Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: 
+      - run: echo "Running Unit Tests in ${{ runner.os }} for branch ${{ github.ref }}."
+      - uses: actions/checkout@v4
+      - name: Set Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+      - run: npm ci
+      - run: npm run test:unit
+      - run: echo "Test completed with status ${{ job.status }}."

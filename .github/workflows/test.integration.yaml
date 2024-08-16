@@ -1,0 +1,33 @@
+name: Integration Tests
+run-name: ${{ github.actor }} is running integration tests
+
+on: [push]
+
+jobs:
+  Integration-Tests:
+    runs-on: ubuntu-22.04
+    env:
+      MYSQL_ROOT_PASSWORD: pswd
+      MYSQL_DATABASE: demodb
+      MYSQL_USER: demouser
+      MYSQL_PASSWORD: demopswd
+      MYSQL_TCP_PORT: 52000
+    steps:
+      - name: Start MySQL
+        run: sudo /etc/init.d/mysql start && mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE }};' -u ${{ env.MYSQL_USER }} -p ${{ env.MYSQL_PASSWORD }} -P ${{env.MYSQL_TCP_PORT}}
+      - name: Apply MySQL schema
+        run: sudo mysql -u ${{ env.MYSQL_USER }} -p ${{ env.MYSQL_PASSWORD }} ${{ env.MYSQL_DATABASE }} ./docker-entrypoint-init-b.d/001-database-model.sql
+      - name: Populate MySQL
+        run: sudo mysql -u ${{ env.MYSQL_USER }} -p ${{ env.MYSQL_PASSWORD }} ${{ env.MYSQL_DATABASE }} ./docker-entrypoint-init-b.d/002-database-state-insert.sql
+      - run: echo "Running Integration Tests in ${{ runner.os }} for branch ${{ github.ref }}."
+      - name: Copy project directory
+        uses: actions/checkout@v4
+      - name: Set Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+      - name: Install dependencies
+        run: cd back && npm ci
+      - name: Launch Integration Tests
+        run: cd back  && npm run test:integration
+      - run: echo "Test completed with status ${{ job.status }}."

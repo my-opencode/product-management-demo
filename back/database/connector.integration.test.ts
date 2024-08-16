@@ -3,6 +3,8 @@ import { describe, it, after, before } from "node:test";
 import * as assert from "node:assert";
 import mysql, { FieldPacket, RowDataPacket } from "mysql2/promise";
 
+const waitForDbServerTime = process.env.GITHUB_ACTION === `1` ? 10 : 60;
+
 // from mysql2/lib/constants/types.js
 const typeDict: { [key: number]: string } = {
   0x00: 'DECIMAL', // aka DECIMAL 
@@ -63,7 +65,7 @@ describe(`Database connector`, async function () {
   before(async function () {
     // Waiting for the database server
     // TODO add env flag to trigger this behavior
-    await waitForDbServer();
+    await waitForDbServer(waitForDbServerTime);
     pool = connector();
   });
   after(function () {

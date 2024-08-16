@@ -8,6 +8,7 @@ import AppSymbols from "./AppSymbols";
 import setCors from "./middleware/cors";
 const logger = Logger(`server`);
 const PORT = process.env.APP_PORT ? parseInt(process.env.APP_PORT) : 3000;
+const waitForDbServerTime = process.env.GITHUB_ACTION === `1` ? 10 : 60;
 export interface StartServerOptions {
   skipDatabase?: boolean;
   skipRoutes?: boolean;
@@ -31,7 +32,7 @@ export default async function startServer(options?: StartServerOptions) {
 
   if (!options?.skipDatabase) {
     logger.log(`debug`, `Connecting DB.`);
-    await waitForDbServer();
+    await waitForDbServer(waitForDbServerTime);
     const connectionPool = connector();
     logger.log(`debug`, `Connected DB.`);
     disconnectDatabase = function () {

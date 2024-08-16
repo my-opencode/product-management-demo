@@ -13,6 +13,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22.x'
+      - run: cd back
       - run: npm ci
       - run: npm run test:unit
       - run: echo "Test completed with status ${{ job.status }}."

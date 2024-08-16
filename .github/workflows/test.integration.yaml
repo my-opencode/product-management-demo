@@ -13,7 +13,7 @@ jobs:
       MYSQL_USER: demouser
       MYSQL_PASSWORD: demopswd
       MYSQL_TCP_PORT: 3306
-      MYSQL_HP: --host=127.0.0.1 --port=3306
+      MYSQL_HP: --host=localhost --port=3306
     steps:
       - name: Copy project directory
         uses: actions/checkout@v4

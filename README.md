@@ -29,7 +29,7 @@ Instructions are in the [README_en-EN.md](./README_en-EN.md) file. The goal  to 
 
 ### Requirements for Local install, tests and serving apps
 
-- [Nodejs 22](https://nodejs.org/en/download/package-manager) (not tested on 18/20).
+- [Nodejs 22](https://nodejs.org/en/download/package-manager).
 - [NPM 10](https://nodejs.org/en/download/package-manager).
 
 ## Using the Makefile
@@ -40,7 +40,7 @@ For convenience, I provide a `makefile` with commands for most common actions.
 Macros can be called with `make macro-name` in a terminal.
 
 Try `make help` or open the `makefile` for more information about the macros.
-
+If you do not have the ability to run make commands, simply open the file in a text editor to see which commands are used.
 
 > The macros in the Makefile are for bash and have not been tested outside of a GNU+Linux environment.
 On Windows or MacOS I strongly recommend using Linux WSL or a VM.
@@ -58,6 +58,8 @@ cd back
 npm ci
 npm run test
 ```
+
+Unit & Integration tests are run automatically on github when changes are pushed to the back or docker-entrypoint-initdb.d sub directories.
 
 # Planification
 

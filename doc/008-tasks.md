@@ -233,7 +233,7 @@
   - ~~[ ] update openapi.yaml~~
   - back/server.test.ts
     - [x] test GET /products/{id}
-- [ ] create new product
+- [x] create new product
   - [x] Common validators
     - back/lib/validators.ts
     - back/lib/validators.test.ts
@@ -266,7 +266,7 @@
       - [x] test new Products()
       - [x] test Products.insertNewToDatabase
       - [x] test save
-  - [ ] Controller
+  - [x] Controller
     - back/controllers/products-create.ts
       - [x] import logger
       - [x] validate post data with model
@@ -337,7 +337,7 @@
     - back/server.test.ts
       - [x] test endpoint
   - ~~[ ] update openapi.yaml~~
-- [ ] delete product
+- [x] delete product
   - [x] Model
     - back/Models/Products.ts
       - [x] static method setDeletedInDatabase
@@ -381,14 +381,18 @@
       - [x] classes
     - [x] consistent logging
       - [x] log level from env
-    - [ ] documentation
+    - [x] documentation
       - [x] split readme
       - [x] reorganize documentation
-      - [ ] simplify & highlight patterns & choices
+      - [x] simplify & highlight patterns & choices
     - [x] openapi
       - [x] map api endpoints
       - [x] map models
       - [x] map params
+
+- automated github actions tests
+  - [x] unit tests
+  - [x] integration tests
 
 - merge main branch
 

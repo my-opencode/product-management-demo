@@ -8,12 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Running Unit Tests in ${{ runner.os }} for branch ${{ github.ref }}."
-      - uses: actions/checkout@v4
+      - name: Copy project directory
+        uses: actions/checkout@v4
       - name: Set Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22.x'
-      - run: cd back
-      - run: npm ci
-      - run: npm run test:unit
+      - name: Install dependencies
+        run: cd back && npm ci
+      - name: Launch Unit Tests
+        run: cd back  && npm run test:unit
       - run: echo "Test completed with status ${{ job.status }}."

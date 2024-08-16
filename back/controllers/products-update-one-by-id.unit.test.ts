@@ -129,7 +129,8 @@ describe(`Products update one by id controller`, function () {
         image: `a.png`,
         quantity: 10000,
         price: 10000.1,
-        inventoryStatus: "INSTOCK"
+        inventoryStatus: "INSTOCK",
+        rating:5
       })));
       // 
       // update request
@@ -156,7 +157,22 @@ describe(`Products update one by id controller`, function () {
       assert.strictEqual(response.send.mock.callCount(), 1);
       assert.strictEqual(
         response.send.mock.calls[0]?.arguments?.[0],
-        `{"data":{"id":${request.product!.id},"code":"a","name":"a","category":4,"categoryId":4,"description":"a","image":"a.png","quantity":10000,"inventoryStatus":"INSTOCK","price":10000.1}}`
+        JSON.stringify(
+          {
+            "data":{
+              "id":request.product!.id,
+              "code":"a",
+              "name":"a",
+              "category":4,
+              "categoryId":4,
+              "description":"a",
+              "image":"a.png",
+              "quantity":10000,
+              "inventoryStatus":"INSTOCK",
+              "price":10000.1,
+              "rating": 5
+            }}
+        )
       );
     });
   });

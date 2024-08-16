@@ -107,7 +107,7 @@ describe(`Products create controller`, function () {
     });
     it(`should call response.send with payload`, function () {
       assert.strictEqual(response.send.mock.callCount(), 1);
-      assert.strictEqual(response.send.mock.calls[0]?.arguments?.[0], `{"data":{"id":20,"code":"a","name":"a","category":2,"categoryId":2,"description":"a","quantity":10,"inventoryStatus":"INSTOCK","price":10.1}}`);
+      assert.strictEqual(response.send.mock.calls[0]?.arguments?.[0], `{"data":{"id":20,"code":"a","name":"a","category":2,"categoryId":2,"description":"a","quantity":10,"inventoryStatus":"INSTOCK","price":10.1,"rating":0}}`);
     });
   });
 });

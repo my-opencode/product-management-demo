@@ -54,7 +54,7 @@ describe(`Products get all controller`, function () {
       await productsGetAll({} as unknown as Request, response, next).finally(() => {
         assert.strictEqual(response.send.mock.callCount(), 1);
         assert.strictEqual(next.mock.callCount(), 0);
-        assert.strictEqual(response.send.mock.calls[0].arguments[0], `{"data":[{"id":1}]}`);
+        assert.strictEqual(response.send.mock.calls[0].arguments[0], `{"data":[{"id":1,"rating":0}]}`);
       });
     });
   });

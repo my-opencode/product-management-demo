@@ -20,7 +20,7 @@ export default function renderer(product: (Product | ProductAsInTheJson)): strin
       quantity: product.quantity,
       inventoryStatus: product.inventoryStatus as InventoryStatus,
       price: product.price,
-      rating: product.rating || undefined
+      rating: product.rating || 0
     }
   };
   return JSON.stringify(payload);

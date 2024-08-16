@@ -17,7 +17,7 @@ describe(`Product details renderer`, function () {
         price: 10.1,
         inventoryStatus: "INSTOCK"
       } as ProductAsInTheJson),
-      `{"data":{"id":20,"code":"a","name":"a","category":"my category","categoryId":2,"description":"a","quantity":10,"inventoryStatus":"INSTOCK","price":10.1}}`
+      `{"data":{"id":20,"code":"a","name":"a","category":"my category","categoryId":2,"description":"a","quantity":10,"inventoryStatus":"INSTOCK","price":10.1,"rating":0}}`
     );
   });
 });

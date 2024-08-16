@@ -21,7 +21,7 @@ export default function renderer(products: (Product | ProductBase)[]): string {
         quantity: p.quantity,
         inventoryStatus: p.inventoryStatus as InventoryStatus,
         price: p.price,
-        rating: p.rating || undefined
+        rating: p.rating || 0
       })
     )
   };

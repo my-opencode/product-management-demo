@@ -40,7 +40,7 @@ restart:
 start-dev-ui:
 	make pre-start-docker;
 	make build-back-with-docker;
-	sudo docker-compose --profile serve-no-ui up -V --force-recreate -d;
+	sudo docker compose --profile serve-no-ui up -V --force-recreate -d;
 	make serve-front;
 
 # Starts all back end services attached.
@@ -54,7 +54,7 @@ start-dev-ui:
 start-back-attached:
 	make stop;
 	make build-back-with-docker;
-	sudo docker-compose --profile serve-no-ui up -V --force-recreate;
+	sudo docker compose --profile serve-no-ui up -V --force-recreate;
 
 # Performs all install and build.
 #
@@ -90,7 +90,7 @@ pre-start-docker:
 #
 # Removes volumes.
 stop:
-	sudo docker-compose down -v;
+	sudo docker compose down -v;
 
 # Starts the development front server.
 serve-front:
@@ -116,7 +116,7 @@ build-back-local:
 # - Runs install & build in container
 build-back-with-docker: 
 	make clear-back-dist;
-	sudo docker-compose -f docker-compose.build-apps.yaml --profile back up;
+	sudo docker compose -f docker-compose.build-apps.yaml --profile back up;
 
 # Builds the front end using local install.
 #
@@ -134,7 +134,7 @@ build-front-local:
 # - Runs install & build in container
 build-front-with-docker: 
 	make clear-front-dist;
-	sudo docker-compose -f docker-compose.build-apps.yaml --profile front up;
+	sudo docker compose -f docker-compose.build-apps.yaml --profile front up;
 
 # Builds back & front ends using a container.
 #
@@ -143,14 +143,14 @@ build-front-with-docker:
 build-apps-with-docker: 
 	make clear-back-dist;
 	make clear-front-dist;
-	sudo docker-compose -f docker-compose.build-apps.yaml --profile all up;
+	sudo docker compose -f docker-compose.build-apps.yaml --profile all up;
 
 # Runs all services.
 #
 # To start the PHP My Admin service, switch profile "serve" for
 # profile "servedebug".
 docker-run-all:
-	sudo docker-compose --profile serve up -V --force-recreate -d;
+	sudo docker compose --profile serve up -V --force-recreate -d;
 
 # Resets the front end build directory.
 clear-front-dist:

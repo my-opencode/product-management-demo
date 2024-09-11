@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import {
@@ -36,7 +36,8 @@ export class ProductsService {
     }
 
     getProducts(): Observable<Product[]> {
-        this.http.get<ProductPayload>(`/api/products`).subscribe({
+        const headers = new HttpHeaders({ "Accept": `application/json` });
+        this.http.get<ProductPayload>(`/api/products`, { headers }).subscribe({
             next: (data) => {
                 ProductsService.productList = data.data;
                 this.products$.next(ProductsService.productList);
@@ -47,8 +48,9 @@ export class ProductsService {
     }
 
     create(prod: Product): Observable<Product[]> {
+        const headers = new HttpHeaders({ "Accept": `application/json` });
         this.http
-            .post<ProductDetailsPayload>(`/api/products`, prod)
+            .post<ProductDetailsPayload>(`/api/products`, prod, { headers })
             .subscribe({
                 next: (resp) => {
                     ProductsService.productList.push(resp.data);
@@ -69,8 +71,9 @@ export class ProductsService {
             price: prod.price,
             quantity: prod.quantity,
         };
+        const headers = new HttpHeaders({ "Accept": `application/json` });
         this.http
-            .patch<ProductDetailsPayload>(`/api/products/${prod.id}`, updateValues)
+            .patch<ProductDetailsPayload>(`/api/products/${prod.id}`, updateValues, { headers })
             .subscribe({
                 next: (resp) => {
                     const targetIndex = ProductsService.productList.findIndex(
@@ -93,7 +96,8 @@ export class ProductsService {
     }
 
     delete(id: number): Observable<Product[]> {
-        this.http.delete<void>(`/api/products/${id}`).subscribe({
+        const headers = new HttpHeaders({ "Accept": `application/json` });
+        this.http.delete<void>(`/api/products/${id}`, { headers }).subscribe({
             next: () => {
                 ProductsService.productList = ProductsService.productList.filter(
                     (value) => {

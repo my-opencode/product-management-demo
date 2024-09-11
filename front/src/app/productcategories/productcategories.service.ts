@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductCategory, ProductCategoryPayload } from './productcategory.class';
@@ -20,7 +20,8 @@ export class ProductCategoriesService {
         //     { id: 3, name: "Clothing" },
         //     { id: 4, name: "Electronics" },
         // ]
-        this.http.get<ProductCategoryPayload>(`/api/categories`).subscribe(data => {
+        const headers = new HttpHeaders({ "Accept": `application/json` });
+        this.http.get<ProductCategoryPayload>(`/api/categories`, { headers }).subscribe(data => {
             console.log(data);
             ProductCategoriesService.categoryList = data.data;
 
@@ -30,7 +31,8 @@ export class ProductCategoriesService {
     }
 
     create(cat: ProductCategory): Observable<ProductCategory[]> {
-        this.http.post<ProductCategoryPayload>(`/api/categories`, cat).subscribe(resp => {
+        const headers = new HttpHeaders({ "Accept": `application/json` });
+        this.http.post<ProductCategoryPayload>(`/api/categories`, cat, { headers }).subscribe(resp => {
             ProductCategoriesService.categoryList.push(resp.data[0]);
             this.categories$.next(ProductCategoriesService.categoryList);
         });
@@ -41,7 +43,8 @@ export class ProductCategoriesService {
         const updateValues = {
             name: cat.name
         };
-        this.http.post<{ data: ProductCategory[] }>(`/api/categories/${cat.id}`, updateValues).subscribe(resp => {
+        const headers = new HttpHeaders({ "Accept": `application/json` });
+        this.http.post<{ data: ProductCategory[] }>(`/api/categories/${cat.id}`, updateValues, { headers }).subscribe(resp => {
             const target = ProductCategoriesService.categoryList.find(p => p.id === cat.id);
             if (!target) throw new Error(`Category to update must be in categoryList.`);
             const updated = resp.data[0];
@@ -52,7 +55,8 @@ export class ProductCategoriesService {
     }
 
     delete(id: number): Observable<ProductCategory[]> {
-        this.http.delete<{ data: ProductCategory[] }>(`/api/categories/${id}`).subscribe(() => {
+        const headers = new HttpHeaders({ "Accept": `application/json` });
+        this.http.delete<{ data: ProductCategory[] }>(`/api/categories/${id}`, { headers }).subscribe(() => {
             ProductCategoriesService.categoryList = ProductCategoriesService.categoryList.filter(value => { return value.id !== id });
             this.categories$.next(ProductCategoriesService.categoryList);
         });
